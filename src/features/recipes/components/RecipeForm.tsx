@@ -140,7 +140,6 @@ export const RecipeForm = ({
             </select>
           </div>
         </div>
-        // center buttons if editing, align to the left if creating
         <div className="flex gap-2 mt-4 m-auto">
           <button
             type="submit"

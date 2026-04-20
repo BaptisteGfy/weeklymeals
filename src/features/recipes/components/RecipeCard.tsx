@@ -3,6 +3,7 @@ import type { IngredientUnit, Recipe, RecipeCategory } from '../types';
 type Props = {
   recipe: Recipe;
   onDelete: (id: string) => void;
+  onEdit: (recipe: Recipe) => void;
 };
 
 const categoryLabels: Record<RecipeCategory, string> = {
@@ -22,7 +23,7 @@ const unitLabels: Record<IngredientUnit, string> = {
   unit: 'pièce',
 };
 
-export const RecipeCard = ({ recipe, onDelete }: Props) => {
+export const RecipeCard = ({ recipe, onDelete, onEdit }: Props) => {
   return (
     <article className="rounded-xl border p-4 shadow-sm">
       <h3 className="text-xl font-semibold">{recipe.title}</h3>
@@ -44,12 +45,22 @@ export const RecipeCard = ({ recipe, onDelete }: Props) => {
             </li>
           ))}
         </ul>
-        <button
-          onClick={() => onDelete(recipe.id)}
-          className="mt-4 inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:border-red-400 transition"
-        >
-          🗑️ Supprimer
-        </button>
+
+        <div className="mt-4 flex gap-2">
+          <button
+            onClick={() => onEdit(recipe)}
+            className="inline-flex items-center gap-2 rounded-md border border-blue-300 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:border-blue-400 hover:bg-blue-50"
+          >
+            ✏️ Éditer
+          </button>
+
+          <button
+            onClick={() => onDelete(recipe.id)}
+            className="inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"
+          >
+            🗑️ Supprimer
+          </button>
+        </div>
       </div>
     </article>
   );

@@ -20,6 +20,10 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleCancelEdit = () => {
+    setEditingRecipe(null);
+  };
+
   const handleSubmitRecipe = (values: RecipeFormValues) => {
     if (editingRecipe) {
       setRecipeList((prev) =>
@@ -40,7 +44,6 @@ function App() {
     const newRecipe: Recipe = {
       id: crypto.randomUUID(),
       ...values,
-      ingredients: [],
       instructions: [],
     };
 
@@ -54,12 +57,9 @@ function App() {
         servings: editingRecipe.servings,
         prepTimeMinutes: editingRecipe.prepTimeMinutes,
         category: editingRecipe.category,
+        ingredients: editingRecipe.ingredients,
       }
     : undefined;
-
-  const handleCancelEdit = () => {
-    setEditingRecipe(null);
-  };
 
   return (
     <main className="mx-auto max-w-4xl p-6">

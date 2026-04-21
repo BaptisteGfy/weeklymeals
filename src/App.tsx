@@ -44,7 +44,6 @@ function App() {
     const newRecipe: Recipe = {
       id: crypto.randomUUID(),
       ...values,
-      instructions: [],
     };
 
     setRecipeList((prev) => [...prev, newRecipe]);
@@ -58,6 +57,7 @@ function App() {
         prepTimeMinutes: editingRecipe.prepTimeMinutes,
         category: editingRecipe.category,
         ingredients: editingRecipe.ingredients,
+        instructions: editingRecipe.instructions,
       }
     : undefined;
 

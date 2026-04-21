@@ -46,6 +46,22 @@ export const RecipeCard = ({ recipe, onDelete, onEdit }: Props) => {
           ))}
         </ul>
 
+        <div className="mt-4">
+          <h4 className="font-medium">Instructions</h4>
+
+          {recipe.instructions.length === 0 ? (
+            <p className="mt-2 text-sm text-slate-500">
+              Aucune instruction renseignée.
+            </p>
+          ) : (
+            <ol className="mt-2 list-inside list-decimal text-sm">
+              {recipe.instructions.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ol>
+          )}
+        </div>
+
         <div className="mt-4 flex gap-2">
           <button
             onClick={() => onEdit(recipe)}

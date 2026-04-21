@@ -8,6 +8,7 @@ export type RecipeFormValues = {
   prepTimeMinutes: number;
   category: RecipeCategory;
   ingredients: Ingredient[];
+  instructions: string[];
 };
 
 const initialFormValues: RecipeFormValues = {
@@ -17,6 +18,7 @@ const initialFormValues: RecipeFormValues = {
   prepTimeMinutes: 10,
   category: 'dinner',
   ingredients: [],
+  instructions: [],
 };
 
 type IngredientDraft = {
@@ -60,6 +62,7 @@ export const RecipeForm = ({
   const [ingredientValues, setIngredientValues] = useState<IngredientDraft>(
     initialIngredientDraft,
   );
+  const [instruction, setInstruction] = useState('');
 
   const handleInputChange = (
     event: React.ChangeEvent<
@@ -108,6 +111,24 @@ export const RecipeForm = ({
     setIngredientValues(initialIngredientDraft);
   };
 
+  const handleAddInstruction = () => {
+    if (!instruction.trim()) return;
+
+    setFormValues((prev) => ({
+      ...prev,
+      instructions: [...prev.instructions, instruction.trim()],
+    }));
+
+    setInstruction('');
+  };
+
+  const handleDeleteInstruction = (index: number) => {
+    setFormValues((prev) => ({
+      ...prev,
+      instructions: prev.instructions.filter((_, i) => i !== index),
+    }));
+  };
+
   const handleDeleteIngredient = (ingredientId: string) => {
     setFormValues((prev) => ({
       ...prev,
@@ -123,6 +144,7 @@ export const RecipeForm = ({
     onSubmit(formValues);
     setFormValues(initialFormValues);
     setIngredientValues(initialIngredientDraft);
+    setInstruction('');
   };
 
   return (
@@ -312,6 +334,49 @@ export const RecipeForm = ({
             )}
           </div>
         </div>
+
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">Instructions</h3>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
+              placeholder="Ex: Couper les oignons"
+              className="flex-1 rounded-md border px-3 py-2"
+            />
+
+            <button
+              type="button"
+              onClick={handleAddInstruction}
+              className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+
+        <ul className="mt-4 space-y-2">
+          {formValues.instructions.map((step, index) => (
+            <li
+              key={index}
+              className="flex items-center justify-between rounded-md border px-3 py-2"
+            >
+              <span>
+                <strong>Étape {index + 1} :</strong> {step}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => handleDeleteInstruction(index)}
+                className="text-red-600 hover:text-red-800"
+              >
+                Supprimer
+              </button>
+            </li>
+          ))}
+        </ul>
 
         <div className="flex gap-2">
           <button

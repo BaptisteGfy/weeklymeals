@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Ingredient, IngredientUnit, RecipeCategory } from '../types';
+import { IngredientSection } from './IngredientSection';
 
 export type RecipeFormValues = {
   title: string;
@@ -31,16 +32,6 @@ const initialIngredientDraft: IngredientDraft = {
   name: '',
   quantity: 1,
   unit: 'unit',
-};
-
-const unitLabels: Record<IngredientUnit, string> = {
-  g: 'g',
-  kg: 'kg',
-  ml: 'ml',
-  l: 'l',
-  cac: 'cuillère à café',
-  cas: 'cuillère à soupe',
-  unit: 'pièce',
 };
 
 type Props = {
@@ -235,105 +226,13 @@ export const RecipeForm = ({
           </div>
         </div>
 
-        <div className="rounded-lg border p-4">
-          <h3 className="mb-4 text-lg font-semibold">Ingrédients</h3>
-
-          <div className="grid gap-4 md:grid-cols-[2fr_1fr_1fr_auto]">
-            <div className="grid gap-2">
-              <label className="text-sm font-medium" htmlFor="ingredient-name">
-                Nom
-              </label>
-              <input
-                id="ingredient-name"
-                name="name"
-                type="text"
-                value={ingredientValues.name}
-                onChange={handleIngredientInputChange}
-                className="rounded-md border px-3 py-2 text-sm"
-                placeholder="Ex : Farine"
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <label
-                className="text-sm font-medium"
-                htmlFor="ingredient-quantity"
-              >
-                Quantité
-              </label>
-              <input
-                id="ingredient-quantity"
-                name="quantity"
-                type="number"
-                min="1"
-                value={ingredientValues.quantity}
-                onChange={handleIngredientInputChange}
-                className="rounded-md border px-3 py-2 text-sm"
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <label className="text-sm font-medium" htmlFor="ingredient-unit">
-                Unité
-              </label>
-              <select
-                id="ingredient-unit"
-                name="unit"
-                value={ingredientValues.unit}
-                onChange={handleIngredientInputChange}
-                className="rounded-md border px-3 py-2 text-sm"
-              >
-                <option value="g">g</option>
-                <option value="kg">kg</option>
-                <option value="ml">ml</option>
-                <option value="l">l</option>
-                <option value="cac">Cuillère à café</option>
-                <option value="cas">Cuillère à soupe</option>
-                <option value="unit">Pièce</option>
-              </select>
-            </div>
-
-            <div className="flex items-end">
-              <button
-                type="button"
-                onClick={handleAddIngredient}
-                className="inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-              >
-                Ajouter
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            {formValues.ingredients.length === 0 ? (
-              <p className="text-sm text-slate-500">
-                Aucun ingrédient ajouté pour le moment.
-              </p>
-            ) : (
-              <ul className="grid gap-2">
-                {formValues.ingredients.map((ingredient) => (
-                  <li
-                    key={ingredient.id}
-                    className="flex items-center justify-between rounded-md border px-3 py-2 text-sm"
-                  >
-                    <span>
-                      {ingredient.name} — {ingredient.quantity}{' '}
-                      {unitLabels[ingredient.unit]}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteIngredient(ingredient.id)}
-                      className="inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"
-                    >
-                      Supprimer
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+        <IngredientSection
+          ingredients={formValues.ingredients}
+          ingredientValues={ingredientValues}
+          onIngredientInputChange={handleIngredientInputChange}
+          onAddIngredient={handleAddIngredient}
+          onDeleteIngredient={handleDeleteIngredient}
+        />
 
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2">Instructions</h3>

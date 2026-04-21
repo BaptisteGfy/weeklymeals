@@ -20,9 +20,9 @@ export const weekDayLabels: Record<WeekDay, string> = {
   sunday: 'Dimanche',
 };
 
-export const mealTypeLabels: Record<MealType, string> = {
-  lunch: 'Déjeuner',
-  dinner: 'Dîner',
-};
-
 export const mealTypes: MealType[] = ['lunch', 'dinner'];
+
+export const mealTypeLabels: Record<MealType, string> = {
+  lunch: 'Midi',
+  dinner: 'Soir',
+};

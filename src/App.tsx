@@ -6,6 +6,7 @@ import {
 } from './features/recipes/components/RecipeForm';
 import { recipes } from './features/recipes/data';
 import type { Recipe } from './features/recipes/types';
+import { PlannerSection } from './features/planner/PlannerSection';
 
 function App() {
   const [recipeList, setRecipeList] = useState<Recipe[]>(recipes);
@@ -87,6 +88,8 @@ function App() {
           ))}
         </div>
       </section>
+
+      <PlannerSection recipes={recipeList} />
     </main>
   );
 }

@@ -20,11 +20,20 @@ export function PlannerSection({ recipes }: Props) {
     mealType: MealType;
   } | null>(null);
 
+  const getPlannedMeal = (day: WeekDay, mealType: MealType) => {
+    return plannedMeals.find(
+      (meal) => meal.day === day && meal.mealType === mealType,
+    );
+  };
+
+  const getRecipeById = (id: string) => {
+    return recipes.find((r) => r.id === id);
+  };
+
   const handleSelectRecipe = (recipeId: string) => {
     if (!selectedSlot) return;
 
     setPlannedMeals((prev) => {
-      // on enlève un éventuel repas déjà présent sur ce slot
       const filtered = prev.filter(
         (meal) =>
           !(
@@ -33,7 +42,6 @@ export function PlannerSection({ recipes }: Props) {
           ),
       );
 
-      // on ajoute le nouveau
       return [
         ...filtered,
         {
@@ -44,8 +52,7 @@ export function PlannerSection({ recipes }: Props) {
         },
       ];
     });
-
-    // fermer la modal
+ 
     setIsModalOpen(false);
     setSelectedSlot(null);
   };
@@ -61,9 +68,11 @@ export function PlannerSection({ recipes }: Props) {
 
             <div className="grid gap-3 md:grid-cols-2">
               {mealTypes.map((mealType) => {
-                const plannedMeal = plannedMeals.find(
-                  (meal) => meal.day === day && meal.mealType === mealType,
-                );
+                const plannedMeal = getPlannedMeal(day, mealType);
+
+                const recipe = plannedMeal
+                  ? getRecipeById(plannedMeal.recipeId)
+                  : undefined;
 
                 return (
                   <div
@@ -75,17 +84,9 @@ export function PlannerSection({ recipes }: Props) {
                     </p>
 
                     {plannedMeal ? (
-                      (() => {
-                        const recipe = recipes.find(
-                          (r) => r.id === plannedMeal.recipeId,
-                        );
-
-                        return (
-                          <p className="mt-2 text-sm text-slate-900 font-medium">
-                            {recipe?.title ?? 'Recette inconnue'}
-                          </p>
-                        );
-                      })()
+                      <p className="mt-2 text-sm font-medium text-slate-900">
+                        {recipe?.title ?? 'Recette inconnue'}
+                      </p>
                     ) : (
                       <p className="mt-2 text-sm text-slate-500">
                         Aucun repas planifié
@@ -133,27 +134,25 @@ export function PlannerSection({ recipes }: Props) {
               </button>
             </div>
 
-            <div className="mt-4">
-              <div className="mt-4 max-h-60 overflow-y-auto">
-                {recipes.length === 0 ? (
-                  <p className="text-sm text-slate-500">
-                    Aucune recette disponible
-                  </p>
-                ) : (
-                  <ul className="space-y-2">
-                    {recipes.map((recipe) => (
-                      <li key={recipe.id}>
-                        <button
-                          onClick={() => handleSelectRecipe(recipe.id)}
-                          className="w-full rounded-md border px-3 py-2 text-left text-sm hover:bg-slate-100"
-                        >
-                          {recipe.title}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+            <div className="mt-4 max-h-60 overflow-y-auto">
+              {recipes.length === 0 ? (
+                <p className="text-sm text-slate-500">
+                  Aucune recette disponible
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {recipes.map((recipe) => (
+                    <li key={recipe.id}>
+                      <button
+                        onClick={() => handleSelectRecipe(recipe.id)}
+                        className="w-full rounded-md border px-3 py-2 text-left text-sm hover:bg-slate-100"
+                      >
+                        {recipe.title}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>

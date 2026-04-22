@@ -4,7 +4,7 @@ import {
   weekDayLabels,
   weekDays,
 } from './constants';
-import type { PlannedMeal } from './types';
+import type { MealType, PlannedMeal, WeekDay } from './types';
 import { useState } from 'react';
 import type { Recipe } from '../recipes/types';
 
@@ -14,6 +14,41 @@ type Props = {
 
 export function PlannerSection({ recipes }: Props) {
   const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState<{
+    day: WeekDay;
+    mealType: MealType;
+  } | null>(null);
+
+  const handleSelectRecipe = (recipeId: string) => {
+    if (!selectedSlot) return;
+
+    setPlannedMeals((prev) => {
+      // on enlève un éventuel repas déjà présent sur ce slot
+      const filtered = prev.filter(
+        (meal) =>
+          !(
+            meal.day === selectedSlot.day &&
+            meal.mealType === selectedSlot.mealType
+          ),
+      );
+
+      // on ajoute le nouveau
+      return [
+        ...filtered,
+        {
+          id: crypto.randomUUID(),
+          day: selectedSlot.day,
+          mealType: selectedSlot.mealType,
+          recipeId,
+        },
+      ];
+    });
+
+    // fermer la modal
+    setIsModalOpen(false);
+    setSelectedSlot(null);
+  };
 
   return (
     <section className="mt-10">
@@ -40,14 +75,32 @@ export function PlannerSection({ recipes }: Props) {
                     </p>
 
                     {plannedMeal ? (
-                      <p className="mt-2 text-sm text-green-600">
-                        Recette planifiée
-                      </p>
+                      (() => {
+                        const recipe = recipes.find(
+                          (r) => r.id === plannedMeal.recipeId,
+                        );
+
+                        return (
+                          <p className="mt-2 text-sm text-slate-900 font-medium">
+                            {recipe?.title ?? 'Recette inconnue'}
+                          </p>
+                        );
+                      })()
                     ) : (
                       <p className="mt-2 text-sm text-slate-500">
                         Aucun repas planifié
                       </p>
                     )}
+
+                    <button
+                      onClick={() => {
+                        setSelectedSlot({ day, mealType });
+                        setIsModalOpen(true);
+                      }}
+                      className="mt-3 text-sm text-blue-600 hover:underline"
+                    >
+                      Choisir une recette
+                    </button>
                   </div>
                 );
               })}
@@ -55,6 +108,56 @@ export function PlannerSection({ recipes }: Props) {
           </article>
         ))}
       </div>
+
+      {isModalOpen && selectedSlot && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-semibold">Choisir une recette</h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  {weekDayLabels[selectedSlot.day]} —{' '}
+                  {mealTypeLabels[selectedSlot.mealType]}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setSelectedSlot(null);
+                }}
+                className="text-sm text-slate-500 transition hover:text-slate-700"
+              >
+                Fermer
+              </button>
+            </div>
+
+            <div className="mt-4">
+              <div className="mt-4 max-h-60 overflow-y-auto">
+                {recipes.length === 0 ? (
+                  <p className="text-sm text-slate-500">
+                    Aucune recette disponible
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {recipes.map((recipe) => (
+                      <li key={recipe.id}>
+                        <button
+                          onClick={() => handleSelectRecipe(recipe.id)}
+                          className="w-full rounded-md border px-3 py-2 text-left text-sm hover:bg-slate-100"
+                        >
+                          {recipe.title}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

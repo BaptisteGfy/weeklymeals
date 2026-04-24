@@ -62,6 +62,12 @@ export function PlannerSection({
     setSelectedSlot(null);
   };
 
+  const handleRemoveMeal = (day: WeekDay, mealType: MealType) => {
+    setPlannedMeals((prev) =>
+      prev.filter((meal) => meal.day !== day || meal.mealType !== mealType),
+    );
+  };
+
   return (
     <section className="mt-10">
       <h2 className="mb-4 text-2xl font-semibold">Planning de la semaine</h2>
@@ -98,15 +104,28 @@ export function PlannerSection({
                       </p>
                     )}
 
-                    <button
-                      onClick={() => {
-                        setSelectedSlot({ day, mealType });
-                        setIsModalOpen(true);
-                      }}
-                      className="mt-3 text-sm text-blue-600 hover:underline"
-                    >
-                      Choisir une recette
-                    </button>
+                    <div className="mt-2 flex justify-start gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedSlot({ day, mealType });
+                          setIsModalOpen(true);
+                        }}
+                        className="inline-flex items-center gap-2 rounded-md border border-blue-300 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:border-blue-400 hover:bg-blue-50"
+                      >
+                        Choisir une recette
+                      </button>
+
+                      {plannedMeal ? (
+                        <button
+                          className="inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"
+                          onClick={() => {
+                            handleRemoveMeal(day, mealType);
+                          }}
+                        >
+                          Supprimer
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                 );
               })}

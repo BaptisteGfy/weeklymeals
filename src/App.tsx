@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RecipeCard } from './features/recipes/components/RecipeCard';
 import {
   RecipeForm,
@@ -11,9 +11,25 @@ import type { PlannedMeal } from './features/planner/types';
 import { ShoppingListSection } from './features/shopping-list/ShoppingListSection';
 
 function App() {
-  const [recipeList, setRecipeList] = useState<Recipe[]>(recipes);
+  const [recipeList, setRecipeList] = useState<Recipe[]>(() => {
+    const storedRecipes = localStorage.getItem('recipes');
+    return storedRecipes ? JSON.parse(storedRecipes) : recipes;
+  });
+
+  const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>(() => {
+    const storedPlanned = localStorage.getItem('planned-meals');
+    return storedPlanned ? JSON.parse(storedPlanned) : [];
+  });
+
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
-  const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>([]);
+
+  useEffect(() => {
+    localStorage.setItem('recipes', JSON.stringify(recipeList));
+  }, [recipeList, plannedMeals]);
+
+  useEffect(() => {
+    localStorage.setItem('planned-meals', JSON.stringify(plannedMeals));
+  }, [plannedMeals]);
 
   const handleDeleteRecipe = (recipeId: string) => {
     setRecipeList((prev) => prev.filter((recipe) => recipe.id !== recipeId));

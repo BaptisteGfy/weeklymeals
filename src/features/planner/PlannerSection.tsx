@@ -10,10 +10,15 @@ import type { Recipe } from '../recipes/types';
 
 type Props = {
   recipes: Recipe[];
+  plannedMeals: PlannedMeal[];
+  setPlannedMeals: React.Dispatch<React.SetStateAction<PlannedMeal[]>>;
 };
 
-export function PlannerSection({ recipes }: Props) {
-  const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>([]);
+export function PlannerSection({
+  recipes,
+  plannedMeals,
+  setPlannedMeals,
+}: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{
     day: WeekDay;
@@ -52,7 +57,7 @@ export function PlannerSection({ recipes }: Props) {
         },
       ];
     });
- 
+
     setIsModalOpen(false);
     setSelectedSlot(null);
   };

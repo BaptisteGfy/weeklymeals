@@ -7,10 +7,13 @@ import {
 import { recipes } from './features/recipes/data';
 import type { Recipe } from './features/recipes/types';
 import { PlannerSection } from './features/planner/PlannerSection';
+import type { PlannedMeal } from './features/planner/types';
+import { ShoppingListSection } from './features/shopping-list/ShoppingListSection';
 
 function App() {
   const [recipeList, setRecipeList] = useState<Recipe[]>(recipes);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
+  const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>([]);
 
   const handleDeleteRecipe = (recipeId: string) => {
     setRecipeList((prev) => prev.filter((recipe) => recipe.id !== recipeId));
@@ -89,7 +92,13 @@ function App() {
         </div>
       </section>
 
-      <PlannerSection recipes={recipeList} />
+      <PlannerSection
+        recipes={recipeList}
+        plannedMeals={plannedMeals}
+        setPlannedMeals={setPlannedMeals}
+      />
+
+      <ShoppingListSection recipes={recipeList} plannedMeals={plannedMeals} />
     </main>
   );
 }

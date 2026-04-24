@@ -1,5 +1,6 @@
 import type { PlannedMeal } from '../planner/types';
 import type { Recipe } from '../recipes/types';
+import { convertUnit } from './convertUnit';
 import type { ShoppingListItem } from './types';
 
 export const buildShoppingList = (
@@ -34,5 +35,5 @@ export const buildShoppingList = (
         },
         {} as Record<string, ShoppingListItem>,
       ),
-  );
+  ).map(convertUnit);
 };

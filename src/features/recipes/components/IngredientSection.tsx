@@ -1,4 +1,4 @@
-import type { Ingredient, IngredientUnit } from '../types';
+import { unitLabels, type Ingredient, type IngredientUnit } from '../types';
 
 type IngredientDraft = {
   name: string;
@@ -14,16 +14,6 @@ type Props = {
   ) => void;
   onAddIngredient: () => void;
   onDeleteIngredient: (ingredientId: string) => void;
-};
-
-const unitLabels: Record<IngredientUnit, string> = {
-  g: 'g',
-  kg: 'kg',
-  ml: 'ml',
-  l: 'l',
-  cac: 'cuillère à café',
-  cas: 'cuillère à soupe',
-  unit: 'pièce',
 };
 
 export function IngredientSection({

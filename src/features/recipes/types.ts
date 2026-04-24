@@ -7,6 +7,16 @@ export type IngredientUnit =
   | 'cas' // cuillère à soupe
   | 'unit';
 
+export const unitLabels: Record<IngredientUnit, string> = {
+  g: 'g',
+  kg: 'kg',
+  ml: 'ml',
+  l: 'l',
+  cac: 'cuillère à café',
+  cas: 'cuillère à soupe',
+  unit: 'pièce',
+};
+
 export type Ingredient = {
   id: string;
   name: string;

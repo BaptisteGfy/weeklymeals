@@ -1,6 +1,6 @@
 import type { PlannedMeal } from '../planner/types';
-import type { Recipe } from '../recipes/types';
-import { buildShoppingList } from './utils';
+import { unitLabels, type Recipe } from '../recipes/types';
+import { buildShoppingList } from './buildShoppingList';
 
 type Props = {
   plannedMeals: PlannedMeal[];
@@ -18,7 +18,9 @@ export const ShoppingListSection = ({ recipes, plannedMeals }: Props) => {
         <ul className="mt-2 list-inside list-disc text-sm">
           {shoppinglist.map((item) => (
             <li key={item.id}>
-              {item.quantity} {item.unit} de {item.name}
+              {item.unit !== 'unit'
+                ? `${item.quantity} ${unitLabels[item.unit]} de ${item.name}`
+                : `${item.quantity} ${item.name}`}
             </li>
           ))}
         </ul>

@@ -1,4 +1,4 @@
-import { unitLabels, type Ingredient, type IngredientUnit } from '../types';
+import { type Ingredient, type IngredientUnit, unitLabels } from '../types';
 
 type IngredientDraft = {
   name: string;

@@ -1,5 +1,5 @@
 import type { PlannedMeal } from '../planner/types';
-import { unitLabels, type Recipe } from '../recipes/types';
+import { type Recipe, unitLabels } from '../recipes/types';
 import { buildShoppingList } from './buildShoppingList';
 
 type Props = {

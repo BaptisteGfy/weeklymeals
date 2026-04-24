@@ -1,3 +1,6 @@
+import { useState } from 'react';
+
+import type { Recipe } from '../recipes/types';
 import {
   mealTypeLabels,
   mealTypes,
@@ -5,8 +8,6 @@ import {
   weekDays,
 } from './constants';
 import type { MealType, PlannedMeal, WeekDay } from './types';
-import { useState } from 'react';
-import type { Recipe } from '../recipes/types';
 
 type Props = {
   recipes: Recipe[];

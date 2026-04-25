@@ -1,26 +1,9 @@
-import type { IngredientUnit, Recipe, RecipeCategory } from '../types';
+import { categoryLabels, type Recipe, unitLabels } from '../types';
 
 type Props = {
   recipe: Recipe;
   onDelete: (id: string) => void;
   onEdit: (recipe: Recipe) => void;
-};
-
-const categoryLabels: Record<RecipeCategory, string> = {
-  breakfast: 'Petit-déjeuner',
-  lunch: 'Déjeuner',
-  dinner: 'Dîner',
-  dessert: 'Dessert',
-};
-
-const unitLabels: Record<IngredientUnit, string> = {
-  g: 'g',
-  kg: 'kg',
-  ml: 'ml',
-  l: 'l',
-  cac: 'cuillère à café',
-  cas: 'cuillère à soupe',
-  unit: 'pièce',
 };
 
 export const RecipeCard = ({ recipe, onDelete, onEdit }: Props) => {
@@ -55,8 +38,8 @@ export const RecipeCard = ({ recipe, onDelete, onEdit }: Props) => {
             </p>
           ) : (
             <ol className="mt-2 list-inside list-decimal text-sm">
-              {recipe.instructions.map((step, index) => (
-                <li key={index}>{step}</li>
+              {recipe.instructions.map((step) => (
+                <li key={step.id}>{step.text}</li>
               ))}
             </ol>
           )}

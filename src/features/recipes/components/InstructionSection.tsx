@@ -1,18 +1,20 @@
+import type { Instruction } from '../types';
+
 type Props = {
   instruction: string;
-  instructions: string[];
+  instructions: Instruction[];
   onInstructionChange: (value: string) => void;
   onAddInstruction: () => void;
-  onDeleteInstruction: (index: number) => void;
+  onDeleteInstruction: (id: string) => void;
 };
 
-export function InstructionSection({
+export const InstructionSection = ({
   instruction,
   instructions,
   onInstructionChange,
   onAddInstruction,
   onDeleteInstruction,
-}: Props) {
+}: Props) => {
   return (
     <div className="rounded-lg border p-4">
       <h3 className="mb-4 text-lg font-semibold">Instructions</h3>
@@ -38,16 +40,16 @@ export function InstructionSection({
       <ul className="mt-4 space-y-2">
         {instructions.map((step, index) => (
           <li
-            key={index}
+            key={step.id}
             className="flex items-center justify-between rounded-md border px-3 py-2"
           >
             <span>
-              <strong>Étape {index + 1} :</strong> {step}
+              <strong>Étape {index + 1} :</strong> {step.text}
             </span>
 
             <button
               type="button"
-              onClick={() => onDeleteInstruction(index)}
+              onClick={() => onDeleteInstruction(step.id)}
               className="text-red-600 transition hover:text-red-800"
             >
               Supprimer
@@ -57,4 +59,4 @@ export function InstructionSection({
       </ul>
     </div>
   );
-}
+};

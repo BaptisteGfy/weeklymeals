@@ -24,14 +24,32 @@ export type Ingredient = {
   unit: IngredientUnit;
 };
 
+export type IngredientDraft = {
+  name: string;
+  quantity: number;
+  unit: IngredientUnit;
+};
+
 export type RecipeCategory = 'breakfast' | 'lunch' | 'dinner' | 'dessert';
+
+export const categoryLabels: Record<RecipeCategory, string> = {
+  breakfast: 'Petit-déjeuner',
+  lunch: 'Déjeuner',
+  dinner: 'Dîner',
+  dessert: 'Dessert',
+};
+
+export type Instruction = {
+  id: string;
+  text: string;
+};
 
 export type Recipe = {
   id: string;
   title: string;
   description: string;
   ingredients: Ingredient[];
-  instructions: string[];
+  instructions: Instruction[];
   servings: number;
   prepTimeMinutes: number;
   category: RecipeCategory;

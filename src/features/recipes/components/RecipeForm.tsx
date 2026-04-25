@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import type { Ingredient, IngredientUnit, RecipeCategory } from '../types';
+
+import type {
+  Ingredient,
+  IngredientDraft,
+  Instruction,
+  RecipeCategory,
+} from '../types';
 import { IngredientSection } from './IngredientSection';
 import { InstructionSection } from './InstructionSection';
 
@@ -10,7 +16,7 @@ export type RecipeFormValues = {
   prepTimeMinutes: number;
   category: RecipeCategory;
   ingredients: Ingredient[];
-  instructions: string[];
+  instructions: Instruction[];
 };
 
 const initialFormValues: RecipeFormValues = {
@@ -21,12 +27,6 @@ const initialFormValues: RecipeFormValues = {
   category: 'dinner',
   ingredients: [],
   instructions: [],
-};
-
-type IngredientDraft = {
-  name: string;
-  quantity: number;
-  unit: IngredientUnit;
 };
 
 const initialIngredientDraft: IngredientDraft = {
@@ -106,18 +106,23 @@ export const RecipeForm = ({
   const handleAddInstruction = () => {
     if (!instruction.trim()) return;
 
+    const newInstruction: Instruction = {
+      id: crypto.randomUUID(),
+      text: instruction.trim(),
+    };
+
     setFormValues((prev) => ({
       ...prev,
-      instructions: [...prev.instructions, instruction.trim()],
+      instructions: [...prev.instructions, newInstruction],
     }));
 
     setInstruction('');
   };
 
-  const handleDeleteInstruction = (index: number) => {
+  const handleDeleteInstruction = (id: string) => {
     setFormValues((prev) => ({
       ...prev,
-      instructions: prev.instructions.filter((_, i) => i !== index),
+      instructions: prev.instructions.filter((ins) => ins.id !== id),
     }));
   };
 

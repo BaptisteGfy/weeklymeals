@@ -19,9 +19,13 @@ claude.md
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
+**/.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Next.js
+.next/
+next-env.d.ts

@@ -1,10 +1,4 @@
-import { type Ingredient, type IngredientUnit, unitLabels } from '../types';
-
-type IngredientDraft = {
-  name: string;
-  quantity: number;
-  unit: IngredientUnit;
-};
+import { type Ingredient, type IngredientDraft, unitLabels } from '../types';
 
 type Props = {
   ingredients: Ingredient[];
@@ -16,13 +10,13 @@ type Props = {
   onDeleteIngredient: (ingredientId: string) => void;
 };
 
-export function IngredientSection({
+export const IngredientSection = ({
   ingredients,
   ingredientValues,
   onIngredientInputChange,
   onAddIngredient,
   onDeleteIngredient,
-}: Props) {
+}: Props) => {
   return (
     <div className="rounded-lg border p-4">
       <h3 className="mb-4 text-lg font-semibold">Ingrédients</h3>
@@ -121,4 +115,4 @@ export function IngredientSection({
       </div>
     </div>
   );
-}
+};

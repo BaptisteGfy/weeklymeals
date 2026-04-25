@@ -11,7 +11,7 @@ import { recipes } from './features/recipes/data';
 import type { Recipe } from './features/recipes/types';
 import { ShoppingListSection } from './features/shopping-list/ShoppingListSection';
 
-function App() {
+const App = () => {
   const [recipeList, setRecipeList] = useState<Recipe[]>(() => {
     const storedRecipes = localStorage.getItem('recipes');
     return storedRecipes ? JSON.parse(storedRecipes) : recipes;
@@ -26,7 +26,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('recipes', JSON.stringify(recipeList));
-  }, [recipeList, plannedMeals]);
+  }, [recipeList]);
 
   useEffect(() => {
     localStorage.setItem('planned-meals', JSON.stringify(plannedMeals));
@@ -118,6 +118,6 @@ function App() {
       <ShoppingListSection recipes={recipeList} plannedMeals={plannedMeals} />
     </main>
   );
-}
+};
 
 export default App;

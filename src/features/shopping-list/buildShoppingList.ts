@@ -15,7 +15,6 @@ export const buildShoppingList = (
         if (!recipe) return [];
 
         return recipe.ingredients.map((ingredient) => ({
-          id: crypto.randomUUID(),
           name: ingredient.name,
           quantity: ingredient.quantity,
           unit: ingredient.unit,

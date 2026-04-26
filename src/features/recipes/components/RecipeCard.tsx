@@ -5,10 +5,9 @@ import { categoryLabels, type Recipe } from '../types';
 type Props = {
   recipe: Recipe;
   onDelete: (id: string) => void;
-  onEdit: (recipe: Recipe) => void;
 };
 
-export const RecipeCard = ({ recipe, onDelete, onEdit }: Props) => {
+export const RecipeCard = ({ recipe, onDelete }: Props) => {
   return (
     <article className="flex flex-col overflow-hidden rounded-xl border shadow-sm">
       <div className="h-48 w-full bg-gray-100">
@@ -47,12 +46,12 @@ export const RecipeCard = ({ recipe, onDelete, onEdit }: Props) => {
           >
             Voir
           </Link>
-          <button
-            onClick={() => onEdit(recipe)}
+          <Link
+            href={`/dashboard/recipes/${recipe.id}?edit=true`}
             className="inline-flex items-center rounded-md border border-blue-300 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:border-blue-400 hover:bg-blue-50"
           >
             Éditer
-          </button>
+          </Link>
           <button
             onClick={() => onDelete(recipe.id)}
             className="inline-flex items-center rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"

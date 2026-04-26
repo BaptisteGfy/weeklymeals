@@ -55,3 +55,13 @@ export type Recipe = {
   prepTimeMinutes: number;
   category: RecipeCategory;
 };
+
+export type RecipeFormValues = {
+  title: string;
+  description: string;
+  servings: number;
+  prepTimeMinutes: number;
+  category: RecipeCategory;
+  ingredients: Ingredient[];
+  instructions: Instruction[];
+};

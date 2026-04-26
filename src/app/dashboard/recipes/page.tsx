@@ -26,7 +26,7 @@ const RecipesPage = () => {
       />
 
       <h1 className="mb-6 text-center text-3xl font-bold">Mes recettes</h1>
-      <div className="grid gap-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {recipeList.map((recipe) => (
           <RecipeCard
             key={recipe.id}

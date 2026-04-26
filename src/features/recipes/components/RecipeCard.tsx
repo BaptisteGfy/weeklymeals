@@ -1,4 +1,6 @@
-import { categoryLabels, type Recipe, unitLabels } from '../types';
+import Link from 'next/link';
+
+import { categoryLabels, type Recipe } from '../types';
 
 type Props = {
   recipe: Recipe;
@@ -8,56 +10,54 @@ type Props = {
 
 export const RecipeCard = ({ recipe, onDelete, onEdit }: Props) => {
   return (
-    <article className="rounded-xl border p-4 shadow-sm">
-      <h3 className="text-xl font-semibold">{recipe.title}</h3>
-      <p className="mt-2 text-sm text-gray-600">{recipe.description}</p>
-
-      <div className="mt-3 flex flex-wrap gap-4 text-sm">
-        <span>Catégorie : {categoryLabels[recipe.category]}</span>
-        <span>Portions : {recipe.servings}</span>
-        <span>Préparation : {recipe.prepTimeMinutes} min</span>
+    <article className="flex flex-col overflow-hidden rounded-xl border shadow-sm">
+      <div className="h-48 w-full bg-gray-100">
+        {recipe.imageUrl ? (
+          <img
+            src={recipe.imageUrl}
+            alt={recipe.title}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-5xl text-gray-300">
+            🍽️
+          </div>
+        )}
       </div>
 
-      <div className="mt-4">
-        <h4 className="font-medium">Ingrédients</h4>
-        <ul className="mt-2 list-inside list-disc text-sm">
-          {recipe.ingredients.map((ingredient) => (
-            <li key={ingredient.id}>
-              {ingredient.name} — {ingredient.quantity}{' '}
-              {unitLabels[ingredient.unit]}
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-4">
-          <h4 className="font-medium">Instructions</h4>
-
-          {recipe.instructions.length === 0 ? (
-            <p className="mt-2 text-sm text-slate-500">
-              Aucune instruction renseignée.
-            </p>
-          ) : (
-            <ol className="mt-2 list-inside list-decimal text-sm">
-              {recipe.instructions.map((step) => (
-                <li key={step.id}>{step.text}</li>
-              ))}
-            </ol>
-          )}
+      <div className="flex flex-1 flex-col justify-between p-4">
+        <div>
+          <h3 className="text-lg font-semibold">{recipe.title}</h3>
+          <p className="mt-1 line-clamp-2 text-sm text-gray-500">
+            {recipe.description}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-400">
+            <span>{categoryLabels[recipe.category]}</span>
+            <span>·</span>
+            <span>{recipe.servings} portions</span>
+            <span>·</span>
+            <span>{recipe.prepTimeMinutes} min</span>
+          </div>
         </div>
 
         <div className="mt-4 flex gap-2">
+          <Link
+            href={`/dashboard/recipes/${recipe.id}`}
+            className="inline-flex items-center rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
+          >
+            Voir
+          </Link>
           <button
             onClick={() => onEdit(recipe)}
-            className="inline-flex items-center gap-2 rounded-md border border-blue-300 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:border-blue-400 hover:bg-blue-50"
+            className="inline-flex items-center rounded-md border border-blue-300 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:border-blue-400 hover:bg-blue-50"
           >
-            ✏️ Éditer
+            Éditer
           </button>
-
           <button
             onClick={() => onDelete(recipe.id)}
-            className="inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"
+            className="inline-flex items-center rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"
           >
-            🗑️ Supprimer
+            Supprimer
           </button>
         </div>
       </div>

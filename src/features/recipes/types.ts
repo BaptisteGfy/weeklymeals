@@ -46,6 +46,7 @@ export type Instruction = {
 
 export type Recipe = {
   id: string;
+  imageUrl?: string;
   title: string;
   description: string;
   ingredients: Ingredient[];

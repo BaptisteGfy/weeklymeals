@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/Sidebar';
+import { Sidebar } from '@/app/dashboard/components/Sidebar';
 import { DashboardProvider } from '@/context/DashboardContext';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {

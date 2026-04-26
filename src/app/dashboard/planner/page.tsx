@@ -1,20 +1,26 @@
 'use client';
 
 import { useDashboard } from '@/context/DashboardContext';
-import { PlannerSection } from '@/features/planner/PlannerSection';
-import { ShoppingListSection } from '@/features/shopping-list/ShoppingListSection';
+import { PlannerView } from '@/features/planner/PlannerView';
+import { ShoppingListView } from '@/features/shopping-list/ShoppingListView';
 
 const PlannerPage = () => {
-  const { recipeList, plannedMeals, setPlannedMeals } = useDashboard();
+  const {
+    recipeList,
+    plannedMeals,
+    handleAddToPlanning,
+    handleRemoveFromPlanning,
+  } = useDashboard();
+
   return (
     <>
-      <PlannerSection
+      <PlannerView
         recipes={recipeList}
         plannedMeals={plannedMeals}
-        setPlannedMeals={setPlannedMeals}
+        onAddToPlanning={handleAddToPlanning}
+        onRemoveFromPlanning={handleRemoveFromPlanning}
       />
-
-      <ShoppingListSection recipes={recipeList} plannedMeals={plannedMeals} />
+      <ShoppingListView recipes={recipeList} plannedMeals={plannedMeals} />
     </>
   );
 };

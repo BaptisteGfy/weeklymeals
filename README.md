@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+# WeeklyMeals
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal meal planning app — manage your recipes, plan your week, and get your shopping list automatically generated.
 
-Currently, two official plugins are available:
+Built as a learning project to get back into development after a break with a modern stack.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech stack
 
-## React Compiler
+<div align="center">
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+![Next.js](https://img.shields.io/badge/Next.js_15-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
-## Expanding the ESLint configuration
+![Prisma](https://img.shields.io/badge/Prisma-soon-lightgrey?style=for-the-badge&logo=prisma)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-soon-lightgrey?style=for-the-badge&logo=postgresql)
+![Auth](https://img.shields.io/badge/Auth.js-soon-lightgrey?style=for-the-badge&logo=auth0)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+</div>
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Features
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Recipe management (create, edit, delete)
+- Weekly planner — 7 days × 2 slots (lunch & dinner)
+- Auto-generated shopping list with ingredient deduplication and unit conversion
+- Data persistence via localStorage
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Roadmap
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- [ ] UI/design overhaul
+- [ ] Recipe detail page with inline editing
+- [ ] Form validation
+- [ ] Mobile sidebar
+- [ ] Database (PostgreSQL + Prisma)
+- [ ] Authentication (OAuth — Google, Apple, magic link)
+- [ ] Multi-user support
+- [ ] Deployment on Vercel

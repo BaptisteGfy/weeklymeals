@@ -1,3 +1,5 @@
+'use client';
+
 import type { Recipe } from '../recipes/types';
 import { mealTypeLabels, weekDayLabels } from './constants';
 import type { MealType, WeekDay } from './types';

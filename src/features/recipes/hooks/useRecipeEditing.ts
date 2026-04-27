@@ -131,6 +131,7 @@ export const useRecipeEditing = (
           ? Number(value)
           : value,
     }));
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   const handleIngredientChange = (
@@ -144,6 +145,7 @@ export const useRecipeEditing = (
         i.id === id ? { ...i, [field]: value } : i,
       ),
     }));
+    setErrors((prev) => ({ ...prev, ingredients: undefined }));
   };
 
   const handleAddIngredient = () => {
@@ -160,6 +162,7 @@ export const useRecipeEditing = (
       ],
     }));
     setIngredientDraft(initialIngredientDraft);
+    setErrors((prev) => ({ ...prev, ingredients: undefined }));
   };
 
   const handleDeleteIngredient = (id: string) => {
@@ -176,6 +179,7 @@ export const useRecipeEditing = (
         i.id === id ? { ...i, text } : i,
       ),
     }));
+    setErrors((prev) => ({ ...prev, instructions: undefined }));
   };
 
   const handleAddInstruction = () => {
@@ -188,6 +192,7 @@ export const useRecipeEditing = (
       ],
     }));
     setInstructionDraft('');
+    setErrors((prev) => ({ ...prev, instructions: undefined }));
   };
 
   const handleDeleteInstruction = (id: string) => {

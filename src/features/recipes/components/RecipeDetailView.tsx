@@ -45,7 +45,16 @@ export const RecipeDetailView = ({
   } = useRecipeEditing(recipe, { onSave, onCancel, initialIsEditing });
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6">
+    // noValidate : désactive la validation native du navigateur, on gère nous-mêmes
+    // onSubmit remplace le onClick du bouton Sauvegarder et active la touche Enter
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSave();
+      }}
+      noValidate
+      className="mx-auto max-w-2xl px-4 py-6"
+    >
       <div className="mb-6 flex items-center justify-between">
         <Link
           href="/dashboard/recipes"
@@ -57,13 +66,15 @@ export const RecipeDetailView = ({
         {isEditing ? (
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={handleCancel}
               className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
             >
               Annuler
             </button>
+            {/* type="submit" — déclenché par le form onSubmit ou la touche Enter */}
             <button
-              onClick={handleSave}
+              type="submit"
               className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700"
             >
               Sauvegarder
@@ -71,6 +82,7 @@ export const RecipeDetailView = ({
           </div>
         ) : (
           <button
+            type="button"
             onClick={startEditing}
             className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
           >
@@ -273,6 +285,7 @@ export const RecipeDetailView = ({
                     )}
                   </select>
                   <button
+                    type="button"
                     onClick={() => handleDeleteIngredient(ingredient.id)}
                     className="text-gray-400 transition hover:text-red-500"
                   >
@@ -331,6 +344,7 @@ export const RecipeDetailView = ({
                 ))}
               </select>
               <button
+                type="button"
                 onClick={handleAddIngredient}
                 className="rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition hover:bg-gray-50"
               >
@@ -374,6 +388,7 @@ export const RecipeDetailView = ({
                       className="min-w-0 flex-1 rounded border px-2 py-1 text-sm leading-relaxed"
                     />
                     <button
+                      type="button"
                       onClick={() => handleDeleteInstruction(instruction.id)}
                       className="mt-1 text-gray-400 transition hover:text-red-500"
                     >
@@ -401,6 +416,7 @@ export const RecipeDetailView = ({
                   className="min-w-0 flex-1 rounded border px-2 py-1 text-sm placeholder-gray-300"
                 />
                 <button
+                  type="button"
                   onClick={handleAddInstruction}
                   className="mt-1 rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition hover:bg-gray-50"
                 >
@@ -417,6 +433,6 @@ export const RecipeDetailView = ({
           </p>
         )}
       </section>
-    </div>
+    </form>
   );
 };

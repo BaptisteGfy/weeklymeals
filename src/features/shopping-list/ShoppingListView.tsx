@@ -7,8 +7,9 @@ type Props = {
   recipes: Recipe[];
 };
 
-export const ShoppingListSection = ({ recipes, plannedMeals }: Props) => {
+export const ShoppingListView = ({ recipes, plannedMeals }: Props) => {
   const shoppingList = buildShoppingList(plannedMeals, recipes);
+
   return (
     <section className="mt-10">
       <h2 className="mb-4 text-2xl font-semibold">Liste de courses</h2>

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 import type { Recipe } from '../recipes/types';
@@ -13,13 +15,15 @@ import type { MealType, PlannedMeal, WeekDay } from './types';
 type Props = {
   recipes: Recipe[];
   plannedMeals: PlannedMeal[];
-  setPlannedMeals: React.Dispatch<React.SetStateAction<PlannedMeal[]>>;
+  onAddToPlanning: (day: WeekDay, mealType: MealType, recipeId: string) => void;
+  onRemoveFromPlanning: (day: WeekDay, mealType: MealType) => void;
 };
 
-export const PlannerSection = ({
+export const PlannerView = ({
   recipes,
   plannedMeals,
-  setPlannedMeals,
+  onAddToPlanning,
+  onRemoveFromPlanning,
 }: Props) => {
   const [selectedSlot, setSelectedSlot] = useState<{
     day: WeekDay;
@@ -29,46 +33,16 @@ export const PlannerSection = ({
   const getPlannedMeal = (
     day: WeekDay,
     mealType: MealType,
-  ): PlannedMeal | undefined => {
-    return plannedMeals.find(
-      (meal) => meal.day === day && meal.mealType === mealType,
-    );
-  };
+  ): PlannedMeal | undefined =>
+    plannedMeals.find((meal) => meal.day === day && meal.mealType === mealType);
 
-  const getRecipeById = (id: string): Recipe | undefined => {
-    return recipes.find((r) => r.id === id);
-  };
+  const getRecipeById = (id: string): Recipe | undefined =>
+    recipes.find((r) => r.id === id);
 
   const handleSelectRecipe = (recipeId: string) => {
     if (!selectedSlot) return;
-
-    setPlannedMeals((prev) => {
-      const filtered = prev.filter(
-        (meal) =>
-          !(
-            meal.day === selectedSlot.day &&
-            meal.mealType === selectedSlot.mealType
-          ),
-      );
-
-      return [
-        ...filtered,
-        {
-          id: crypto.randomUUID(),
-          day: selectedSlot.day,
-          mealType: selectedSlot.mealType,
-          recipeId,
-        },
-      ];
-    });
-
+    onAddToPlanning(selectedSlot.day, selectedSlot.mealType, recipeId);
     setSelectedSlot(null);
-  };
-
-  const handleRemoveMeal = (day: WeekDay, mealType: MealType) => {
-    setPlannedMeals((prev) =>
-      prev.filter((meal) => !(meal.day === day && meal.mealType === mealType)),
-    );
   };
 
   return (
@@ -83,7 +57,6 @@ export const PlannerSection = ({
             <div className="grid gap-3 md:grid-cols-2">
               {mealTypes.map((mealType) => {
                 const plannedMeal = getPlannedMeal(day, mealType);
-
                 const recipe = plannedMeal
                   ? getRecipeById(plannedMeal.recipeId)
                   : undefined;
@@ -115,14 +88,14 @@ export const PlannerSection = ({
                         Choisir une recette
                       </button>
 
-                      {plannedMeal ? (
+                      {plannedMeal && (
                         <button
+                          onClick={() => onRemoveFromPlanning(day, mealType)}
                           className="inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"
-                          onClick={() => handleRemoveMeal(day, mealType)}
                         >
                           Supprimer
                         </button>
-                      ) : null}
+                      )}
                     </div>
                   </div>
                 );

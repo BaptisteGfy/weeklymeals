@@ -29,3 +29,6 @@ claude.md
 # Next.js
 .next/
 next-env.d.ts
+
+# TypeScript build cache
+tsconfig.tsbuildinfo

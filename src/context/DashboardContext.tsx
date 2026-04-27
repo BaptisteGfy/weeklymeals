@@ -2,17 +2,22 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import { PlannedMeal } from '@/features/planner/types';
+import { MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
 import { recipes } from '@/features/recipes/data';
 import { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
 type DashboardContextType = {
   recipeList: Recipe[];
   plannedMeals: PlannedMeal[];
-  setPlannedMeals: React.Dispatch<React.SetStateAction<PlannedMeal[]>>;
   handleCreateRecipe: (id: string, values: RecipeFormValues) => void;
   handleUpdateRecipe: (id: string, values: RecipeFormValues) => void;
   handleDeleteRecipe: (id: string) => void;
+  handleAddToPlanning: (
+    day: WeekDay,
+    mealType: MealType,
+    recipeId: string,
+  ) => void;
+  handleRemoveFromPlanning: (day: WeekDay, mealType: MealType) => void;
 };
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
@@ -43,8 +48,7 @@ export const DashboardProvider = ({
   }, [plannedMeals]);
 
   const handleCreateRecipe = (id: string, values: RecipeFormValues) => {
-    const newRecipe: Recipe = { id, ...values };
-    setRecipeList((prev) => [...prev, newRecipe]);
+    setRecipeList((prev) => [...prev, { id, ...values }]);
   };
 
   const handleUpdateRecipe = (id: string, values: RecipeFormValues) => {
@@ -59,15 +63,38 @@ export const DashboardProvider = ({
     setRecipeList((prev) => prev.filter((recipe) => recipe.id !== id));
   };
 
+  const handleAddToPlanning = (
+    day: WeekDay,
+    mealType: MealType,
+    recipeId: string,
+  ) => {
+    setPlannedMeals((prev) => {
+      const filtered = prev.filter(
+        (meal) => !(meal.day === day && meal.mealType === mealType),
+      );
+      return [
+        ...filtered,
+        { id: crypto.randomUUID(), day, mealType, recipeId },
+      ];
+    });
+  };
+
+  const handleRemoveFromPlanning = (day: WeekDay, mealType: MealType) => {
+    setPlannedMeals((prev) =>
+      prev.filter((meal) => !(meal.day === day && meal.mealType === mealType)),
+    );
+  };
+
   return (
     <DashboardContext.Provider
       value={{
         recipeList,
         plannedMeals,
-        setPlannedMeals,
         handleCreateRecipe,
         handleUpdateRecipe,
         handleDeleteRecipe,
+        handleAddToPlanning,
+        handleRemoveFromPlanning,
       }}
     >
       {children}

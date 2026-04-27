@@ -13,6 +13,59 @@ type Options = {
   initialIsEditing?: boolean;
 };
 
+type FormErrors = {
+  title?: string;
+  description?: string;
+  servings?: string;
+  prepTimeMinutes?: string;
+  ingredients?: string;
+  instructions?: string;
+};
+
+const validate = (values: RecipeFormValues): FormErrors => {
+  const errors: FormErrors = {};
+
+  if (!values.title.trim()) {
+    errors.title = 'Le titre est requis';
+  }
+
+  if (!values.description.trim()) {
+    errors.description = 'La description ne peut pas être vide';
+  }
+
+  if (values.servings <= 0) {
+    errors.servings = 'Le nombre de portions doit être supérieur à 0';
+  }
+
+  if (values.ingredients.length === 0) {
+    errors.ingredients = 'Au moins un ingrédient est requis';
+  } else {
+    for (const [index, ingredient] of values.ingredients.entries()) {
+      if (!ingredient.name.trim()) {
+        errors.ingredients = `Le nom de l'ingrédient #${index + 1} est requis`;
+        break;
+      }
+      if (ingredient.quantity <= 0) {
+        errors.ingredients = `La quantité de l'ingrédient #${index + 1} doit être > 0`;
+        break;
+      }
+    }
+  }
+
+  if (values.instructions.length === 0) {
+    errors.instructions = 'Au moins une étape de préparation est requise';
+  } else {
+    for (const [index, instruction] of values.instructions.entries()) {
+      if (!instruction.text.trim()) {
+        errors.instructions = `Le texte de l'étape #${index + 1} est requis`;
+        break;
+      }
+    }
+  }
+
+  return errors;
+};
+
 const initialIngredientDraft: IngredientDraft = {
   name: '',
   quantity: 1,
@@ -42,6 +95,8 @@ export const useRecipeEditing = (
   );
   const [instructionDraft, setInstructionDraft] = useState('');
 
+  const [errors, setErrors] = useState<FormErrors>({});
+
   const handleCancel = () => {
     if (onCancel) {
       onCancel();
@@ -51,11 +106,16 @@ export const useRecipeEditing = (
     setIngredientDraft(initialIngredientDraft);
     setInstructionDraft('');
     setIsEditing(false);
+    setErrors({});
   };
 
   const handleSave = () => {
-    onSave(editValues);
-    setIsEditing(false);
+    const validationErrors = validate(editValues);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      onSave(editValues);
+      setIsEditing(false);
+    }
   };
 
   const handleFieldChange = (
@@ -71,6 +131,7 @@ export const useRecipeEditing = (
           ? Number(value)
           : value,
     }));
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   const handleIngredientChange = (
@@ -84,6 +145,7 @@ export const useRecipeEditing = (
         i.id === id ? { ...i, [field]: value } : i,
       ),
     }));
+    setErrors((prev) => ({ ...prev, ingredients: undefined }));
   };
 
   const handleAddIngredient = () => {
@@ -100,6 +162,7 @@ export const useRecipeEditing = (
       ],
     }));
     setIngredientDraft(initialIngredientDraft);
+    setErrors((prev) => ({ ...prev, ingredients: undefined }));
   };
 
   const handleDeleteIngredient = (id: string) => {
@@ -116,6 +179,7 @@ export const useRecipeEditing = (
         i.id === id ? { ...i, text } : i,
       ),
     }));
+    setErrors((prev) => ({ ...prev, instructions: undefined }));
   };
 
   const handleAddInstruction = () => {
@@ -128,6 +192,7 @@ export const useRecipeEditing = (
       ],
     }));
     setInstructionDraft('');
+    setErrors((prev) => ({ ...prev, instructions: undefined }));
   };
 
   const handleDeleteInstruction = (id: string) => {
@@ -154,5 +219,6 @@ export const useRecipeEditing = (
     handleInstructionChange,
     handleAddInstruction,
     handleDeleteInstruction,
+    errors,
   };
 };

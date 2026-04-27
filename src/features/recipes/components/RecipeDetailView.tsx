@@ -41,10 +41,20 @@ export const RecipeDetailView = ({
     handleInstructionChange,
     handleAddInstruction,
     handleDeleteInstruction,
+    errors,
   } = useRecipeEditing(recipe, { onSave, onCancel, initialIsEditing });
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6">
+    // noValidate : désactive la validation native du navigateur, on gère nous-mêmes
+    // onSubmit remplace le onClick du bouton Sauvegarder et active la touche Enter
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSave();
+      }}
+      noValidate
+      className="mx-auto max-w-2xl px-4 py-6"
+    >
       <div className="mb-6 flex items-center justify-between">
         <Link
           href="/dashboard/recipes"
@@ -56,13 +66,15 @@ export const RecipeDetailView = ({
         {isEditing ? (
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={handleCancel}
               className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
             >
               Annuler
             </button>
+            {/* type="submit" — déclenché par le form onSubmit ou la touche Enter */}
             <button
-              onClick={handleSave}
+              type="submit"
               className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700"
             >
               Sauvegarder
@@ -70,6 +82,7 @@ export const RecipeDetailView = ({
           </div>
         ) : (
           <button
+            type="button"
             onClick={startEditing}
             className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
           >
@@ -94,71 +107,123 @@ export const RecipeDetailView = ({
 
       <div className="mt-6">
         {isEditing ? (
-          <input
-            name="title"
-            value={editValues.title}
-            onChange={handleFieldChange}
-            className="w-full rounded-md border px-3 py-2 text-3xl font-bold focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          />
+          <div>
+            <input
+              name="title"
+              value={editValues.title}
+              onChange={handleFieldChange}
+              aria-label="Titre de la recette"
+              aria-invalid={!!errors.title}
+              aria-describedby={errors.title ? 'title-error' : undefined}
+              className={`w-full rounded-md border px-3 py-2 text-3xl font-bold focus:ring-2 focus:outline-none ${
+                errors.title
+                  ? 'border-red-400 focus:ring-red-200'
+                  : 'focus:ring-blue-200'
+              }`}
+            />
+            {errors.title && (
+              <p
+                id="title-error"
+                role="alert"
+                className="mt-1 text-sm text-red-500"
+              >
+                {errors.title}
+              </p>
+            )}
+          </div>
         ) : (
           <h1 className="text-3xl font-bold">{recipe.title}</h1>
         )}
 
-        <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-500">
-          {isEditing ? (
-            <>
-              <select
-                name="category"
-                value={editValues.category}
-                onChange={handleFieldChange}
-                className="rounded-md border px-2 py-1 text-sm"
-              >
-                <option value="breakfast">Petit-déjeuner</option>
-                <option value="lunch">Déjeuner</option>
-                <option value="dinner">Dîner</option>
-                <option value="dessert">Dessert</option>
-              </select>
-              <span>·</span>
-              <input
-                name="servings"
-                type="number"
-                min="1"
-                value={editValues.servings}
-                onChange={handleFieldChange}
-                className="w-16 rounded-md border px-2 py-1 text-sm"
-              />
-              <span>portions ·</span>
-              <input
-                name="prepTimeMinutes"
-                type="number"
-                min="1"
-                value={editValues.prepTimeMinutes}
-                onChange={handleFieldChange}
-                className="w-16 rounded-md border px-2 py-1 text-sm"
-              />
-              <span>min</span>
-            </>
-          ) : (
-            <>
-              <span>{categoryLabels[recipe.category]}</span>
-              <span>·</span>
-              <span>{recipe.servings} portions</span>
-              <span>·</span>
-              <span>{recipe.prepTimeMinutes} min</span>
-            </>
+        <div className="mt-2">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+            {isEditing ? (
+              <>
+                <select
+                  name="category"
+                  value={editValues.category}
+                  onChange={handleFieldChange}
+                  className="rounded-md border px-2 py-1 text-sm"
+                >
+                  <option value="breakfast">Petit-déjeuner</option>
+                  <option value="lunch">Déjeuner</option>
+                  <option value="dinner">Dîner</option>
+                  <option value="dessert">Dessert</option>
+                </select>
+                <span>·</span>
+                <input
+                  name="servings"
+                  type="number"
+                  min="1"
+                  value={editValues.servings}
+                  onChange={handleFieldChange}
+                  aria-label="Nombre de portions"
+                  aria-invalid={!!errors.servings}
+                  aria-describedby={errors.servings ? 'servings-error' : undefined}
+                  className={`w-16 rounded-md border px-2 py-1 text-sm ${
+                    errors.servings ? 'border-red-400' : ''
+                  }`}
+                />
+                <span>portions ·</span>
+                <input
+                  name="prepTimeMinutes"
+                  type="number"
+                  min="1"
+                  value={editValues.prepTimeMinutes}
+                  onChange={handleFieldChange}
+                  aria-label="Temps de préparation en minutes"
+                  className="w-16 rounded-md border px-2 py-1 text-sm"
+                />
+                <span>min</span>
+              </>
+            ) : (
+              <>
+                <span>{categoryLabels[recipe.category]}</span>
+                <span>·</span>
+                <span>{recipe.servings} portions</span>
+                <span>·</span>
+                <span>{recipe.prepTimeMinutes} min</span>
+              </>
+            )}
+          </div>
+          {/* Erreur servings sous la ligne inline, visible uniquement en mode édition */}
+          {isEditing && errors.servings && (
+            <p id="servings-error" role="alert" className="mt-1 text-sm text-red-500">
+              {errors.servings}
+            </p>
           )}
         </div>
       </div>
 
       <div className="mt-4">
         {isEditing ? (
-          <textarea
-            name="description"
-            value={editValues.description}
-            onChange={handleFieldChange}
-            rows={3}
-            className="w-full rounded-md border px-3 py-2 text-sm leading-relaxed text-gray-600 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          />
+          <div>
+            <textarea
+              name="description"
+              value={editValues.description}
+              onChange={handleFieldChange}
+              rows={3}
+              aria-label="Description de la recette"
+              aria-invalid={!!errors.description}
+              aria-describedby={
+                errors.description ? 'description-error' : undefined
+              }
+              className={`w-full rounded-md border px-3 py-2 text-sm leading-relaxed text-gray-600 focus:ring-2 focus:outline-none ${
+                errors.description
+                  ? 'border-red-400 focus:ring-red-200'
+                  : 'focus:ring-blue-200'
+              }`}
+            />
+            {errors.description && (
+              <p
+                id="description-error"
+                role="alert"
+                className="mt-1 text-sm text-red-500"
+              >
+                {errors.description}
+              </p>
+            )}
+          </div>
         ) : (
           recipe.description && (
             <p className="leading-relaxed text-gray-600">
@@ -220,6 +285,7 @@ export const RecipeDetailView = ({
                     )}
                   </select>
                   <button
+                    type="button"
                     onClick={() => handleDeleteIngredient(ingredient.id)}
                     className="text-gray-400 transition hover:text-red-500"
                   >
@@ -278,6 +344,7 @@ export const RecipeDetailView = ({
                 ))}
               </select>
               <button
+                type="button"
                 onClick={handleAddIngredient}
                 className="rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition hover:bg-gray-50"
               >
@@ -286,6 +353,12 @@ export const RecipeDetailView = ({
             </li>
           )}
         </ul>
+        {/* Erreur au niveau de la section — couvre "liste vide" et "ingrédient invalide" */}
+        {isEditing && errors.ingredients && (
+          <p id="ingredients-error" role="alert" className="mt-2 text-sm text-red-500">
+            {errors.ingredients}
+          </p>
+        )}
       </section>
 
       <section className="mt-8 pb-12">
@@ -315,6 +388,7 @@ export const RecipeDetailView = ({
                       className="min-w-0 flex-1 rounded border px-2 py-1 text-sm leading-relaxed"
                     />
                     <button
+                      type="button"
                       onClick={() => handleDeleteInstruction(instruction.id)}
                       className="mt-1 text-gray-400 transition hover:text-red-500"
                     >
@@ -342,6 +416,7 @@ export const RecipeDetailView = ({
                   className="min-w-0 flex-1 rounded border px-2 py-1 text-sm placeholder-gray-300"
                 />
                 <button
+                  type="button"
                   onClick={handleAddInstruction}
                   className="mt-1 rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition hover:bg-gray-50"
                 >
@@ -351,7 +426,13 @@ export const RecipeDetailView = ({
             )}
           </ol>
         )}
+        {/* Erreur au niveau de la section — couvre "liste vide" et "étape avec texte vide" */}
+        {isEditing && errors.instructions && (
+          <p id="instructions-error" role="alert" className="mt-2 text-sm text-red-500">
+            {errors.instructions}
+          </p>
+        )}
       </section>
-    </div>
+    </form>
   );
 };

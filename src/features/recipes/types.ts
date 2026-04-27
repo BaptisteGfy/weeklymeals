@@ -52,7 +52,7 @@ export type Recipe = {
   ingredients: Ingredient[];
   instructions: Instruction[];
   servings: number;
-  prepTimeMinutes: number;
+  prepTimeMinutes: number | undefined;
   category: RecipeCategory;
 };
 
@@ -60,7 +60,7 @@ export type RecipeFormValues = {
   title: string;
   description: string;
   servings: number;
-  prepTimeMinutes: number;
+  prepTimeMinutes: number | undefined;
   category: RecipeCategory;
   ingredients: Ingredient[];
   instructions: Instruction[];

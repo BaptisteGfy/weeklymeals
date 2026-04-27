@@ -473,7 +473,7 @@ export const RecipeDetailView = ({
           onAdd={(day, mealType) => {
             onAddToPlanning(day, mealType);
             toast.success(
-              `${recipe.title} ajouté au planning du ${weekDayLabels[day]} pour ${mealTypeLabels[mealType]}`,
+              `${recipe.title} ajouté au planning du ${weekDayLabels[day]} ${mealTypeLabels[mealType]}`,
             );
           }}
         />

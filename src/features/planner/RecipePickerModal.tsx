@@ -32,7 +32,7 @@ export const RecipePickerModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-sm text-slate-500 transition hover:text-slate-700"
+            className="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-50"
           >
             Fermer
           </button>
@@ -46,8 +46,9 @@ export const RecipePickerModal = ({
               {recipes.map((recipe) => (
                 <li key={recipe.id}>
                   <button
+                    type="button"
                     onClick={() => onSelectRecipe(recipe.id)}
-                    className="w-full rounded-md border px-3 py-2 text-left text-sm hover:bg-slate-100"
+                    className="w-full rounded-md border border-slate-200 px-3 py-2 text-left text-sm transition hover:bg-slate-50"
                   >
                     {recipe.title}
                   </button>

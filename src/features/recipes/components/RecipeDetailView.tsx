@@ -1,6 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
+import { toast } from 'sonner';
+
+import { AddToPlanningModal } from '@/features/planner/AddToPlanningModal';
+import { mealTypeLabels, weekDayLabels } from '@/features/planner/constants';
+import { MealType, WeekDay } from '@/features/planner/types';
 
 import { useRecipeEditing } from '../hooks/useRecipeEditing';
 import {
@@ -16,6 +22,7 @@ type Props = {
   onSave: (values: RecipeFormValues) => void;
   onCancel?: () => void;
   initialIsEditing?: boolean;
+  onAddToPlanning?: (day: WeekDay, mealType: MealType) => void;
 };
 
 export const RecipeDetailView = ({
@@ -23,6 +30,7 @@ export const RecipeDetailView = ({
   onSave,
   onCancel,
   initialIsEditing = false,
+  onAddToPlanning,
 }: Props) => {
   const {
     isEditing,
@@ -44,9 +52,9 @@ export const RecipeDetailView = ({
     errors,
   } = useRecipeEditing(recipe, { onSave, onCancel, initialIsEditing });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    // noValidate : désactive la validation native du navigateur, on gère nous-mêmes
-    // onSubmit remplace le onClick du bouton Sauvegarder et active la touche Enter
     <form
       onSubmit={(e) => {
         e.preventDefault();
@@ -72,7 +80,7 @@ export const RecipeDetailView = ({
             >
               Annuler
             </button>
-            {/* type="submit" — déclenché par le form onSubmit ou la touche Enter */}
+
             <button
               type="submit"
               className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700"
@@ -81,13 +89,23 @@ export const RecipeDetailView = ({
             </button>
           </div>
         ) : (
-          <button
-            type="button"
-            onClick={startEditing}
-            className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
-          >
-            ✏️ Modifier
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={startEditing}
+              className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
+            >
+              ✏️ Modifier
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
+            >
+              🕒 Ajouter à l'agenda
+            </button>
+          </>
         )}
       </div>
 
@@ -159,7 +177,9 @@ export const RecipeDetailView = ({
                   onChange={handleFieldChange}
                   aria-label="Nombre de portions"
                   aria-invalid={!!errors.servings}
-                  aria-describedby={errors.servings ? 'servings-error' : undefined}
+                  aria-describedby={
+                    errors.servings ? 'servings-error' : undefined
+                  }
                   className={`w-16 rounded-md border px-2 py-1 text-sm ${
                     errors.servings ? 'border-red-400' : ''
                   }`}
@@ -188,7 +208,11 @@ export const RecipeDetailView = ({
           </div>
           {/* Erreur servings sous la ligne inline, visible uniquement en mode édition */}
           {isEditing && errors.servings && (
-            <p id="servings-error" role="alert" className="mt-1 text-sm text-red-500">
+            <p
+              id="servings-error"
+              role="alert"
+              className="mt-1 text-sm text-red-500"
+            >
               {errors.servings}
             </p>
           )}
@@ -355,7 +379,11 @@ export const RecipeDetailView = ({
         </ul>
         {/* Erreur au niveau de la section — couvre "liste vide" et "ingrédient invalide" */}
         {isEditing && errors.ingredients && (
-          <p id="ingredients-error" role="alert" className="mt-2 text-sm text-red-500">
+          <p
+            id="ingredients-error"
+            role="alert"
+            className="mt-2 text-sm text-red-500"
+          >
             {errors.ingredients}
           </p>
         )}
@@ -428,11 +456,28 @@ export const RecipeDetailView = ({
         )}
         {/* Erreur au niveau de la section — couvre "liste vide" et "étape avec texte vide" */}
         {isEditing && errors.instructions && (
-          <p id="instructions-error" role="alert" className="mt-2 text-sm text-red-500">
+          <p
+            id="instructions-error"
+            role="alert"
+            className="mt-2 text-sm text-red-500"
+          >
             {errors.instructions}
           </p>
         )}
       </section>
+
+      {onAddToPlanning && (
+        <AddToPlanningModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onAdd={(day, mealType) => {
+            onAddToPlanning(day, mealType);
+            toast.success(
+              `${recipe.title} ajouté au planning du ${weekDayLabels[day]} pour ${mealTypeLabels[mealType]}`,
+            );
+          }}
+        />
+      )}
     </form>
   );
 };

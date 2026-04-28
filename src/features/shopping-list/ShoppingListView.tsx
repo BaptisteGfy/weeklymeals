@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 import type { PlannedMeal } from '../planner/types';
 import { type Recipe, unitLabels } from '../recipes/types';
 import { buildShoppingList } from './buildShoppingList';
@@ -9,6 +13,19 @@ type Props = {
 
 export const ShoppingListView = ({ recipes, plannedMeals }: Props) => {
   const shoppingList = buildShoppingList(plannedMeals, recipes);
+  const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
+
+  const toggleItem = (name: string) => {
+    setCheckedItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) {
+        next.delete(name);
+      } else {
+        next.add(name);
+      }
+      return next;
+    });
+  };
 
   return (
     <section className="mt-10">
@@ -16,14 +33,29 @@ export const ShoppingListView = ({ recipes, plannedMeals }: Props) => {
       {shoppingList.length === 0 ? (
         <p className="text-sm text-slate-500">Aucun ingrédient</p>
       ) : (
-        <ul className="mt-2 list-inside list-disc text-sm">
-          {shoppingList.map((item) => (
-            <li key={item.name}>
-              {item.unit !== 'unit'
+        <ul className="mt-2 space-y-2 text-sm">
+          {shoppingList.map((item) => {
+            const isChecked = checkedItems.has(item.name);
+            const label =
+              item.unit !== 'unit'
                 ? `${item.quantity} ${unitLabels[item.unit]} de ${item.name}`
-                : `${item.quantity} ${item.name}`}
-            </li>
-          ))}
+                : `${item.quantity} ${item.name}`;
+            return (
+              <li key={item.name}>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => toggleItem(item.name)}
+                    className="h-4 w-4 cursor-pointer"
+                  />
+                  <span className={isChecked ? 'text-slate-400 line-through' : ''}>
+                    {label}
+                  </span>
+                </label>
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>

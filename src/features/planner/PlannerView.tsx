@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useState } from 'react';
 
 import type { Recipe } from '../recipes/types';
@@ -83,7 +84,10 @@ export const PlannerView = ({
                     <div className="mt-2 flex justify-start gap-2">
                       <button
                         onClick={() => setSelectedSlot({ day, mealType })}
-                        className="inline-flex items-center gap-2 rounded-md border border-blue-300 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:border-blue-400 hover:bg-blue-50"
+                        className={clsx(
+                          'inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition',
+                          'border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50',
+                        )}
                       >
                         Choisir une recette
                       </button>
@@ -91,7 +95,10 @@ export const PlannerView = ({
                       {plannedMeal && (
                         <button
                           onClick={() => onRemoveFromPlanning(day, mealType)}
-                          className="inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 transition hover:border-red-400 hover:bg-red-50"
+                          className={clsx(
+                            'inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition',
+                            'border-red-300 text-red-600 hover:border-red-400 hover:bg-red-50',
+                          )}
                         >
                           Supprimer
                         </button>

@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useState } from 'react';
 
 import type { PlannedMeal } from '../planner/types';
@@ -49,7 +50,7 @@ export const ShoppingListView = ({ recipes, plannedMeals }: Props) => {
                     onChange={() => toggleItem(item.name)}
                     className="h-4 w-4 cursor-pointer"
                   />
-                  <span className={isChecked ? 'text-slate-400 line-through' : ''}>
+                  <span className={clsx(isChecked && 'text-slate-400 line-through')}>
                     {label}
                   </span>
                 </label>

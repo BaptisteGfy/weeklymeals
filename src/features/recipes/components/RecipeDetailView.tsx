@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -133,11 +134,10 @@ export const RecipeDetailView = ({
               aria-label="Titre de la recette"
               aria-invalid={!!errors.title}
               aria-describedby={errors.title ? 'title-error' : undefined}
-              className={`w-full rounded-md border px-3 py-2 text-3xl font-bold focus:ring-2 focus:outline-none ${
-                errors.title
-                  ? 'border-red-400 focus:ring-red-200'
-                  : 'focus:ring-blue-200'
-              }`}
+              className={clsx(
+                'w-full rounded-md border px-3 py-2 text-3xl font-bold focus:ring-2 focus:outline-none',
+                errors.title ? 'border-red-400 focus:ring-red-200' : 'focus:ring-blue-200',
+              )}
             />
             {errors.title && (
               <p
@@ -180,9 +180,10 @@ export const RecipeDetailView = ({
                   aria-describedby={
                     errors.servings ? 'servings-error' : undefined
                   }
-                  className={`w-16 rounded-md border px-2 py-1 text-sm ${
-                    errors.servings ? 'border-red-400' : ''
-                  }`}
+                  className={clsx(
+                    'w-16 rounded-md border px-2 py-1 text-sm',
+                    errors.servings && 'border-red-400',
+                  )}
                 />
                 <span>portions ·</span>
                 <input
@@ -232,11 +233,10 @@ export const RecipeDetailView = ({
               aria-describedby={
                 errors.description ? 'description-error' : undefined
               }
-              className={`w-full rounded-md border px-3 py-2 text-sm leading-relaxed text-gray-600 focus:ring-2 focus:outline-none ${
-                errors.description
-                  ? 'border-red-400 focus:ring-red-200'
-                  : 'focus:ring-blue-200'
-              }`}
+              className={clsx(
+                'w-full rounded-md border px-3 py-2 text-sm leading-relaxed text-gray-600 focus:ring-2 focus:outline-none',
+                errors.description ? 'border-red-400 focus:ring-red-200' : 'focus:ring-blue-200',
+              )}
             />
             {errors.description && (
               <p

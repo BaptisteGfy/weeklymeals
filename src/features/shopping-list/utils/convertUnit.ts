@@ -1,4 +1,4 @@
-import type { ShoppingListItem } from './types';
+import type { ShoppingListItem } from '../types';
 
 export const convertUnit = (ingredient: ShoppingListItem): ShoppingListItem => {
   if (ingredient.quantity >= 1000) {

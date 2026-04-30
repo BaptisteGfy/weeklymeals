@@ -7,10 +7,10 @@ import { useDashboard } from '@/context/DashboardContext';
 import { RecipeCard } from '@/features/recipes/components/RecipeCard';
 
 const RecipesPage = () => {
-  const { recipeList, handleDeleteRecipe } = useDashboard();
+  const { recipes, handleDeleteRecipe } = useDashboard();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredRecipes = recipeList.filter((recipe) =>
+  const filteredRecipes = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 

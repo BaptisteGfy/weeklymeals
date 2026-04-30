@@ -11,13 +11,13 @@ type Props = {
 };
 
 const RecipeDetailPage = ({ params }: Props) => {
-  const { recipeList, handleUpdateRecipe, handleAddToPlanning } =
+  const { recipes, handleUpdateRecipe, handleAddToPlanning } =
     useDashboard();
   const { id } = use(params);
   const searchParams = useSearchParams();
   const initialIsEditing = searchParams.get('edit') === 'true';
 
-  const recipe = recipeList.find((r) => r.id === id);
+  const recipe = recipes.find((r) => r.id === id);
 
   if (!recipe) {
     return <div>Recette non trouvée</div>;

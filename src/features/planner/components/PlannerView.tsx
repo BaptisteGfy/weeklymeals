@@ -3,15 +3,15 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import type { Recipe } from '../recipes/types';
+import type { Recipe } from '../../recipes/types';
 import {
   mealTypeLabels,
   mealTypes,
   weekDayLabels,
   weekDays,
-} from './constants';
+} from '../constants';
+import type { MealSlot, MealType, PlannedMeal, WeekDay } from '../types';
 import { RecipePickerModal } from './RecipePickerModal';
-import type { MealType, PlannedMeal, WeekDay } from './types';
 
 type Props = {
   recipes: Recipe[];
@@ -26,10 +26,7 @@ export const PlannerView = ({
   onAddToPlanning,
   onRemoveFromPlanning,
 }: Props) => {
-  const [selectedSlot, setSelectedSlot] = useState<{
-    day: WeekDay;
-    mealType: MealType;
-  } | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<MealSlot | null>(null);
 
   const getPlannedMeal = (
     day: WeekDay,

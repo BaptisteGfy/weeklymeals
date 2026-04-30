@@ -5,8 +5,8 @@ import {
   mealTypes,
   weekDayLabels,
   weekDays,
-} from './constants';
-import { MealType, WeekDay } from './types';
+} from '../constants';
+import { MealType, WeekDay } from '../types';
 
 type Props = {
   isOpen: boolean;

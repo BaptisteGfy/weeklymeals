@@ -5,18 +5,13 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { AddToPlanningModal } from '@/features/planner/AddToPlanningModal';
+import { AddToPlanningModal } from '@/features/planner/components/AddToPlanningModal';
 import { mealTypeLabels, weekDayLabels } from '@/features/planner/constants';
 import { MealType, WeekDay } from '@/features/planner/types';
 
-import { useRecipeEditing } from '../hooks/useRecipeEditing';
-import {
-  categoryLabels,
-  IngredientUnit,
-  Recipe,
-  RecipeFormValues,
-  unitLabels,
-} from '../types';
+import { categoryLabels, unitLabels } from '../constants';
+import { useRecipeForm } from '../hooks/useRecipeForm';
+import { IngredientUnit, Recipe, RecipeFormValues } from '../types';
 
 type Props = {
   recipe: Recipe;
@@ -36,7 +31,7 @@ export const RecipeDetailView = ({
   const {
     isEditing,
     startEditing,
-    editValues,
+    formValues,
     ingredientDraft,
     setIngredientDraft,
     instructionDraft,
@@ -51,7 +46,7 @@ export const RecipeDetailView = ({
     handleAddInstruction,
     handleDeleteInstruction,
     errors,
-  } = useRecipeEditing(recipe, { onSave, onCancel, initialIsEditing });
+  } = useRecipeForm(recipe, { onSave, onCancel, initialIsEditing });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -129,14 +124,16 @@ export const RecipeDetailView = ({
           <div>
             <input
               name="title"
-              value={editValues.title}
+              value={formValues.title}
               onChange={handleFieldChange}
               aria-label="Titre de la recette"
               aria-invalid={!!errors.title}
               aria-describedby={errors.title ? 'title-error' : undefined}
               className={clsx(
                 'w-full rounded-md border px-3 py-2 text-3xl font-bold focus:ring-2 focus:outline-none',
-                errors.title ? 'border-red-400 focus:ring-red-200' : 'focus:ring-blue-200',
+                errors.title
+                  ? 'border-red-400 focus:ring-red-200'
+                  : 'focus:ring-blue-200',
               )}
             />
             {errors.title && (
@@ -159,7 +156,7 @@ export const RecipeDetailView = ({
               <>
                 <select
                   name="category"
-                  value={editValues.category}
+                  value={formValues.category}
                   onChange={handleFieldChange}
                   className="rounded-md border px-2 py-1 text-sm"
                 >
@@ -173,7 +170,7 @@ export const RecipeDetailView = ({
                   name="servings"
                   type="number"
                   min="1"
-                  value={editValues.servings}
+                  value={formValues.servings}
                   onChange={handleFieldChange}
                   aria-label="Nombre de portions"
                   aria-invalid={!!errors.servings}
@@ -190,7 +187,7 @@ export const RecipeDetailView = ({
                   name="prepTimeMinutes"
                   type="number"
                   min="1"
-                  value={editValues.prepTimeMinutes}
+                  value={formValues.prepTimeMinutes}
                   onChange={handleFieldChange}
                   aria-label="Temps de préparation en minutes"
                   className="w-16 rounded-md border px-2 py-1 text-sm"
@@ -207,7 +204,6 @@ export const RecipeDetailView = ({
               </>
             )}
           </div>
-          {/* Erreur servings sous la ligne inline, visible uniquement en mode édition */}
           {isEditing && errors.servings && (
             <p
               id="servings-error"
@@ -225,7 +221,7 @@ export const RecipeDetailView = ({
           <div>
             <textarea
               name="description"
-              value={editValues.description}
+              value={formValues.description}
               onChange={handleFieldChange}
               rows={3}
               aria-label="Description de la recette"
@@ -235,7 +231,9 @@ export const RecipeDetailView = ({
               }
               className={clsx(
                 'w-full rounded-md border px-3 py-2 text-sm leading-relaxed text-gray-600 focus:ring-2 focus:outline-none',
-                errors.description ? 'border-red-400 focus:ring-red-200' : 'focus:ring-blue-200',
+                errors.description
+                  ? 'border-red-400 focus:ring-red-200'
+                  : 'focus:ring-blue-200',
               )}
             />
             {errors.description && (
@@ -260,7 +258,7 @@ export const RecipeDetailView = ({
       <section className="mt-8">
         <h2 className="mb-3 text-xl font-semibold">Ingrédients</h2>
         <ul className="space-y-2">
-          {editValues.ingredients.map((ingredient) => (
+          {formValues.ingredients.map((ingredient) => (
             <li key={ingredient.id} className="flex items-center gap-2 text-sm">
               <span className="text-gray-400">•</span>
               {isEditing ? (
@@ -391,13 +389,13 @@ export const RecipeDetailView = ({
 
       <section className="mt-8 pb-12">
         <h2 className="mb-3 text-xl font-semibold">Préparation</h2>
-        {editValues.instructions.length === 0 && !isEditing ? (
+        {formValues.instructions.length === 0 && !isEditing ? (
           <p className="text-sm text-gray-400">
             Aucune instruction renseignée.
           </p>
         ) : (
           <ol className="space-y-3">
-            {editValues.instructions.map((instruction, index) => (
+            {formValues.instructions.map((instruction, index) => (
               <li
                 key={instruction.id}
                 className="flex items-start gap-3 text-sm"
@@ -434,7 +432,7 @@ export const RecipeDetailView = ({
             {isEditing && (
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-300">
-                  {editValues.instructions.length + 1}
+                  {formValues.instructions.length + 1}
                 </span>
                 <textarea
                   value={instructionDraft}
@@ -454,7 +452,6 @@ export const RecipeDetailView = ({
             )}
           </ol>
         )}
-        {/* Erreur au niveau de la section — couvre "liste vide" et "étape avec texte vide" */}
         {isEditing && errors.instructions && (
           <p
             id="instructions-error"

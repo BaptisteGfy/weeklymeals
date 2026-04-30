@@ -9,6 +9,11 @@ export type WeekDay =
 
 export type MealType = 'lunch' | 'dinner';
 
+export type MealSlot = {
+  day: WeekDay;
+  mealType: MealType;
+};
+
 export type PlannedMeal = {
   id: string;
   day: WeekDay;

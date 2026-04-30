@@ -7,7 +7,7 @@ import {
   RecipeFormValues,
 } from '../types';
 
-type Options = {
+type UseRecipeFormOptions = {
   onSave: (values: RecipeFormValues) => void;
   onCancel?: () => void;
   initialIsEditing?: boolean;
@@ -72,7 +72,7 @@ const initialIngredientDraft: IngredientDraft = {
   unit: 'unit',
 };
 
-const toFormValues = (recipe: Recipe): RecipeFormValues => ({
+const recipeToFormValues = (recipe: Recipe): RecipeFormValues => ({
   title: recipe.title,
   description: recipe.description,
   servings: recipe.servings,
@@ -82,13 +82,13 @@ const toFormValues = (recipe: Recipe): RecipeFormValues => ({
   instructions: recipe.instructions,
 });
 
-export const useRecipeEditing = (
+export const useRecipeForm = (
   recipe: Recipe,
-  { onSave, onCancel, initialIsEditing = false }: Options,
+  { onSave, onCancel, initialIsEditing = false }: UseRecipeFormOptions,
 ) => {
   const [isEditing, setIsEditing] = useState(initialIsEditing);
-  const [editValues, setEditValues] = useState<RecipeFormValues>(
-    toFormValues(recipe),
+  const [formValues, setFormValues] = useState<RecipeFormValues>(
+    recipeToFormValues(recipe),
   );
   const [ingredientDraft, setIngredientDraft] = useState<IngredientDraft>(
     initialIngredientDraft,
@@ -102,7 +102,7 @@ export const useRecipeEditing = (
       onCancel();
       return;
     }
-    setEditValues(toFormValues(recipe));
+    setFormValues(recipeToFormValues(recipe));
     setIngredientDraft(initialIngredientDraft);
     setInstructionDraft('');
     setIsEditing(false);
@@ -110,10 +110,10 @@ export const useRecipeEditing = (
   };
 
   const handleSave = () => {
-    const validationErrors = validate(editValues);
+    const validationErrors = validate(formValues);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      onSave(editValues);
+      onSave(formValues);
       setIsEditing(false);
     }
   };
@@ -124,7 +124,7 @@ export const useRecipeEditing = (
     >,
   ) => {
     const { name, value } = e.target;
-    setEditValues((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       [name]:
         name === 'servings' || name === 'prepTimeMinutes'
@@ -139,7 +139,7 @@ export const useRecipeEditing = (
     field: keyof Omit<Ingredient, 'id'>,
     value: string | number,
   ) => {
-    setEditValues((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       ingredients: prev.ingredients.map((i) =>
         i.id === id ? { ...i, [field]: value } : i,
@@ -150,7 +150,7 @@ export const useRecipeEditing = (
 
   const handleAddIngredient = () => {
     if (!ingredientDraft.name.trim()) return;
-    setEditValues((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       ingredients: [
         ...prev.ingredients,
@@ -166,14 +166,14 @@ export const useRecipeEditing = (
   };
 
   const handleDeleteIngredient = (id: string) => {
-    setEditValues((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       ingredients: prev.ingredients.filter((i) => i.id !== id),
     }));
   };
 
   const handleInstructionChange = (id: string, text: string) => {
-    setEditValues((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       instructions: prev.instructions.map((i) =>
         i.id === id ? { ...i, text } : i,
@@ -184,7 +184,7 @@ export const useRecipeEditing = (
 
   const handleAddInstruction = () => {
     if (!instructionDraft.trim()) return;
-    setEditValues((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       instructions: [
         ...prev.instructions,
@@ -196,7 +196,7 @@ export const useRecipeEditing = (
   };
 
   const handleDeleteInstruction = (id: string) => {
-    setEditValues((prev) => ({
+    setFormValues((prev) => ({
       ...prev,
       instructions: prev.instructions.filter((i) => i.id !== id),
     }));
@@ -205,7 +205,7 @@ export const useRecipeEditing = (
   return {
     isEditing,
     startEditing: () => setIsEditing(true),
-    editValues,
+    formValues,
     ingredientDraft,
     setIngredientDraft,
     instructionDraft,

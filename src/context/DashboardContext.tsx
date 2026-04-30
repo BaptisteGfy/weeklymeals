@@ -3,11 +3,11 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import { MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
-import { recipes } from '@/features/recipes/data';
+import { recipes as mockRecipes } from '@/features/recipes/mock-data';
 import { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
 type DashboardContextType = {
-  recipeList: Recipe[];
+  recipes: Recipe[];
   plannedMeals: PlannedMeal[];
   handleCreateRecipe: (id: string, values: RecipeFormValues) => void;
   handleUpdateRecipe: (id: string, values: RecipeFormValues) => void;
@@ -27,32 +27,34 @@ export const DashboardProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [recipeList, setRecipeList] = useState<Recipe[]>(() => {
-    if (typeof window === 'undefined') return recipes;
+  const [recipes, setRecipes] = useState<Recipe[]>(() => {
+    // localStorage n'est pas disponible côté serveur (SSR)
+    if (typeof window === 'undefined') return mockRecipes;
     const stored = localStorage.getItem('recipes');
-    return stored ? JSON.parse(stored) : recipes;
+    return stored ? JSON.parse(stored) : mockRecipes;
   });
 
   const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>(() => {
+    // localStorage n'est pas disponible côté serveur (SSR)
     if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem('planned-meals');
     return stored ? JSON.parse(stored) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem('recipes', JSON.stringify(recipeList));
-  }, [recipeList]);
+    localStorage.setItem('recipes', JSON.stringify(recipes));
+  }, [recipes]);
 
   useEffect(() => {
     localStorage.setItem('planned-meals', JSON.stringify(plannedMeals));
   }, [plannedMeals]);
 
   const handleCreateRecipe = (id: string, values: RecipeFormValues) => {
-    setRecipeList((prev) => [...prev, { id, ...values }]);
+    setRecipes((prev) => [...prev, { id, ...values }]);
   };
 
   const handleUpdateRecipe = (id: string, values: RecipeFormValues) => {
-    setRecipeList((prev) =>
+    setRecipes((prev) =>
       prev.map((recipe) =>
         recipe.id === id ? { ...recipe, ...values } : recipe,
       ),
@@ -60,7 +62,7 @@ export const DashboardProvider = ({
   };
 
   const handleDeleteRecipe = (id: string) => {
-    setRecipeList((prev) => prev.filter((recipe) => recipe.id !== id));
+    setRecipes((prev) => prev.filter((recipe) => recipe.id !== id));
   };
 
   const handleAddToPlanning = (
@@ -88,7 +90,7 @@ export const DashboardProvider = ({
   return (
     <DashboardContext.Provider
       value={{
-        recipeList,
+        recipes,
         plannedMeals,
         handleCreateRecipe,
         handleUpdateRecipe,

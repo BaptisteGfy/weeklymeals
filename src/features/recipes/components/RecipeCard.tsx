@@ -1,14 +1,15 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 
-import { categoryLabels, type Recipe } from '../types';
+import { categoryLabels } from '../constants';
+import type { Recipe } from '../types';
 
 type Props = {
   recipe: Recipe;
   onDelete: (id: string) => void;
 };
 
-const btnBase =
+const cardButtonStyles =
   'inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium transition';
 
 export const RecipeCard = ({ recipe, onDelete }: Props) => {
@@ -46,19 +47,28 @@ export const RecipeCard = ({ recipe, onDelete }: Props) => {
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
             href={`/dashboard/recipes/${recipe.id}`}
-            className={clsx(btnBase, 'border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50')}
+            className={clsx(
+              cardButtonStyles,
+              'border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50',
+            )}
           >
             Voir
           </Link>
           <Link
             href={`/dashboard/recipes/${recipe.id}?edit=true`}
-            className={clsx(btnBase, 'border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50')}
+            className={clsx(
+              cardButtonStyles,
+              'border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50',
+            )}
           >
             Éditer
           </Link>
           <button
             onClick={() => onDelete(recipe.id)}
-            className={clsx(btnBase, 'border-red-300 text-red-600 hover:border-red-400 hover:bg-red-50')}
+            className={clsx(
+              cardButtonStyles,
+              'border-red-300 text-red-600 hover:border-red-400 hover:bg-red-50',
+            )}
           >
             Supprimer
           </button>

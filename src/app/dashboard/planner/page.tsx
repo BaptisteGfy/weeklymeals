@@ -1,12 +1,12 @@
 'use client';
 
 import { useDashboard } from '@/context/DashboardContext';
-import { PlannerView } from '@/features/planner/PlannerView';
-import { ShoppingListView } from '@/features/shopping-list/ShoppingListView';
+import { PlannerView } from '@/features/planner/components/PlannerView';
+import { ShoppingListView } from '@/features/shopping-list/components/ShoppingListView';
 
 const PlannerPage = () => {
   const {
-    recipeList,
+    recipes,
     plannedMeals,
     handleAddToPlanning,
     handleRemoveFromPlanning,
@@ -15,12 +15,12 @@ const PlannerPage = () => {
   return (
     <>
       <PlannerView
-        recipes={recipeList}
+        recipes={recipes}
         plannedMeals={plannedMeals}
         onAddToPlanning={handleAddToPlanning}
         onRemoveFromPlanning={handleRemoveFromPlanning}
       />
-      <ShoppingListView recipes={recipeList} plannedMeals={plannedMeals} />
+      <ShoppingListView recipes={recipes} plannedMeals={plannedMeals} />
     </>
   );
 };

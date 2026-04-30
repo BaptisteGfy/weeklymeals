@@ -7,15 +7,6 @@ export type IngredientUnit =
   | 'cas' // cuillère à soupe
   | 'unit';
 
-export const unitLabels: Record<IngredientUnit, string> = {
-  g: 'g',
-  kg: 'kg',
-  ml: 'ml',
-  l: 'l',
-  cac: 'cuillère à café',
-  cas: 'cuillère à soupe',
-  unit: 'pièce',
-};
 
 export type Ingredient = {
   id: string;
@@ -32,12 +23,6 @@ export type IngredientDraft = {
 
 export type RecipeCategory = 'breakfast' | 'lunch' | 'dinner' | 'dessert';
 
-export const categoryLabels: Record<RecipeCategory, string> = {
-  breakfast: 'Petit-déjeuner',
-  lunch: 'Déjeuner',
-  dinner: 'Dîner',
-  dessert: 'Dessert',
-};
 
 export type Instruction = {
   id: string;

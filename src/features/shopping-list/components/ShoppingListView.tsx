@@ -3,9 +3,10 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import type { PlannedMeal } from '../planner/types';
-import { type Recipe, unitLabels } from '../recipes/types';
-import { buildShoppingList } from './buildShoppingList';
+import type { PlannedMeal } from '../../planner/types';
+import { unitLabels } from '../../recipes/constants';
+import type { Recipe } from '../../recipes/types';
+import { buildShoppingList } from '../utils/buildShoppingList';
 
 type Props = {
   plannedMeals: PlannedMeal[];
@@ -50,7 +51,9 @@ export const ShoppingListView = ({ recipes, plannedMeals }: Props) => {
                     onChange={() => toggleItem(item.name)}
                     className="h-4 w-4 cursor-pointer"
                   />
-                  <span className={clsx(isChecked && 'text-slate-400 line-through')}>
+                  <span
+                    className={clsx(isChecked && 'text-slate-400 line-through')}
+                  >
                     {label}
                   </span>
                 </label>

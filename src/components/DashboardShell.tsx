@@ -4,11 +4,7 @@ import { useState } from 'react';
 
 import { Sidebar } from './Sidebar';
 
-export const DashboardWrapper = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="flex h-screen">

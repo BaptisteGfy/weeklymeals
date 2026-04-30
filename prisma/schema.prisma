@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum RecipeCategory {
+  breakfast
+  lunch
+  dinner
+  dessert
+}
+
+enum IngredientUnit {
+  g
+  kg
+  ml
+  l
+  cac
+  cas
+  unit
+}
+
+enum IngredientCategory {
+  vegetables
+  fruits
+  dairy
+  meat
+  fish
+  cereals
+  legumes
+  spices
+  condiments
+  oils
+  nuts
+  other
+}
+
+enum WeekDay {
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+  sunday
+}
+
+enum MealType {
+  lunch
+  dinner
+}
+
+model User {
+  email        String        @unique
+  id           String        @id @default(cuid())
+  name         String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  recipes      Recipe[]
+  plannedMeals PlannedMeal[]
+}
+
+model Ingredient {
+  nameEn   String
+  id       String             @id @default(cuid())
+  nameFr   String
+  category IngredientCategory
+  calories Float?
+  proteins Float?
+  carbs    Float?
+  fats     Float?
+  fiber    Float?
+  recipes  RecipeIngredient[]
+}
+
+model Recipe {
+  id              String             @id @default(cuid())
+  title           String
+  description     String
+  servings        Int
+  prepTimeMinutes Int?
+  userId          String
+  category        RecipeCategory
+  createdAt       DateTime           @default(now())
+  user            User               @relation(fields: [userId], references: [id])
+  updatedAt       DateTime           @updatedAt
+  ingredients     RecipeIngredient[]
+  imageUrl        String?
+  instructions    Instruction[]
+  plannedMeals    PlannedMeal[]
+}
+
+model Instruction {
+  id       String @id @default(cuid())
+  text     String
+  position Int
+  recipeId String
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+}
+
+model RecipeIngredient {
+  id           String         @id @default(cuid())
+  quantity     Float
+  unit         IngredientUnit
+  recipeId     String
+  recipe       Recipe         @relation(fields: [recipeId], references: [id])
+  ingredientId String
+  ingredient   Ingredient     @relation(fields: [ingredientId], references: [id])
+}
+
+model PlannedMeal {
+  id        String   @id @default(cuid())
+  day       WeekDay
+  mealType  MealType
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  recipeId  String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+}

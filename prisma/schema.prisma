@@ -103,6 +103,7 @@ model Recipe {
   imageUrl        String?
   instructions    Instruction[]
   plannedMeals    PlannedMeal[]
+  isLibrary Boolean @default(false)
 }
 
 model Instruction {

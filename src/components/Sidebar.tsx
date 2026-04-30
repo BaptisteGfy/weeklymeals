@@ -2,7 +2,9 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+
+import { authClient } from '@/lib/auth-client';
 
 const navLinks = [
   { href: '/dashboard/recipes', label: 'Mes recettes' },
@@ -15,6 +17,13 @@ type SidebarProps = {
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push('/');
+  };
 
   return (
     <div className="contents">
@@ -61,7 +70,18 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </nav>
 
         <div className="border-t border-slate-700 px-6 py-4">
-          <p className="text-xs text-slate-500">Account — bientôt disponible</p>
+          <p className="truncate text-sm font-medium text-white">
+            {session?.user.name}
+          </p>
+          <p className="truncate text-xs text-slate-400">
+            {session?.user.email}
+          </p>
+          <button
+            onClick={handleSignOut}
+            className="mt-3 w-full cursor-pointer rounded-md border border-slate-600 px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-500 hover:text-white"
+          >
+            Se déconnecter
+          </button>
         </div>
       </aside>
     </div>

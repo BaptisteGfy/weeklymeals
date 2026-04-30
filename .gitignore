@@ -26,9 +26,15 @@ claude.md
 *.sln
 *.sw?
 
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 # Next.js
 .next/
 next-env.d.ts
 
 # TypeScript build cache
 tsconfig.tsbuildinfo
+/src/generated/prisma

@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -44,31 +42,23 @@ enum IngredientCategory {
   other
 }
 
-enum WeekDay {
-  monday
-  tuesday
-  wednesday
-  thursday
-  friday
-  saturday
-  sunday
-}
-
 enum MealType {
   lunch
   dinner
 }
 
 model User {
-  email         String        @unique
   id            String        @id @default(cuid())
+  email         String        @unique
   name          String?
+  role          String        @default("user")
+  emailVerified Boolean       @default(false)
+  image         String?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   recipes       Recipe[]
   plannedMeals  PlannedMeal[]
-  emailVerified Boolean       @default(false)
-  image         String?
+  savedRecipes  SavedRecipe[]
   sessions      Session[]
   accounts      Account[]
 
@@ -76,8 +66,8 @@ model User {
 }
 
 model Ingredient {
-  nameEn   String
   id       String             @id @default(cuid())
+  nameEn   String
   nameFr   String
   category IngredientCategory
   calories Float?
@@ -92,32 +82,28 @@ model Recipe {
   id              String             @id @default(cuid())
   title           String
   description     String
+  category        RecipeCategory
   servings        Int
   prepTimeMinutes Int?
-  userId          String
-  category        RecipeCategory
-  createdAt       DateTime           @default(now())
-  user            User               @relation(fields: [userId], references: [id])
-  updatedAt       DateTime           @updatedAt
-  ingredients     RecipeIngredient[]
+  cookTimeMinutes Int?
+  restTimeMinutes Int?
+  instructions    String[]
   imageUrl        String?
-  instructions    Instruction[]
+  isLibrary       Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  userId          String
+  user            User               @relation(fields: [userId], references: [id])
+  ingredients     RecipeIngredient[]
   plannedMeals    PlannedMeal[]
-  isLibrary Boolean @default(false)
-}
-
-model Instruction {
-  id       String @id @default(cuid())
-  text     String
-  position Int
-  recipeId String
-  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  savedBy         SavedRecipe[]
 }
 
 model RecipeIngredient {
   id           String         @id @default(cuid())
   quantity     Float
   unit         IngredientUnit
+  note         String?
   recipeId     String
   recipe       Recipe         @relation(fields: [recipeId], references: [id])
   ingredientId String
@@ -126,13 +112,26 @@ model RecipeIngredient {
 
 model PlannedMeal {
   id        String   @id @default(cuid())
-  day       WeekDay
+  date      DateTime
   mealType  MealType
   createdAt DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   recipeId  String
   recipe    Recipe   @relation(fields: [recipeId], references: [id])
+
+  @@unique([userId, date, mealType])
+}
+
+model SavedRecipe {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  recipeId  String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+
+  @@unique([userId, recipeId])
 }
 
 model Session {

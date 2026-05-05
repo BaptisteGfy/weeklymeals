@@ -2,15 +2,20 @@
 
 import { createContext, useContext, useState } from 'react';
 
+import {
+  createRecipe,
+  deleteRecipe,
+  updateRecipe,
+} from '@/actions/recipe-actions';
 import { MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
 import { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
 type DashboardContextType = {
   recipes: Recipe[];
   plannedMeals: PlannedMeal[];
-  handleCreateRecipe: (id: string, values: RecipeFormValues) => void;
-  handleUpdateRecipe: (id: string, values: RecipeFormValues) => void;
-  handleDeleteRecipe: (id: string) => void;
+  handleCreateRecipe: (values: RecipeFormValues) => Promise<Recipe>;
+  handleUpdateRecipe: (id: string, values: RecipeFormValues) => Promise<void>;
+  handleDeleteRecipe: (id: string) => Promise<void>;
   handleAddToPlanning: (
     day: WeekDay,
     mealType: MealType,
@@ -37,19 +42,21 @@ export const DashboardProvider = ({
     return stored ? JSON.parse(stored) : [];
   });
 
-  const handleCreateRecipe = (id: string, values: RecipeFormValues) => {
-    setRecipes((prev) => [...prev, { id, ...values }]);
+  const handleCreateRecipe = async (values: RecipeFormValues) => {
+    const newRecipe = await createRecipe(values);
+    setRecipes((prev) => [...prev, newRecipe]);
+    return newRecipe;
   };
 
-  const handleUpdateRecipe = (id: string, values: RecipeFormValues) => {
+  const handleUpdateRecipe = async (id: string, values: RecipeFormValues) => {
+    const updatedRecipe = await updateRecipe(id, values);
     setRecipes((prev) =>
-      prev.map((recipe) =>
-        recipe.id === id ? { ...recipe, ...values } : recipe,
-      ),
+      prev.map((recipe) => (recipe.id === id ? updatedRecipe : recipe)),
     );
   };
 
-  const handleDeleteRecipe = (id: string) => {
+  const handleDeleteRecipe = async (id: string) => {
+    await deleteRecipe(id);
     setRecipes((prev) => prev.filter((recipe) => recipe.id !== id));
   };
 

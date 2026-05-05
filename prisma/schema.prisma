@@ -68,7 +68,7 @@ model User {
 model Ingredient {
   id       String             @id @default(cuid())
   nameEn   String
-  nameFr   String
+  nameFr   String             @unique
   category IngredientCategory
   calories Float?
   proteins Float?

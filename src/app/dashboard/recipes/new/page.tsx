@@ -12,6 +12,8 @@ const defaultRecipe: Omit<Recipe, 'id'> = {
   description: '',
   servings: 4,
   prepTimeMinutes: 30,
+  cookTimeMinutes: undefined,
+  restTimeMinutes: undefined,
   category: 'dinner',
   ingredients: [],
   instructions: [],

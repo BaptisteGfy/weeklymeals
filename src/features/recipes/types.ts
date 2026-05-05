@@ -7,7 +7,6 @@ export type IngredientUnit =
   | 'cas' // cuillère à soupe
   | 'unit';
 
-
 export type Ingredient = {
   id: string;
   name: string;
@@ -23,7 +22,6 @@ export type IngredientDraft = {
 
 export type RecipeCategory = 'breakfast' | 'lunch' | 'dinner' | 'dessert';
 
-
 export type Instruction = {
   id: string;
   text: string;
@@ -38,15 +36,19 @@ export type Recipe = {
   instructions: Instruction[];
   servings: number;
   prepTimeMinutes: number | undefined;
+  cookTimeMinutes: number | undefined;
+  restTimeMinutes: number | undefined;
   category: RecipeCategory;
 };
 
 export type RecipeFormValues = {
   title: string;
   description: string;
-  servings: number;
-  prepTimeMinutes: number | undefined;
-  category: RecipeCategory;
   ingredients: Ingredient[];
   instructions: Instruction[];
+  servings: number;
+  prepTimeMinutes: number | undefined;
+  cookTimeMinutes: number | undefined;
+  restTimeMinutes: number | undefined;
+  category: RecipeCategory;
 };

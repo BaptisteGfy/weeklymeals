@@ -1,9 +1,8 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import { MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
-import { recipes as mockRecipes } from '@/features/recipes/mock-data';
 import { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
 type DashboardContextType = {
@@ -24,15 +23,12 @@ const DashboardContext = createContext<DashboardContextType | null>(null);
 
 export const DashboardProvider = ({
   children,
+  initialRecipes,
 }: {
   children: React.ReactNode;
+  initialRecipes: Recipe[];
 }) => {
-  const [recipes, setRecipes] = useState<Recipe[]>(() => {
-    // localStorage n'est pas disponible côté serveur (SSR)
-    if (typeof window === 'undefined') return mockRecipes;
-    const stored = localStorage.getItem('recipes');
-    return stored ? JSON.parse(stored) : mockRecipes;
-  });
+  const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes);
 
   const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>(() => {
     // localStorage n'est pas disponible côté serveur (SSR)
@@ -40,14 +36,6 @@ export const DashboardProvider = ({
     const stored = localStorage.getItem('planned-meals');
     return stored ? JSON.parse(stored) : [];
   });
-
-  useEffect(() => {
-    localStorage.setItem('recipes', JSON.stringify(recipes));
-  }, [recipes]);
-
-  useEffect(() => {
-    localStorage.setItem('planned-meals', JSON.stringify(plannedMeals));
-  }, [plannedMeals]);
 
   const handleCreateRecipe = (id: string, values: RecipeFormValues) => {
     setRecipes((prev) => [...prev, { id, ...values }]);

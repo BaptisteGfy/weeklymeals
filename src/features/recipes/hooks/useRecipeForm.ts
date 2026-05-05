@@ -77,6 +77,8 @@ const recipeToFormValues = (recipe: Recipe): RecipeFormValues => ({
   description: recipe.description,
   servings: recipe.servings,
   prepTimeMinutes: recipe.prepTimeMinutes,
+  cookTimeMinutes: recipe.cookTimeMinutes,
+  restTimeMinutes: recipe.restTimeMinutes,
   category: recipe.category,
   ingredients: recipe.ingredients,
   instructions: recipe.instructions,

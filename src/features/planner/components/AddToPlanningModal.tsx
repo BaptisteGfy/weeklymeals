@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 import {
@@ -7,14 +9,21 @@ import {
   weekDays,
 } from '../constants';
 import { MealType, WeekDay } from '../types';
+import { weekDayToDate } from '../utils/date';
 
 type Props = {
   isOpen: boolean;
+  weekStart: Date;
   onClose: () => void;
-  onAdd: (day: WeekDay, mealType: MealType) => void;
+  onAdd: (date: string, mealType: MealType) => void;
 };
 
-export const AddToPlanningModal = ({ isOpen, onClose, onAdd }: Props) => {
+export const AddToPlanningModal = ({
+  isOpen,
+  weekStart,
+  onClose,
+  onAdd,
+}: Props) => {
   const [selectedDay, setSelectedDay] = useState<WeekDay>('monday');
   const [selectedMealType, setSelectedMealType] = useState<MealType>('lunch');
 
@@ -81,7 +90,7 @@ export const AddToPlanningModal = ({ isOpen, onClose, onAdd }: Props) => {
           <button
             type="button"
             onClick={() => {
-              onAdd(selectedDay, selectedMealType);
+              onAdd(weekDayToDate(selectedDay, weekStart), selectedMealType);
               onClose();
             }}
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"

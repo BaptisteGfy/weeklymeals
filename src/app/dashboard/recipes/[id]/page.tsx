@@ -28,8 +28,8 @@ const RecipeDetailPage = ({ params }: Props) => {
       recipe={recipe}
       onSave={(values) => handleUpdateRecipe(recipe.id, values)}
       initialIsEditing={initialIsEditing}
-      onAddToPlanning={(day, mealType) =>
-        handleAddToPlanning(day, mealType, recipe.id)
+      onAddToPlanning={(date, mealType) =>
+        handleAddToPlanning(date, mealType, recipe.id)
       }
     />
   );

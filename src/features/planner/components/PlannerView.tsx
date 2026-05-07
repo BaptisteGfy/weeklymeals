@@ -11,13 +11,18 @@ import {
   weekDays,
 } from '../constants';
 import type { MealSlot, MealType, PlannedMeal, WeekDay } from '../types';
+import { getWeekStart, weekDayToDate } from '../utils/date';
 import { RecipePickerModal } from './RecipePickerModal';
 
 type Props = {
   recipes: Recipe[];
   plannedMeals: PlannedMeal[];
-  onAddToPlanning: (day: WeekDay, mealType: MealType, recipeId: string) => void;
-  onRemoveFromPlanning: (day: WeekDay, mealType: MealType) => void;
+  onAddToPlanning: (
+    date: string,
+    mealType: MealType,
+    recipeId: string,
+  ) => Promise<void>;
+  onRemoveFromPlanning: (date: string, mealType: MealType) => Promise<void>;
 };
 
 export const PlannerView = ({
@@ -27,19 +32,22 @@ export const PlannerView = ({
   onRemoveFromPlanning,
 }: Props) => {
   const [selectedSlot, setSelectedSlot] = useState<MealSlot | null>(null);
+  const weekStart = getWeekStart();
 
-  const getPlannedMeal = (
-    day: WeekDay,
-    mealType: MealType,
-  ): PlannedMeal | undefined =>
-    plannedMeals.find((meal) => meal.day === day && meal.mealType === mealType);
+  const getPlannedMeal = (day: WeekDay, mealType: MealType) => {
+    const date = weekDayToDate(day, weekStart);
+    return plannedMeals.find(
+      (meal) => meal.date === date && meal.mealType === mealType,
+    );
+  };
 
   const getRecipeById = (id: string): Recipe | undefined =>
     recipes.find((r) => r.id === id);
 
   const handleSelectRecipe = (recipeId: string) => {
     if (!selectedSlot) return;
-    onAddToPlanning(selectedSlot.day, selectedSlot.mealType, recipeId);
+    const date = weekDayToDate(selectedSlot.day, weekStart);
+    onAddToPlanning(date, selectedSlot.mealType, recipeId);
     setSelectedSlot(null);
   };
 
@@ -91,7 +99,12 @@ export const PlannerView = ({
 
                       {plannedMeal && (
                         <button
-                          onClick={() => onRemoveFromPlanning(day, mealType)}
+                          onClick={() =>
+                            onRemoveFromPlanning(
+                              weekDayToDate(day, weekStart),
+                              mealType,
+                            )
+                          }
                           className={clsx(
                             'inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition',
                             'border-red-300 text-red-600 hover:border-red-400 hover:bg-red-50',

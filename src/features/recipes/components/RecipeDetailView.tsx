@@ -7,7 +7,8 @@ import { toast } from 'sonner';
 
 import { AddToPlanningModal } from '@/features/planner/components/AddToPlanningModal';
 import { mealTypeLabels, weekDayLabels } from '@/features/planner/constants';
-import { MealType, WeekDay } from '@/features/planner/types';
+import { MealType } from '@/features/planner/types';
+import { dateToWeekDay, getWeekStart } from '@/features/planner/utils/date';
 
 import { categoryLabels, unitLabels } from '../constants';
 import { useRecipeForm } from '../hooks/useRecipeForm';
@@ -18,7 +19,7 @@ type Props = {
   onSave: (values: RecipeFormValues) => void;
   onCancel?: () => void;
   initialIsEditing?: boolean;
-  onAddToPlanning?: (day: WeekDay, mealType: MealType) => void;
+  onAddToPlanning?: (date: string, mealType: MealType) => void;
 };
 
 export const RecipeDetailView = ({
@@ -47,6 +48,8 @@ export const RecipeDetailView = ({
     handleDeleteInstruction,
     errors,
   } = useRecipeForm(recipe, { onSave, onCancel, initialIsEditing });
+
+  const weekStart = getWeekStart();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -466,11 +469,12 @@ export const RecipeDetailView = ({
       {onAddToPlanning && (
         <AddToPlanningModal
           isOpen={isModalOpen}
+          weekStart={weekStart}
           onClose={() => setIsModalOpen(false)}
-          onAdd={(day, mealType) => {
-            onAddToPlanning(day, mealType);
+          onAdd={(date, mealType) => {
+            onAddToPlanning(date, mealType);
             toast.success(
-              `${recipe.title} ajouté au planning du ${weekDayLabels[day]} ${mealTypeLabels[mealType]}`,
+              `${recipe.title} ajouté au planning du ${weekDayLabels[dateToWeekDay(date)]} ${mealTypeLabels[mealType]}`,
             );
           }}
         />

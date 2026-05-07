@@ -16,7 +16,7 @@ export type MealSlot = {
 
 export type PlannedMeal = {
   id: string;
-  day: WeekDay;
+  date: string; 
   mealType: MealType;
   recipeId: string;
 };

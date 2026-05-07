@@ -2,13 +2,14 @@
 
 import { createContext, useContext, useState } from 'react';
 
+import { addToPlanning, removeFromPlanning } from '@/actions/planner-actions';
 import {
   createRecipe,
   deleteRecipe,
   updateRecipe,
 } from '@/actions/recipe-actions';
-import { MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
-import { Recipe, RecipeFormValues } from '@/features/recipes/types';
+import type { MealType, PlannedMeal } from '@/features/planner/types';
+import type { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
 type DashboardContextType = {
   recipes: Recipe[];
@@ -17,11 +18,11 @@ type DashboardContextType = {
   handleUpdateRecipe: (id: string, values: RecipeFormValues) => Promise<void>;
   handleDeleteRecipe: (id: string) => Promise<void>;
   handleAddToPlanning: (
-    day: WeekDay,
+    date: string,
     mealType: MealType,
     recipeId: string,
-  ) => void;
-  handleRemoveFromPlanning: (day: WeekDay, mealType: MealType) => void;
+  ) => Promise<void>;
+  handleRemoveFromPlanning: (date: string, mealType: MealType) => Promise<void>;
 };
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
@@ -29,18 +30,15 @@ const DashboardContext = createContext<DashboardContextType | null>(null);
 export const DashboardProvider = ({
   children,
   initialRecipes,
+  initialPlannedMeals,
 }: {
   children: React.ReactNode;
   initialRecipes: Recipe[];
+  initialPlannedMeals: PlannedMeal[];
 }) => {
   const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes);
-
-  const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>(() => {
-    // localStorage n'est pas disponible côté serveur (SSR)
-    if (typeof window === 'undefined') return [];
-    const stored = localStorage.getItem('planned-meals');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [plannedMeals, setPlannedMeals] =
+    useState<PlannedMeal[]>(initialPlannedMeals);
 
   const handleCreateRecipe = async (values: RecipeFormValues) => {
     const newRecipe = await createRecipe(values);
@@ -60,25 +58,26 @@ export const DashboardProvider = ({
     setRecipes((prev) => prev.filter((recipe) => recipe.id !== id));
   };
 
-  const handleAddToPlanning = (
-    day: WeekDay,
+  const handleAddToPlanning = async (
+    date: string,
     mealType: MealType,
     recipeId: string,
   ) => {
+    const newMeal = await addToPlanning(date, mealType, recipeId);
     setPlannedMeals((prev) => {
       const filtered = prev.filter(
-        (meal) => !(meal.day === day && meal.mealType === mealType),
+        (meal) => !(meal.date === date && meal.mealType === mealType),
       );
-      return [
-        ...filtered,
-        { id: crypto.randomUUID(), day, mealType, recipeId },
-      ];
+      return [...filtered, newMeal];
     });
   };
 
-  const handleRemoveFromPlanning = (day: WeekDay, mealType: MealType) => {
+  const handleRemoveFromPlanning = async (date: string, mealType: MealType) => {
+    await removeFromPlanning(date, mealType);
     setPlannedMeals((prev) =>
-      prev.filter((meal) => !(meal.day === day && meal.mealType === mealType)),
+      prev.filter(
+        (meal) => !(meal.date === date && meal.mealType === mealType),
+      ),
     );
   };
 

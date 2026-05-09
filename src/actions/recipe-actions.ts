@@ -8,8 +8,39 @@ import {
   RecipeCategory,
   RecipeFormValues,
 } from '@/features/recipes/types';
+import { Prisma } from '@/generated/prisma/client';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+
+type RecipeWithIngredients = Prisma.RecipeGetPayload<{
+  include: {
+    ingredients: { include: { ingredient: true } };
+  };
+}>;
+
+const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
+  return {
+    id: recipe.id,
+    imageUrl: recipe.imageUrl ?? undefined,
+    title: recipe.title,
+    description: recipe.description,
+    servings: recipe.servings,
+    prepTimeMinutes: recipe.prepTimeMinutes ?? undefined,
+    cookTimeMinutes: recipe.cookTimeMinutes ?? undefined,
+    restTimeMinutes: recipe.restTimeMinutes ?? undefined,
+    category: recipe.category as RecipeCategory,
+    ingredients: recipe.ingredients.map((ri) => ({
+      id: ri.id,
+      name: ri.ingredient.nameFr,
+      quantity: ri.quantity,
+      unit: ri.unit as IngredientUnit,
+    })),
+    instructions: recipe.instructions.map((text, index) => ({
+      id: String(index),
+      text,
+    })),
+  };
+};
 
 export const getRecipes = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -25,27 +56,7 @@ export const getRecipes = async () => {
     },
   });
 
-  return recipes.map((recipe) => ({
-    id: recipe.id,
-    imageUrl: recipe.imageUrl ?? undefined,
-    title: recipe.title,
-    description: recipe.description,
-    servings: recipe.servings,
-    prepTimeMinutes: recipe.prepTimeMinutes ?? undefined,
-    cookTimeMinutes: recipe.cookTimeMinutes ?? undefined,
-    restTimeMinutes: recipe.restTimeMinutes ?? undefined,
-    category: recipe.category as RecipeCategory,
-    ingredients: recipe.ingredients.map((ri) => ({
-      id: ri.id,
-      name: ri.ingredient.nameFr, // ou nameEn selon la langue que tu veux afficher
-      quantity: ri.quantity,
-      unit: ri.unit as IngredientUnit,
-    })),
-    instructions: recipe.instructions.map((text, index) => ({
-      id: String(index),
-      text,
-    })),
-  }));
+  return recipes.map(transformRecipeFromDB);
 };
 
 export const createRecipe = async (
@@ -86,26 +97,7 @@ export const createRecipe = async (
     },
   });
 
-  return {
-    id: created.id,
-    title: created.title,
-    description: created.description,
-    servings: created.servings,
-    prepTimeMinutes: created.prepTimeMinutes ?? undefined,
-    cookTimeMinutes: created.cookTimeMinutes ?? undefined,
-    restTimeMinutes: created.restTimeMinutes ?? undefined,
-    category: created.category as RecipeCategory,
-    ingredients: created.ingredients.map((ri) => ({
-      id: ri.id,
-      name: ri.ingredient.nameFr,
-      quantity: ri.quantity,
-      unit: ri.unit as IngredientUnit,
-    })),
-    instructions: created.instructions.map((text, index) => ({
-      id: String(index),
-      text,
-    })),
-  };
+  return transformRecipeFromDB(created);
 };
 
 export const updateRecipe = async (
@@ -149,27 +141,7 @@ export const updateRecipe = async (
     },
   });
 
-  return {
-    id: updated.id,
-    imageUrl: updated.imageUrl ?? undefined,
-    title: updated.title,
-    description: updated.description,
-    servings: updated.servings,
-    prepTimeMinutes: updated.prepTimeMinutes ?? undefined,
-    cookTimeMinutes: updated.cookTimeMinutes ?? undefined,
-    restTimeMinutes: updated.restTimeMinutes ?? undefined,
-    category: updated.category as RecipeCategory,
-    ingredients: updated.ingredients.map((ri) => ({
-      id: ri.id,
-      name: ri.ingredient.nameFr,
-      quantity: ri.quantity,
-      unit: ri.unit as IngredientUnit,
-    })),
-    instructions: updated.instructions.map((text, index) => ({
-      id: String(index),
-      text,
-    })),
-  };
+  return transformRecipeFromDB(updated);
 };
 
 export const deleteRecipe = async (id: string) => {

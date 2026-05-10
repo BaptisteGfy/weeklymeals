@@ -10,9 +10,11 @@ import { mealTypeLabels, weekDayLabels } from '@/features/planner/constants';
 import { MealType } from '@/features/planner/types';
 import { dateToWeekDay, getWeekStart } from '@/features/planner/utils/date';
 
-import { categoryLabels, unitLabels } from '../constants';
+import { categoryLabels } from '../constants';
 import { useRecipeForm } from '../hooks/useRecipeForm';
-import { IngredientUnit, Recipe, RecipeFormValues } from '../types';
+import { Recipe, RecipeFormValues } from '../types';
+import { IngredientsSection } from './IngredientsSection';
+import { InstructionsSection } from './InstructionsSection';
 
 type Props = {
   recipe: Recipe;
@@ -258,213 +260,28 @@ export const RecipeDetailView = ({
         )}
       </div>
 
-      <section className="mt-8">
-        <h2 className="mb-3 text-xl font-semibold">Ingrédients</h2>
-        <ul className="space-y-2">
-          {formValues.ingredients.map((ingredient) => (
-            <li key={ingredient.id} className="flex items-center gap-2 text-sm">
-              <span className="text-gray-400">•</span>
-              {isEditing ? (
-                <>
-                  <input
-                    value={ingredient.name}
-                    onChange={(e) =>
-                      handleIngredientChange(
-                        ingredient.id,
-                        'name',
-                        e.target.value,
-                      )
-                    }
-                    className="min-w-0 flex-1 rounded border px-2 py-1 text-sm"
-                  />
-                  <input
-                    type="number"
-                    min="1"
-                    value={ingredient.quantity}
-                    onChange={(e) =>
-                      handleIngredientChange(
-                        ingredient.id,
-                        'quantity',
-                        Number(e.target.value),
-                      )
-                    }
-                    className="w-16 rounded border px-2 py-1 text-sm"
-                  />
-                  <select
-                    value={ingredient.unit}
-                    onChange={(e) =>
-                      handleIngredientChange(
-                        ingredient.id,
-                        'unit',
-                        e.target.value as IngredientUnit,
-                      )
-                    }
-                    className="rounded border px-2 py-1 text-sm"
-                  >
-                    {(Object.keys(unitLabels) as IngredientUnit[]).map(
-                      (unit) => (
-                        <option key={unit} value={unit}>
-                          {unitLabels[unit]}
-                        </option>
-                      ),
-                    )}
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteIngredient(ingredient.id)}
-                    className="text-gray-400 transition hover:text-red-500"
-                  >
-                    ✕
-                  </button>
-                </>
-              ) : (
-                <span className="text-gray-700">
-                  {ingredient.name} — {ingredient.quantity}{' '}
-                  {unitLabels[ingredient.unit]}
-                </span>
-              )}
-            </li>
-          ))}
+      <IngredientsSection
+        isEditing={isEditing}
+        ingredients={formValues.ingredients}
+        ingredientDraft={ingredientDraft}
+        setIngredientDraft={setIngredientDraft}
+        handleIngredientChange={handleIngredientChange}
+        handleAddIngredient={handleAddIngredient}
+        handleDeleteIngredient={handleDeleteIngredient}
+        error={errors.ingredients}
+      />
 
-          {isEditing && (
-            <li className="flex items-center gap-2 pt-1">
-              <span className="text-gray-300">+</span>
-              <input
-                value={ingredientDraft.name}
-                onChange={(e) =>
-                  setIngredientDraft((prev) => ({
-                    ...prev,
-                    name: e.target.value,
-                  }))
-                }
-                placeholder="Nouvel ingrédient"
-                className="min-w-0 flex-1 rounded border px-2 py-1 text-sm placeholder-gray-300"
-              />
-              <input
-                type="number"
-                min="1"
-                value={ingredientDraft.quantity}
-                onChange={(e) =>
-                  setIngredientDraft((prev) => ({
-                    ...prev,
-                    quantity: Number(e.target.value),
-                  }))
-                }
-                className="w-16 rounded border px-2 py-1 text-sm"
-              />
-              <select
-                value={ingredientDraft.unit}
-                onChange={(e) =>
-                  setIngredientDraft((prev) => ({
-                    ...prev,
-                    unit: e.target.value as IngredientUnit,
-                  }))
-                }
-                className="rounded border px-2 py-1 text-sm"
-              >
-                {(Object.keys(unitLabels) as IngredientUnit[]).map((unit) => (
-                  <option key={unit} value={unit}>
-                    {unitLabels[unit]}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={handleAddIngredient}
-                className="rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition hover:bg-gray-50"
-              >
-                Ajouter
-              </button>
-            </li>
-          )}
-        </ul>
-        {/* Erreur au niveau de la section — couvre "liste vide" et "ingrédient invalide" */}
-        {isEditing && errors.ingredients && (
-          <p
-            id="ingredients-error"
-            role="alert"
-            className="mt-2 text-sm text-red-500"
-          >
-            {errors.ingredients}
-          </p>
-        )}
-      </section>
-
-      <section className="mt-8 pb-12">
-        <h2 className="mb-3 text-xl font-semibold">Préparation</h2>
-        {formValues.instructions.length === 0 && !isEditing ? (
-          <p className="text-sm text-gray-400">
-            Aucune instruction renseignée.
-          </p>
-        ) : (
-          <ol className="space-y-3">
-            {formValues.instructions.map((instruction, index) => (
-              <li
-                key={instruction.id}
-                className="flex items-start gap-3 text-sm"
-              >
-                <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-500">
-                  {index + 1}
-                </span>
-                {isEditing ? (
-                  <>
-                    <textarea
-                      value={instruction.text}
-                      onChange={(e) =>
-                        handleInstructionChange(instruction.id, e.target.value)
-                      }
-                      rows={2}
-                      className="min-w-0 flex-1 rounded border px-2 py-1 text-sm leading-relaxed"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteInstruction(instruction.id)}
-                      className="mt-1 text-gray-400 transition hover:text-red-500"
-                    >
-                      ✕
-                    </button>
-                  </>
-                ) : (
-                  <span className="leading-relaxed text-gray-700">
-                    {instruction.text}
-                  </span>
-                )}
-              </li>
-            ))}
-
-            {isEditing && (
-              <li className="flex items-start gap-3">
-                <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-300">
-                  {formValues.instructions.length + 1}
-                </span>
-                <textarea
-                  value={instructionDraft}
-                  onChange={(e) => setInstructionDraft(e.target.value)}
-                  placeholder="Nouvelle étape..."
-                  rows={2}
-                  className="min-w-0 flex-1 rounded border px-2 py-1 text-sm placeholder-gray-300"
-                />
-                <button
-                  type="button"
-                  onClick={handleAddInstruction}
-                  className="mt-1 rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition hover:bg-gray-50"
-                >
-                  Ajouter
-                </button>
-              </li>
-            )}
-          </ol>
-        )}
-        {isEditing && errors.instructions && (
-          <p
-            id="instructions-error"
-            role="alert"
-            className="mt-2 text-sm text-red-500"
-          >
-            {errors.instructions}
-          </p>
-        )}
-      </section>
+      <InstructionsSection
+        isEditing={isEditing}
+        instructions={formValues.instructions}
+        instructionDraft={instructionDraft}
+        setInstructionDraft={setInstructionDraft}
+        handleInstructionChange={handleInstructionChange}
+        handleAddInstruction={handleAddInstruction}
+        handleDeleteInstruction={handleDeleteInstruction}
+        error={errors.instructions}
+      />
+      
 
       {onAddToPlanning && (
         <AddToPlanningModal

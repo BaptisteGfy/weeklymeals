@@ -2,6 +2,8 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
+
+import { UserRole } from '@/generated/prisma/client';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { authClient } from '@/lib/auth-client';
@@ -49,7 +51,7 @@ export const Sidebar = ({ isOpen, onClose, user }: SidebarProps) => {
 
         <nav className="flex-1 px-3 py-4">
           <ul className="space-y-1">
-            {[...userNavLinks, ...(user.role === 'admin' ? adminNavLinks : [])].map((link) => {
+            {[...userNavLinks, ...(user.role === UserRole.admin ? adminNavLinks : [])].map((link) => {
               const isActive = pathname === link.href;
               return (
                 <li key={link.href}>

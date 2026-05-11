@@ -1,17 +1,17 @@
 'use server';
 
-import { headers } from 'next/headers';
-
 import type { MealType, PlannedMeal } from '@/features/planner/types';
-import { auth } from '@/lib/auth';
+import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 const toDateTime = (isoDate: string): Date => new Date(isoDate + 'T12:00:00Z');
 
 const toISODate = (date: Date): string => date.toISOString().split('T')[0];
 
-export const getPlannedMeals = async (weekStart: Date): Promise<PlannedMeal[]> => {
-  const session = await auth.api.getSession({ headers: await headers() });
+export const getPlannedMeals = async (
+  weekStart: Date,
+): Promise<PlannedMeal[]> => {
+  const session = await getCurrentSession();
   if (!session) throw new Error('User is not authenticated');
 
   const weekEnd = new Date(weekStart);
@@ -38,7 +38,7 @@ export const addToPlanning = async (
   mealType: MealType,
   recipeId: string,
 ): Promise<PlannedMeal> => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentSession();
   if (!session) throw new Error('User is not authenticated');
 
   const meal = await prisma.plannedMeal.upsert({
@@ -70,7 +70,7 @@ export const removeFromPlanning = async (
   date: string,
   mealType: MealType,
 ): Promise<void> => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentSession();
   if (!session) throw new Error('User is not authenticated');
 
   await prisma.plannedMeal.delete({

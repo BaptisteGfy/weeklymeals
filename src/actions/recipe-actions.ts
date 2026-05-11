@@ -1,7 +1,5 @@
 'use server';
 
-import { headers } from 'next/headers';
-
 import {
   IngredientUnit,
   Recipe,
@@ -9,7 +7,7 @@ import {
   RecipeFormValues,
 } from '@/features/recipes/types';
 import { Prisma } from '@/generated/prisma/client';
-import { auth } from '@/lib/auth';
+import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 type RecipeWithIngredients = Prisma.RecipeGetPayload<{
@@ -43,7 +41,7 @@ const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
 };
 
 export const getRecipes = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentSession();
   if (!session) {
     throw new Error('User is not authenticated');
   }
@@ -62,7 +60,7 @@ export const getRecipes = async () => {
 export const createRecipe = async (
   values: RecipeFormValues,
 ): Promise<Recipe> => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentSession();
   if (!session) {
     throw new Error('User is not authenticated');
   }
@@ -104,7 +102,7 @@ export const updateRecipe = async (
   id: string,
   values: RecipeFormValues,
 ): Promise<Recipe> => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentSession();
   if (!session) {
     throw new Error('User is not authenticated');
   }
@@ -145,7 +143,7 @@ export const updateRecipe = async (
 };
 
 export const deleteRecipe = async (id: string) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentSession();
   if (!session) {
     throw new Error('User is not authenticated');
   }

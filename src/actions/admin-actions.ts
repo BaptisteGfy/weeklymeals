@@ -1,12 +1,10 @@
 'use server';
 
-import { headers } from 'next/headers';
-
-import { auth } from '@/lib/auth';
+import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export const getAdminStats = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCurrentSession();
 
   if (!session || session.user.role !== 'admin') {
     throw new Error('Unauthorized');

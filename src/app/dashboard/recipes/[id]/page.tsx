@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { use } from 'react';
+import { Suspense, use } from 'react';
 
 import { useDashboard } from '@/context/DashboardContext';
 import { RecipeDetailView } from '@/features/recipes/components/RecipeDetailView';
@@ -10,9 +10,8 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-const RecipeDetailPage = ({ params }: Props) => {
-  const { recipes, handleUpdateRecipe, handleAddToPlanning } =
-    useDashboard();
+const RecipeDetailContent = ({ params }: Props) => {
+  const { recipes, handleUpdateRecipe, handleAddToPlanning } = useDashboard();
   const { id } = use(params);
   const searchParams = useSearchParams();
   const initialIsEditing = searchParams.get('edit') === 'true';
@@ -34,5 +33,11 @@ const RecipeDetailPage = ({ params }: Props) => {
     />
   );
 };
+
+const RecipeDetailPage = ({ params }: Props) => (
+  <Suspense fallback={null}>
+    <RecipeDetailContent params={params} />
+  </Suspense>
+);
 
 export default RecipeDetailPage;

@@ -1,7 +1,8 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { Suspense, use } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, use, useEffect } from 'react';
+import { toast } from 'sonner';
 
 import { useDashboard } from '@/context/DashboardContext';
 import { RecipeDetailView } from '@/features/recipes/components/RecipeDetailView';
@@ -15,12 +16,18 @@ const RecipeDetailContent = ({ params }: Props) => {
   const { id } = use(params);
   const searchParams = useSearchParams();
   const initialIsEditing = searchParams.get('edit') === 'true';
+  const router = useRouter();
 
   const recipe = recipes.find((r) => r.id === id);
 
-  if (!recipe) {
-    return <div>Recette non trouvée</div>;
-  }
+  useEffect(() => {
+    if (!recipe) {
+      toast.error('Recette introuvable');
+      router.push('/dashboard/recipes');
+    }
+  }, [recipe, router]);
+
+  if (!recipe) return null;
 
   return (
     <RecipeDetailView

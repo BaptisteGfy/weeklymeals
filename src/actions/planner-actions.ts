@@ -6,7 +6,7 @@ import type { MealType, PlannedMeal } from '@/features/planner/types';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-const toDateTime = (isoDate: string): Date => new Date(isoDate + 'T12:00:00');
+const toDateTime = (isoDate: string): Date => new Date(isoDate + 'T12:00:00Z');
 
 const toISODate = (date: Date): string => date.toISOString().split('T')[0];
 

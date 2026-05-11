@@ -6,7 +6,7 @@ import { Sidebar } from './Sidebar';
 
 type DashboardShellProps = {
   children: React.ReactNode;
-  user: { name: string; email: string };
+  user: { name: string; email: string; role: string };
 };
 
 export const DashboardShell = ({ children, user }: DashboardShellProps) => {

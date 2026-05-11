@@ -27,6 +27,12 @@ async function seed() {
     console.log('Compte admin existant :', existingAdmin.email);
   }
 
+  await prisma.user.update({
+    where: { id: adminId },
+    data: { role: 'admin' },
+  });
+  console.log('Rôle admin confirmé.');
+
   // Reset des recettes de bibliothèque existantes pour garantir un état propre
   const existingLibrary = await prisma.recipe.findMany({
     where: { isLibrary: true },

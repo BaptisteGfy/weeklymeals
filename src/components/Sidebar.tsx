@@ -6,14 +6,16 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { authClient } from '@/lib/auth-client';
 
-const navLinks = [
+const userNavLinks = [
   { href: '/dashboard/recipes', label: 'Mes recettes' },
   { href: '/dashboard/planner', label: 'Mon planning' },
 ];
+
+const adminNavLinks = [{ href: '/dashboard/admin', label: 'Admin' }];
 type SidebarProps = {
   isOpen: boolean;
   onClose: () => void;
-  user: { name: string; email: string };
+  user: { name: string; email: string; role: string };
 };
 
 export const Sidebar = ({ isOpen, onClose, user }: SidebarProps) => {
@@ -47,7 +49,7 @@ export const Sidebar = ({ isOpen, onClose, user }: SidebarProps) => {
 
         <nav className="flex-1 px-3 py-4">
           <ul className="space-y-1">
-            {navLinks.map((link) => {
+            {[...userNavLinks, ...(user.role === 'admin' ? adminNavLinks : [])].map((link) => {
               const isActive = pathname === link.href;
               return (
                 <li key={link.href}>

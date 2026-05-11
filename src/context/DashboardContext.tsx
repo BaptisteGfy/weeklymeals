@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState } from 'react';
+import { toast } from 'sonner';
 
 import { addToPlanning, removeFromPlanning } from '@/actions/planner-actions';
 import {
@@ -41,21 +42,34 @@ export const DashboardProvider = ({
     useState<PlannedMeal[]>(initialPlannedMeals);
 
   const handleCreateRecipe = async (values: RecipeFormValues) => {
-    const newRecipe = await createRecipe(values);
-    setRecipes((prev) => [...prev, newRecipe]);
-    return newRecipe;
+    try {
+      const newRecipe = await createRecipe(values);
+      setRecipes((prev) => [...prev, newRecipe]);
+      return newRecipe;
+    } catch {
+      toast.error('Impossible de créer la recette. Réessaie.');
+      throw new Error('Failed to create recipe');
+    }
   };
 
   const handleUpdateRecipe = async (id: string, values: RecipeFormValues) => {
-    const updatedRecipe = await updateRecipe(id, values);
-    setRecipes((prev) =>
-      prev.map((recipe) => (recipe.id === id ? updatedRecipe : recipe)),
-    );
+    try {
+      const updatedRecipe = await updateRecipe(id, values);
+      setRecipes((prev) =>
+        prev.map((recipe) => (recipe.id === id ? updatedRecipe : recipe)),
+      );
+    } catch {
+      toast.error('Impossible de modifier la recette. Réessaie.');
+    }
   };
 
   const handleDeleteRecipe = async (id: string) => {
-    await deleteRecipe(id);
-    setRecipes((prev) => prev.filter((recipe) => recipe.id !== id));
+    try {
+      await deleteRecipe(id);
+      setRecipes((prev) => prev.filter((recipe) => recipe.id !== id));
+    } catch {
+      toast.error('Impossible de supprimer la recette. Réessaie.');
+    }
   };
 
   const handleAddToPlanning = async (
@@ -63,22 +77,30 @@ export const DashboardProvider = ({
     mealType: MealType,
     recipeId: string,
   ) => {
-    const newMeal = await addToPlanning(date, mealType, recipeId);
-    setPlannedMeals((prev) => {
-      const filtered = prev.filter(
-        (meal) => !(meal.date === date && meal.mealType === mealType),
-      );
-      return [...filtered, newMeal];
-    });
+    try {
+      const newMeal = await addToPlanning(date, mealType, recipeId);
+      setPlannedMeals((prev) => {
+        const filtered = prev.filter(
+          (meal) => !(meal.date === date && meal.mealType === mealType),
+        );
+        return [...filtered, newMeal];
+      });
+    } catch {
+      toast.error('Impossible d\'ajouter au planning. Réessaie.');
+    }
   };
 
   const handleRemoveFromPlanning = async (date: string, mealType: MealType) => {
-    await removeFromPlanning(date, mealType);
-    setPlannedMeals((prev) =>
-      prev.filter(
-        (meal) => !(meal.date === date && meal.mealType === mealType),
-      ),
-    );
+    try {
+      await removeFromPlanning(date, mealType);
+      setPlannedMeals((prev) =>
+        prev.filter(
+          (meal) => !(meal.date === date && meal.mealType === mealType),
+        ),
+      );
+    } catch {
+      toast.error('Impossible de retirer du planning. Réessaie.');
+    }
   };
 
   return (

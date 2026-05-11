@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { headers } from 'next/headers';
 
 import { prisma } from './prisma';
 
@@ -13,3 +14,9 @@ export const auth = betterAuth({
     enabled: true,
   },
 });
+
+export const getCurrentSession = async () => {
+  return auth.api.getSession({
+    headers: await headers(),
+  });
+};

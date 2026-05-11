@@ -6,7 +6,7 @@ import {
   RecipeCategory,
   RecipeFormValues,
 } from '@/features/recipes/types';
-import { Prisma } from '@/generated/prisma/client';
+import { IngredientCategory, Prisma } from '@/generated/prisma/client';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
@@ -82,7 +82,7 @@ export const createRecipe = async (
           ingredient: {
             connectOrCreate: {
               where: { nameFr: ing.name },
-              create: { nameFr: ing.name, nameEn: ing.name, category: 'other' },
+              create: { nameFr: ing.name, nameEn: ing.name, category: IngredientCategory.other },
             },
           },
         })),
@@ -126,7 +126,7 @@ export const updateRecipe = async (
           ingredient: {
             connectOrCreate: {
               where: { nameFr: ing.name },
-              create: { nameFr: ing.name, nameEn: ing.name, category: 'other' },
+              create: { nameFr: ing.name, nameEn: ing.name, category: IngredientCategory.other },
             },
           },
         })),

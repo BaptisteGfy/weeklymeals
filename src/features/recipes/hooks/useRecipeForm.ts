@@ -66,6 +66,8 @@ const validate = (values: RecipeFormValues): FormErrors => {
   return errors;
 };
 
+const NUMERIC_FIELDS = ['servings', 'prepTimeMinutes', 'cookTimeMinutes', 'restTimeMinutes'];
+
 const initialIngredientDraft: IngredientDraft = {
   name: '',
   quantity: 1,
@@ -128,10 +130,7 @@ export const useRecipeForm = (
     const { name, value } = e.target;
     setFormValues((prev) => ({
       ...prev,
-      [name]:
-        name === 'servings' || name === 'prepTimeMinutes'
-          ? Number(value)
-          : value,
+      [name]: NUMERIC_FIELDS.includes(name) ? Number(value) : value,
     }));
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };

@@ -13,12 +13,12 @@ const navLinks = [
 type SidebarProps = {
   isOpen: boolean;
   onClose: () => void;
+  user: { name: string; email: string };
 };
 
-export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
+export const Sidebar = ({ isOpen, onClose, user }: SidebarProps) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = authClient.useSession();
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -71,10 +71,10 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
         <div className="border-t border-slate-700 px-6 py-4">
           <p className="truncate text-sm font-medium text-white">
-            {session?.user.name}
+            {user.name}
           </p>
           <p className="truncate text-xs text-slate-400">
-            {session?.user.email}
+            {user.email}
           </p>
           <button
             onClick={handleSignOut}

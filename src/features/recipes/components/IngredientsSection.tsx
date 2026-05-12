@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { unitLabels } from '../constants';
-import { Ingredient, IngredientDraft, IngredientUnit } from '../types';
+import { unitLabels } from '@/features/recipes/constants';
+import { Ingredient, IngredientDraft, IngredientUnit } from '@/features/recipes/types';
 
 type Props = {
   isEditing: boolean;

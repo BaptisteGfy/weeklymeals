@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { categoryLabels } from '../constants';
-import { Recipe, RecipeFormValues } from '../types';
+import { categoryLabels } from '@/features/recipes/constants';
+import { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
 type Props = {
   recipe: Recipe;

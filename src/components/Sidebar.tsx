@@ -2,11 +2,10 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
-
-import { UserRole } from '@/types/enums';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { authClient } from '@/lib/auth-client';
+import { UserRole } from '@/types/enums';
 
 const userNavLinks = [
   { href: '/dashboard/recipes', label: 'Mes recettes' },

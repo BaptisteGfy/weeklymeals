@@ -5,7 +5,7 @@ import {
   IngredientDraft,
   Recipe,
   RecipeFormValues,
-} from '../types';
+} from '@/features/recipes/types';
 
 type UseRecipeFormOptions = {
   onSave: (values: RecipeFormValues) => void;

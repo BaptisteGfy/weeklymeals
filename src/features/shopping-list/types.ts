@@ -1,4 +1,4 @@
-import type { IngredientUnit } from '../recipes/types';
+import type { IngredientUnit } from '@/features/recipes/types';
 
 export type ShoppingListItem = {
   name: string;

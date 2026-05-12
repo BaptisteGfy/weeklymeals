@@ -1,8 +1,8 @@
 'use client';
 
-import type { Recipe } from '../../recipes/types';
-import { mealTypeLabels, weekDayLabels } from '../constants';
-import type { MealType, WeekDay } from '../types';
+import { mealTypeLabels, weekDayLabels } from '@/features/planner/constants';
+import type { MealType, WeekDay } from '@/features/planner/types';
+import type { Recipe } from '@/features/recipes/types';
 
 type Props = {
   selectedSlot: { day: WeekDay; mealType: MealType };

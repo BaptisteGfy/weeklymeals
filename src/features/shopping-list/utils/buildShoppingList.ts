@@ -1,6 +1,7 @@
-import type { PlannedMeal } from '../../planner/types';
-import type { Recipe } from '../../recipes/types';
-import type { ShoppingListItem } from '../types';
+import type { PlannedMeal } from '@/features/planner/types';
+import type { Recipe } from '@/features/recipes/types';
+import type { ShoppingListItem } from '@/features/shopping-list/types';
+
 import { convertUnit } from './convertUnit';
 
 export const buildShoppingList = (

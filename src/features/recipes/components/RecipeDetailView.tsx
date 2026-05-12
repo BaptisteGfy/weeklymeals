@@ -7,9 +7,9 @@ import { AddToPlanningModal } from '@/features/planner/components/AddToPlanningM
 import { mealTypeLabels, weekDayLabels } from '@/features/planner/constants';
 import { MealType } from '@/features/planner/types';
 import { dateToWeekDay, getWeekStart } from '@/features/planner/utils/date';
+import { useRecipeForm } from '@/features/recipes/hooks/useRecipeForm';
+import { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
-import { useRecipeForm } from '../hooks/useRecipeForm';
-import { Recipe, RecipeFormValues } from '../types';
 import { IngredientsSection } from './IngredientsSection';
 import { InstructionsSection } from './InstructionsSection';
 import { RecipeActionBar } from './RecipeActionBar';

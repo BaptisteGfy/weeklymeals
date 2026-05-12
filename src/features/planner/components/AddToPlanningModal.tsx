@@ -7,9 +7,9 @@ import {
   mealTypes,
   weekDayLabels,
   weekDays,
-} from '../constants';
-import { MealType, WeekDay } from '../types';
-import { weekDayToDate } from '../utils/date';
+} from '@/features/planner/constants';
+import { MealType, WeekDay } from '@/features/planner/types';
+import { weekDayToDate } from '@/features/planner/utils/date';
 
 type Props = {
   isOpen: boolean;

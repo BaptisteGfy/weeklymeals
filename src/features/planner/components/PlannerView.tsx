@@ -3,15 +3,16 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import type { Recipe } from '../../recipes/types';
 import {
   mealTypeLabels,
   mealTypes,
   weekDayLabels,
   weekDays,
-} from '../constants';
-import type { MealSlot, MealType, PlannedMeal, WeekDay } from '../types';
-import { getWeekStart, weekDayToDate } from '../utils/date';
+} from '@/features/planner/constants';
+import type { MealSlot, MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
+import { getWeekStart, weekDayToDate } from '@/features/planner/utils/date';
+import type { Recipe } from '@/features/recipes/types';
+
 import { RecipePickerModal } from './RecipePickerModal';
 
 type Props = {

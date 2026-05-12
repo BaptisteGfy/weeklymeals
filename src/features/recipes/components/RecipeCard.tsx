@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 
-import { categoryLabels } from '../constants';
-import type { Recipe } from '../types';
+import { categoryLabels } from '@/features/recipes/constants';
+import type { Recipe } from '@/features/recipes/types';
 
 type Props = {
   recipe: Recipe;

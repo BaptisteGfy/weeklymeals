@@ -3,10 +3,10 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import type { PlannedMeal } from '../../planner/types';
-import { unitLabels } from '../../recipes/constants';
-import type { Recipe } from '../../recipes/types';
-import { buildShoppingList } from '../utils/buildShoppingList';
+import type { PlannedMeal } from '@/features/planner/types';
+import { unitLabels } from '@/features/recipes/constants';
+import type { Recipe } from '@/features/recipes/types';
+import { buildShoppingList } from '@/features/shopping-list/utils/buildShoppingList';
 
 type Props = {
   plannedMeals: PlannedMeal[];

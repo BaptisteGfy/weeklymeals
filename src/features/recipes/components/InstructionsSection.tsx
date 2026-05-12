@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { Instruction } from '../types';
+import { Instruction } from '@/features/recipes/types';
 
 type Props = {
   isEditing: boolean;

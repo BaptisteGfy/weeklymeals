@@ -33,8 +33,8 @@ const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
       quantity: ri.quantity,
       unit: ri.unit as IngredientUnit,
     })),
-    instructions: recipe.instructions.map((text, index) => ({
-      id: String(index),
+    instructions: recipe.instructions.map((text) => ({
+      id: crypto.randomUUID(),
       text,
     })),
   };

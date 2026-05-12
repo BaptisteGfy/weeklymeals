@@ -1,16 +1,14 @@
 'use client';
 
-import { useDashboard } from '@/context/DashboardContext';
+import { usePlanner } from '@/context/PlannerContext';
+import { useRecipes } from '@/context/RecipesContext';
 import { PlannerView } from '@/features/planner/components/PlannerView';
 import { ShoppingListView } from '@/features/shopping-list/components/ShoppingListView';
 
 const PlannerPage = () => {
-  const {
-    recipes,
-    plannedMeals,
-    handleAddToPlanning,
-    handleRemoveFromPlanning,
-  } = useDashboard();
+  const { recipes } = useRecipes();
+  const { plannedMeals, handleAddToPlanning, handleRemoveFromPlanning } =
+    usePlanner();
 
   return (
     <>

@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { useDashboard } from '@/context/DashboardContext';
+import { useRecipes } from '@/context/RecipesContext';
 import { RecipeCard } from '@/features/recipes/components/RecipeCard';
 
 const RecipesPage = () => {
-  const { recipes, handleDeleteRecipe } = useDashboard();
+  const { recipes, handleDeleteRecipe } = useRecipes();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredRecipes = recipes.filter((recipe) =>

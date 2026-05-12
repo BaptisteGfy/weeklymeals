@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useDashboard } from '@/context/DashboardContext';
+import { useRecipes } from '@/context/RecipesContext';
 import { RecipeDetailView } from '@/features/recipes/components/RecipeDetailView';
 import { Recipe } from '@/features/recipes/types';
 
@@ -20,7 +20,7 @@ const defaultRecipe: Omit<Recipe, 'id'> = {
 
 const NewRecipePage = () => {
   const router = useRouter();
-  const { handleCreateRecipe } = useDashboard();
+  const { handleCreateRecipe } = useRecipes();
 
   const recipe: Recipe = { id: '', ...defaultRecipe };
 

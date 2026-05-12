@@ -4,7 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, use, useEffect } from 'react';
 import { toast } from 'sonner';
 
-import { useDashboard } from '@/context/DashboardContext';
+import { usePlanner } from '@/context/PlannerContext';
+import { useRecipes } from '@/context/RecipesContext';
 import { RecipeDetailView } from '@/features/recipes/components/RecipeDetailView';
 
 type Props = {
@@ -12,7 +13,8 @@ type Props = {
 };
 
 const RecipeDetailContent = ({ params }: Props) => {
-  const { recipes, handleUpdateRecipe, handleAddToPlanning } = useDashboard();
+  const { recipes, handleUpdateRecipe } = useRecipes();
+  const { handleAddToPlanning } = usePlanner();
   const { id } = use(params);
   const searchParams = useSearchParams();
   const initialIsEditing = searchParams.get('edit') === 'true';

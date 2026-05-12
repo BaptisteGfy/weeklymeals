@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation';
 import { getPlannedMeals } from '@/actions/planner-actions';
 import { getRecipes } from '@/actions/recipe-actions';
 import { DashboardShell } from '@/components/DashboardShell';
-import { DashboardProvider } from '@/context/DashboardContext';
+import { PlannerProvider } from '@/context/PlannerContext';
+import { RecipesProvider } from '@/context/RecipesContext';
 import { getWeekStart } from '@/features/planner/utils/date';
 import { getCurrentSession } from '@/lib/auth';
 
@@ -18,12 +19,11 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   if (!session) redirect('/login');
 
   return (
-    <DashboardProvider
-      initialRecipes={recipes}
-      initialPlannedMeals={plannedMeals}
-    >
-      <DashboardShell user={session.user}>{children}</DashboardShell>
-    </DashboardProvider>
+    <RecipesProvider initialRecipes={recipes}>
+      <PlannerProvider initialPlannedMeals={plannedMeals}>
+        <DashboardShell user={session.user}>{children}</DashboardShell>
+      </PlannerProvider>
+    </RecipesProvider>
   );
 };
 

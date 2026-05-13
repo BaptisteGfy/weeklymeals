@@ -30,6 +30,9 @@ export const RecipeDetailView = ({
   initialIsEditing = false,
   onAddToPlanning,
 }: Props) => {
+  const [targetServings, setTargetServings] = useState(recipe.servings);
+  const scalingMultiplier = targetServings / recipe.servings;
+
   const {
     isEditing,
     startEditing,
@@ -51,8 +54,12 @@ export const RecipeDetailView = ({
   } = useRecipeForm(recipe, { onSave, onCancel, initialIsEditing });
 
   const weekStart = getWeekStart();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleStartEditing = () => {
+    setTargetServings(recipe.servings);
+    startEditing();
+  };
 
   return (
     <form
@@ -65,7 +72,7 @@ export const RecipeDetailView = ({
     >
       <RecipeActionBar
         isEditing={isEditing}
-        startEditing={startEditing}
+        startEditing={handleStartEditing}
         handleCancel={handleCancel}
         showPlanningButton={!!onAddToPlanning}
         onOpenModal={() => setIsModalOpen(true)}
@@ -90,6 +97,8 @@ export const RecipeDetailView = ({
         formValues={formValues}
         isEditing={isEditing}
         handleFieldChange={handleFieldChange}
+        targetServings={targetServings}
+        onTargetServingsChange={setTargetServings}
         error={{
           title: errors.title,
           description: errors.description,
@@ -100,6 +109,7 @@ export const RecipeDetailView = ({
       <IngredientsSection
         isEditing={isEditing}
         ingredients={formValues.ingredients}
+        scalingMultiplier={scalingMultiplier}
         ingredientDraft={ingredientDraft}
         setIngredientDraft={setIngredientDraft}
         handleIngredientChange={handleIngredientChange}

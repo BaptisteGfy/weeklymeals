@@ -3,6 +3,9 @@ import clsx from 'clsx';
 import { categoryLabels } from '@/features/recipes/constants';
 import { Recipe, RecipeFormValues } from '@/features/recipes/types';
 
+const MIN_SERVINGS = 1;
+const MAX_SERVINGS = 10;
+
 type Props = {
   recipe: Recipe;
   formValues: RecipeFormValues;
@@ -12,6 +15,8 @@ type Props = {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => void;
+  targetServings: number;
+  onTargetServingsChange: (n: number) => void;
   error?: {
     title?: string;
     description?: string;
@@ -24,6 +29,8 @@ export const RecipeInfoSection = ({
   formValues,
   isEditing,
   handleFieldChange,
+  targetServings,
+  onTargetServingsChange,
   error,
 }: Props) => {
   return (
@@ -101,8 +108,6 @@ export const RecipeInfoSection = ({
               <>
                 <span>{categoryLabels[recipe.category]}</span>
                 <span>·</span>
-                <span>{recipe.servings} portions</span>
-                <span>·</span>
                 <span>{recipe.prepTimeMinutes} min</span>
               </>
             )}
@@ -111,6 +116,38 @@ export const RecipeInfoSection = ({
             <p id="servings-error" role="alert" className="mt-1 text-sm text-red-500">
               {error.servings}
             </p>
+          )}
+
+          {!isEditing && (
+            <div className="mt-3">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-500">Portions :</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onTargetServingsChange(Math.max(MIN_SERVINGS, targetServings - 1))}
+                    disabled={targetServings <= MIN_SERVINGS}
+                    className="flex h-7 w-7 items-center justify-center rounded-md border text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    −
+                  </button>
+                  <span className="w-6 text-center text-sm font-medium">{targetServings}</span>
+                  <button
+                    type="button"
+                    onClick={() => onTargetServingsChange(Math.min(MAX_SERVINGS, targetServings + 1))}
+                    disabled={targetServings >= MAX_SERVINGS}
+                    className="flex h-7 w-7 items-center justify-center rounded-md border text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              {targetServings !== recipe.servings && (
+                <p className="mt-2 text-xs text-amber-600">
+                  Recette originale prévue pour {recipe.servings} portion{recipe.servings > 1 ? 's' : ''}. Les épices, le sel et les levures peuvent nécessiter un ajustement.
+                </p>
+              )}
+            </div>
           )}
         </div>
       </div>

@@ -3,9 +3,16 @@ import { Dispatch, SetStateAction } from 'react';
 import { unitLabels } from '@/features/recipes/constants';
 import { Ingredient, IngredientDraft, IngredientUnit } from '@/features/recipes/types';
 
+const formatQuantity = (value: number): string => {
+  if (Number.isInteger(value)) return String(value);
+  const rounded = Math.round(value * 10) / 10;
+  return rounded % 1 === 0 ? String(rounded) : rounded.toFixed(1);
+};
+
 type Props = {
   isEditing: boolean;
   ingredients: Ingredient[];
+  scalingMultiplier?: number;
   ingredientDraft: IngredientDraft;
   setIngredientDraft: Dispatch<SetStateAction<IngredientDraft>>;
   handleIngredientChange: (
@@ -21,6 +28,7 @@ type Props = {
 export const IngredientsSection = ({
   isEditing,
   ingredients,
+  scalingMultiplier = 1,
   ingredientDraft,
   setIngredientDraft,
   handleIngredientChange,
@@ -88,7 +96,7 @@ export const IngredientsSection = ({
               </>
             ) : (
               <span className="text-gray-700">
-                {ingredient.name} — {ingredient.quantity}{' '}
+                {ingredient.name} — {formatQuantity(ingredient.quantity * scalingMultiplier)}{' '}
                 {unitLabels[ingredient.unit]}
               </span>
             )}

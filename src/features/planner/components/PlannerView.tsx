@@ -10,7 +10,11 @@ import {
   weekDays,
 } from '@/features/planner/constants';
 import type { MealSlot, MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
-import { getWeekStart, weekDayToDate } from '@/features/planner/utils/date';
+import {
+  getDayNumber,
+  getWeekLabel,
+  weekDayToDate,
+} from '@/features/planner/utils/date';
 import type { Recipe } from '@/features/recipes/types';
 
 import { RecipePickerModal } from './RecipePickerModal';
@@ -18,6 +22,9 @@ import { RecipePickerModal } from './RecipePickerModal';
 type Props = {
   recipes: Recipe[];
   plannedMeals: PlannedMeal[];
+  weekStart: Date;
+  onPrevWeek: () => void;
+  onNextWeek: () => void;
   onAddToPlanning: (
     date: string,
     mealType: MealType,
@@ -29,11 +36,13 @@ type Props = {
 export const PlannerView = ({
   recipes,
   plannedMeals,
+  weekStart,
+  onPrevWeek,
+  onNextWeek,
   onAddToPlanning,
   onRemoveFromPlanning,
 }: Props) => {
   const [selectedSlot, setSelectedSlot] = useState<MealSlot | null>(null);
-  const weekStart = getWeekStart();
 
   const getPlannedMeal = (day: WeekDay, mealType: MealType) => {
     const date = weekDayToDate(day, weekStart);
@@ -54,12 +63,33 @@ export const PlannerView = ({
 
   return (
     <section className="mt-10">
-      <h2 className="mb-4 text-2xl font-semibold">Planning de la semaine</h2>
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-semibold">Planning de la semaine</h2>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onPrevWeek}
+            className="rounded-md border px-3 py-1.5 text-sm font-medium transition hover:bg-slate-50"
+          >
+            ←
+          </button>
+          <span className="min-w-40 text-center text-sm font-medium text-slate-700">
+            {getWeekLabel(weekStart)}
+          </span>
+          <button
+            onClick={onNextWeek}
+            className="rounded-md border px-3 py-1.5 text-sm font-medium transition hover:bg-slate-50"
+          >
+            →
+          </button>
+        </div>
+      </div>
 
       <div className="grid gap-4">
         {weekDays.map((day) => (
           <article key={day} className="rounded-xl border p-4 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold">{weekDayLabels[day]}</h3>
+            <h3 className="mb-4 text-lg font-semibold">
+              {weekDayLabels[day]} {getDayNumber(day, weekStart)}
+            </h3>
 
             <div className="grid gap-3 md:grid-cols-2">
               {mealTypes.map((mealType) => {

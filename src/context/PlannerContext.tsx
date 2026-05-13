@@ -1,13 +1,19 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 import { toast } from 'sonner';
 
-import { addToPlanning, removeFromPlanning } from '@/actions/planner-actions';
+import {
+  addToPlanning,
+  getPlannedMeals,
+  removeFromPlanning,
+} from '@/actions/planner-actions';
 import type { MealType, PlannedMeal } from '@/features/planner/types';
+import { weekDayToDate } from '@/features/planner/utils/date';
 
 type PlannerContextType = {
   plannedMeals: PlannedMeal[];
+  loadWeekMeals: (weekStart: Date) => Promise<void>;
   handleAddToPlanning: (
     date: string,
     mealType: MealType,
@@ -59,10 +65,27 @@ export const PlannerProvider = ({
     }
   };
 
+  const loadWeekMeals = useCallback(async (weekStart: Date) => {
+    try {
+      const meals = await getPlannedMeals(weekStart);
+      setPlannedMeals((prev) => {
+        const weekStartDate = weekDayToDate('monday', weekStart);
+        const weekEndDate = weekDayToDate('sunday', weekStart);
+        const filtered = prev.filter(
+          (meal) => meal.date < weekStartDate || meal.date > weekEndDate,
+        );
+        return [...filtered, ...meals];
+      });
+    } catch {
+      toast.error('Impossible de charger le planning. Réessaie.');
+    }
+  }, []);
+
   return (
     <PlannerContext.Provider
       value={{
         plannedMeals,
+        loadWeekMeals,
         handleAddToPlanning,
         handleRemoveFromPlanning,
       }}

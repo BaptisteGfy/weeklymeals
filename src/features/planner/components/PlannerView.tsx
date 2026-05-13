@@ -9,6 +9,7 @@ import {
   weekDayLabels,
   weekDays,
 } from '@/features/planner/constants';
+
 import type { MealSlot, MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
 import {
   getDayNumber,
@@ -155,7 +156,7 @@ export const PlannerView = ({
 
       {selectedSlot !== null && (
         <RecipePickerModal
-          selectedSlot={selectedSlot}
+          subtitle={`${weekDayLabels[selectedSlot.day]} — ${mealTypeLabels[selectedSlot.mealType]}`}
           recipes={recipes}
           onSelectRecipe={handleSelectRecipe}
           onClose={() => setSelectedSlot(null)}

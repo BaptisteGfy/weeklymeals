@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { getMealIdeas } from '@/actions/meal-idea-actions';
 import { getPlannedMeals } from '@/actions/planner-actions';
 import { getRecipes } from '@/actions/recipe-actions';
 import { DashboardShell } from '@/components/DashboardShell';
@@ -10,9 +11,10 @@ import { getCurrentSession } from '@/lib/auth';
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const weekStart = getWeekStart();
-  const [recipes, plannedMeals, session] = await Promise.all([
+  const [recipes, plannedMeals, mealIdeas, session] = await Promise.all([
     getRecipes(),
     getPlannedMeals(weekStart),
+    getMealIdeas(),
     getCurrentSession(),
   ]);
 
@@ -20,7 +22,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <RecipesProvider initialRecipes={recipes}>
-      <PlannerProvider initialPlannedMeals={plannedMeals}>
+      <PlannerProvider initialPlannedMeals={plannedMeals} initialMealIdeas={mealIdeas}>
         <DashboardShell user={session.user}>{children}</DashboardShell>
       </PlannerProvider>
     </RecipesProvider>

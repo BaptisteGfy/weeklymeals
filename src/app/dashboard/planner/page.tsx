@@ -4,17 +4,22 @@ import { useEffect, useState } from 'react';
 
 import { usePlanner } from '@/context/PlannerContext';
 import { useRecipes } from '@/context/RecipesContext';
+import { MealIdeasSection } from '@/features/planner/components/MealIdeasSection';
 import { PlannerView } from '@/features/planner/components/PlannerView';
-import {
-  getWeekStart,
-  weekDayToDate,
-} from '@/features/planner/utils/date';
+import { getWeekStart, weekDayToDate } from '@/features/planner/utils/date';
 import { ShoppingListView } from '@/features/shopping-list/components/ShoppingListView';
 
 const PlannerPage = () => {
   const { recipes } = useRecipes();
-  const { plannedMeals, handleAddToPlanning, handleRemoveFromPlanning, loadWeekMeals } =
-    usePlanner();
+  const {
+    plannedMeals,
+    handleAddToPlanning,
+    handleRemoveFromPlanning,
+    loadWeekMeals,
+    mealIdeas,
+    handleAddMealIdea,
+    handleRemoveMealIdea,
+  } = usePlanner();
   const [weekOffset, setWeekOffset] = useState(0);
 
   const weekStart = getWeekStart(weekOffset);
@@ -33,6 +38,13 @@ const PlannerPage = () => {
 
   return (
     <>
+      <MealIdeasSection
+        recipes={recipes}
+        mealIdeas={mealIdeas}
+        onAddMealIdea={handleAddMealIdea}
+        onRemoveMealIdea={handleRemoveMealIdea}
+      />
+
       <PlannerView
         recipes={recipes}
         plannedMeals={currentWeekMeals}
@@ -42,6 +54,7 @@ const PlannerPage = () => {
         onAddToPlanning={handleAddToPlanning}
         onRemoveFromPlanning={handleRemoveFromPlanning}
       />
+
       <ShoppingListView recipes={recipes} plannedMeals={currentWeekMeals} />
     </>
   );

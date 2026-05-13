@@ -4,11 +4,15 @@ import { createContext, useCallback, useContext, useState } from 'react';
 import { toast } from 'sonner';
 
 import {
+  addMealIdea,
+  removeMealIdea,
+} from '@/actions/meal-idea-actions';
+import {
   addToPlanning,
   getPlannedMeals,
   removeFromPlanning,
 } from '@/actions/planner-actions';
-import type { MealType, PlannedMeal } from '@/features/planner/types';
+import type { MealIdea, MealType, PlannedMeal } from '@/features/planner/types';
 import { weekDayToDate } from '@/features/planner/utils/date';
 
 type PlannerContextType = {
@@ -20,6 +24,9 @@ type PlannerContextType = {
     recipeId: string,
   ) => Promise<void>;
   handleRemoveFromPlanning: (date: string, mealType: MealType) => Promise<void>;
+  mealIdeas: MealIdea[];
+  handleAddMealIdea: (recipeId: string) => Promise<void>;
+  handleRemoveMealIdea: (recipeId: string) => Promise<void>;
 };
 
 const PlannerContext = createContext<PlannerContextType | null>(null);
@@ -27,12 +34,15 @@ const PlannerContext = createContext<PlannerContextType | null>(null);
 export const PlannerProvider = ({
   children,
   initialPlannedMeals,
+  initialMealIdeas,
 }: {
   children: React.ReactNode;
   initialPlannedMeals: PlannedMeal[];
+  initialMealIdeas: MealIdea[];
 }) => {
   const [plannedMeals, setPlannedMeals] =
     useState<PlannedMeal[]>(initialPlannedMeals);
+  const [mealIdeas, setMealIdeas] = useState<MealIdea[]>(initialMealIdeas);
 
   const handleAddToPlanning = async (
     date: string,
@@ -81,6 +91,24 @@ export const PlannerProvider = ({
     }
   }, []);
 
+  const handleAddMealIdea = async (recipeId: string) => {
+    try {
+      const newIdea = await addMealIdea(recipeId);
+      setMealIdeas((prev) => [...prev, newIdea]);
+    } catch {
+      toast.error("Impossible d'ajouter l'idée. Réessaie.");
+    }
+  };
+
+  const handleRemoveMealIdea = async (recipeId: string) => {
+    try {
+      await removeMealIdea(recipeId);
+      setMealIdeas((prev) => prev.filter((idea) => idea.recipeId !== recipeId));
+    } catch {
+      toast.error("Impossible de retirer l'idée. Réessaie.");
+    }
+  };
+
   return (
     <PlannerContext.Provider
       value={{
@@ -88,6 +116,9 @@ export const PlannerProvider = ({
         loadWeekMeals,
         handleAddToPlanning,
         handleRemoveFromPlanning,
+        mealIdeas,
+        handleAddMealIdea,
+        handleRemoveMealIdea,
       }}
     >
       {children}

@@ -16,7 +16,12 @@ export type MealSlot = {
 
 export type PlannedMeal = {
   id: string;
-  date: string; 
+  date: string;
   mealType: MealType;
+  recipeId: string;
+};
+
+export type MealIdea = {
+  id: string;
   recipeId: string;
 };

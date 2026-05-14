@@ -22,7 +22,10 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <RecipesProvider initialRecipes={recipes}>
-      <PlannerProvider initialPlannedMeals={plannedMeals} initialMealIdeas={mealIdeas}>
+      <PlannerProvider
+        initialPlannedMeals={plannedMeals}
+        initialMealIdeas={mealIdeas}
+      >
         <DashboardShell user={session.user}>{children}</DashboardShell>
       </PlannerProvider>
     </RecipesProvider>

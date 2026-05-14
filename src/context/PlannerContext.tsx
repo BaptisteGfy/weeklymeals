@@ -3,10 +3,7 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { toast } from 'sonner';
 
-import {
-  addMealIdea,
-  removeMealIdea,
-} from '@/actions/meal-idea-actions';
+import { addMealIdea, removeMealIdea } from '@/actions/meal-idea-actions';
 import {
   addToPlanning,
   getPlannedMeals,

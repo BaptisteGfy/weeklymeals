@@ -9,8 +9,12 @@ import {
   weekDayLabels,
   weekDays,
 } from '@/features/planner/constants';
-
-import type { MealSlot, MealType, PlannedMeal, WeekDay } from '@/features/planner/types';
+import type {
+  MealSlot,
+  MealType,
+  PlannedMeal,
+  WeekDay,
+} from '@/features/planner/types';
 import {
   getDayNumber,
   getWeekLabel,

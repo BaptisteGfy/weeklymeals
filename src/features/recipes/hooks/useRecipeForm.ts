@@ -66,7 +66,12 @@ const validate = (values: RecipeFormValues): FormErrors => {
   return errors;
 };
 
-const NUMERIC_FIELDS = ['servings', 'prepTimeMinutes', 'cookTimeMinutes', 'restTimeMinutes'];
+const NUMERIC_FIELDS = [
+  'servings',
+  'prepTimeMinutes',
+  'cookTimeMinutes',
+  'restTimeMinutes',
+];
 
 const initialIngredientDraft: IngredientDraft = {
   name: '',

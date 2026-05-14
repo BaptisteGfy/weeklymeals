@@ -50,7 +50,9 @@ export const MealIdeasSection = ({
       </div>
 
       {mealIdeas.length === 0 ? (
-        <p className="text-sm text-slate-500">Aucune idée pour l&apos;instant.</p>
+        <p className="text-sm text-slate-500">
+          Aucune idée pour l&apos;instant.
+        </p>
       ) : (
         <ul className="flex flex-wrap gap-2">
           {mealIdeas.map((idea) => {

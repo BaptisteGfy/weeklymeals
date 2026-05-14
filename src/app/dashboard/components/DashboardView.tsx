@@ -1,21 +1,20 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import { BookOpen, CalendarDays, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { usePlanner } from '@/context/PlannerContext';
 import { useRecipes } from '@/context/RecipesContext';
 import { mealTypes, weekDays } from '@/features/planner/constants';
 import type { MealType, WeekDay } from '@/features/planner/types';
-import type { RecipeCategory } from '@/features/recipes/types';
 import {
   getDayNumber,
   getWeekStart,
   weekDayToDate,
 } from '@/features/planner/utils/date';
+import type { RecipeCategory } from '@/features/recipes/types';
 import { cn } from '@/lib/utils';
 
 const DAY_SHORT: Record<WeekDay, string> = {
@@ -80,7 +79,9 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
 
   const getMealRecipe = (day: WeekDay, mealType: MealType) => {
     const date = weekDayToDate(day, weekStart);
-    const meal = weekMeals.find((m) => m.date === date && m.mealType === mealType);
+    const meal = weekMeals.find(
+      (m) => m.date === date && m.mealType === mealType,
+    );
     return meal ? (recipeMap.get(meal.recipeId) ?? null) : null;
   };
 
@@ -89,27 +90,27 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
 
   return (
     <div className="grid grid-cols-[1fr_280px] gap-6">
-
       {/* Colonne gauche */}
       <div className="min-w-0 space-y-5">
-
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">
+          <h1 className="font-heading text-foreground text-2xl font-bold">
             Bonjour {firstName} 👋
           </h1>
-          <p className="text-sm text-muted-foreground">{todayLabel}</p>
+          <p className="text-muted-foreground text-sm">{todayLabel}</p>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-5">
-          <h2 className="mb-4 text-sm font-semibold text-foreground">Cette semaine</h2>
+        <div className="border-border bg-card rounded-xl border p-5">
+          <h2 className="text-foreground mb-4 text-sm font-semibold">
+            Cette semaine
+          </h2>
           <div className="grid grid-cols-[2.5rem_repeat(7,1fr)] gap-x-1 gap-y-2">
             <div />
             {weekDays.map((day) => (
               <div key={day} className="text-center">
-                <span className="block text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                <span className="text-muted-foreground block text-[10px] font-medium tracking-wide uppercase">
                   {DAY_SHORT[day]}
                 </span>
-                <span className="block text-sm font-semibold text-foreground">
+                <span className="text-foreground block text-sm font-semibold">
                   {getDayNumber(day, weekStart)}
                 </span>
               </div>
@@ -119,7 +120,7 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
               <>
                 <div
                   key={`label-${mealType}`}
-                  className="flex items-center justify-end text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+                  className="text-muted-foreground flex items-center justify-end text-[10px] font-medium tracking-wide uppercase"
                 >
                   {MEAL_LABEL[mealType]}
                 </div>
@@ -132,7 +133,7 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
                           'truncate rounded-md px-1 py-1.5 text-center text-[10px] leading-tight transition-colors',
                           recipe
                             ? 'bg-secondary text-foreground hover:bg-secondary/70'
-                            : 'border border-dashed border-border text-muted-foreground/30 hover:border-primary/30',
+                            : 'border-border text-muted-foreground/30 hover:border-primary/30 border border-dashed',
                         )}
                       >
                         {recipe ? recipe.title : '+'}
@@ -146,46 +147,56 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-xl border border-border bg-card p-4">
-            <BookOpen className="mb-2 h-4 w-4 text-primary" strokeWidth={1.5} />
-            <p className="text-xl font-bold text-foreground">{recipes.length}</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">recettes sauvegardées</p>
+          <div className="border-border bg-card rounded-xl border p-4">
+            <BookOpen className="text-primary mb-2 h-4 w-4" strokeWidth={1.5} />
+            <p className="text-foreground text-xl font-bold">
+              {recipes.length}
+            </p>
+            <p className="text-muted-foreground mt-0.5 text-xs">
+              recettes sauvegardées
+            </p>
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-4">
-            <CalendarDays className="mb-2 h-4 w-4 text-primary" strokeWidth={1.5} />
-            <p className="text-xl font-bold text-foreground">
+          <div className="border-border bg-card rounded-xl border p-4">
+            <CalendarDays
+              className="text-primary mb-2 h-4 w-4"
+              strokeWidth={1.5}
+            />
+            <p className="text-foreground text-xl font-bold">
               {weekMeals.length}
-              <span className="text-sm font-normal text-muted-foreground">
+              <span className="text-muted-foreground text-sm font-normal">
                 /{totalSlots}
               </span>
             </p>
-            <p className="mt-0.5 text-xs text-muted-foreground">repas planifiés</p>
-            <div className="mt-2 h-1 w-full rounded-full bg-secondary">
+            <p className="text-muted-foreground mt-0.5 text-xs">
+              repas planifiés
+            </p>
+            <div className="bg-secondary mt-2 h-1 w-full rounded-full">
               <div
-                className="h-1 rounded-full bg-primary transition-all"
+                className="bg-primary h-1 rounded-full transition-all"
                 style={{ width: `${(weekMeals.length / totalSlots) * 100}%` }}
               />
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-4">
-            <ShoppingCart className="mb-2 h-4 w-4 text-primary" strokeWidth={1.5} />
-            <p className="text-xl font-bold text-foreground">—</p>
+          <div className="border-border bg-card rounded-xl border p-4">
+            <ShoppingCart
+              className="text-primary mb-2 h-4 w-4"
+              strokeWidth={1.5}
+            />
+            <p className="text-foreground text-xl font-bold">—</p>
             <Link
               href="/dashboard/shopping-list"
-              className="mt-0.5 block text-xs text-primary hover:underline"
+              className="text-primary mt-0.5 block text-xs hover:underline"
             >
               Voir la liste →
             </Link>
           </div>
         </div>
-
       </div>
 
       {/* Colonne droite */}
-      <div className="sticky top-6 self-start space-y-4">
-
+      <div className="sticky top-6 space-y-4 self-start">
         <div className="flex flex-col gap-2">
           <Button asChild className="w-full justify-start">
             <Link href="/dashboard/recipes/new">+ Nouvelle recette</Link>
@@ -204,27 +215,32 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
           </Button>
         </div>
 
-        <div className="rounded-xl border border-border bg-card">
-          <div className="border-b border-border px-4 py-3">
-            <h2 className="text-sm font-semibold text-foreground">
+        <div className="border-border bg-card rounded-xl border">
+          <div className="border-border border-b px-4 py-3">
+            <h2 className="text-foreground text-sm font-semibold">
               Mes recettes{' '}
-              <span className="font-normal text-muted-foreground">({recipes.length})</span>
+              <span className="text-muted-foreground font-normal">
+                ({recipes.length})
+              </span>
             </h2>
           </div>
-          <ul className="max-h-[calc(100vh-16rem)] divide-y divide-border overflow-y-auto">
+          <ul className="divide-border max-h-[calc(100vh-16rem)] divide-y overflow-y-auto">
             {recipes.map((recipe) => (
               <li key={recipe.id}>
                 <Link
                   href={`/dashboard/recipes/${recipe.id}`}
-                  className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-muted/50"
+                  className="hover:bg-muted/50 flex items-center gap-3 px-4 py-2.5 transition-colors"
                 >
                   <span
-                    className={cn('h-2 w-2 shrink-0 rounded-full', CATEGORY_DOT[recipe.category])}
+                    className={cn(
+                      'h-2 w-2 shrink-0 rounded-full',
+                      CATEGORY_DOT[recipe.category],
+                    )}
                   />
-                  <span className="min-w-0 flex-1 truncate text-sm text-foreground">
+                  <span className="text-foreground min-w-0 flex-1 truncate text-sm">
                     {recipe.title}
                   </span>
-                  <span className="shrink-0 text-[10px] text-muted-foreground">
+                  <span className="text-muted-foreground shrink-0 text-[10px]">
                     {CATEGORY_LABEL[recipe.category]}
                   </span>
                 </Link>
@@ -232,7 +248,6 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
             ))}
           </ul>
         </div>
-
       </div>
     </div>
   );

@@ -1,7 +1,11 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import { unitLabels } from '@/features/recipes/constants';
-import { Ingredient, IngredientDraft, IngredientUnit } from '@/features/recipes/types';
+import {
+  Ingredient,
+  IngredientDraft,
+  IngredientUnit,
+} from '@/features/recipes/types';
 
 const formatQuantity = (value: number): string => {
   if (Number.isInteger(value)) return String(value);
@@ -96,7 +100,8 @@ export const IngredientsSection = ({
               </>
             ) : (
               <span className="text-gray-700">
-                {ingredient.name} — {formatQuantity(ingredient.quantity * scalingMultiplier)}{' '}
+                {ingredient.name} —{' '}
+                {formatQuantity(ingredient.quantity * scalingMultiplier)}{' '}
                 {unitLabels[ingredient.unit]}
               </span>
             )}

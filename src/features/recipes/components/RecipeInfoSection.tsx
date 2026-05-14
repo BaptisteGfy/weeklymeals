@@ -53,7 +53,11 @@ export const RecipeInfoSection = ({
               )}
             />
             {error?.title && (
-              <p id="title-error" role="alert" className="mt-1 text-sm text-red-500">
+              <p
+                id="title-error"
+                role="alert"
+                className="mt-1 text-sm text-red-500"
+              >
                 {error.title}
               </p>
             )}
@@ -86,7 +90,9 @@ export const RecipeInfoSection = ({
                   onChange={handleFieldChange}
                   aria-label="Nombre de portions"
                   aria-invalid={!!error?.servings}
-                  aria-describedby={error?.servings ? 'servings-error' : undefined}
+                  aria-describedby={
+                    error?.servings ? 'servings-error' : undefined
+                  }
                   className={clsx(
                     'w-16 rounded-md border px-2 py-1 text-sm',
                     error?.servings && 'border-red-400',
@@ -113,7 +119,11 @@ export const RecipeInfoSection = ({
             )}
           </div>
           {isEditing && error?.servings && (
-            <p id="servings-error" role="alert" className="mt-1 text-sm text-red-500">
+            <p
+              id="servings-error"
+              role="alert"
+              className="mt-1 text-sm text-red-500"
+            >
               {error.servings}
             </p>
           )}
@@ -125,16 +135,26 @@ export const RecipeInfoSection = ({
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => onTargetServingsChange(Math.max(MIN_SERVINGS, targetServings - 1))}
+                    onClick={() =>
+                      onTargetServingsChange(
+                        Math.max(MIN_SERVINGS, targetServings - 1),
+                      )
+                    }
                     disabled={targetServings <= MIN_SERVINGS}
                     className="flex h-7 w-7 items-center justify-center rounded-md border text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     −
                   </button>
-                  <span className="w-6 text-center text-sm font-medium">{targetServings}</span>
+                  <span className="w-6 text-center text-sm font-medium">
+                    {targetServings}
+                  </span>
                   <button
                     type="button"
-                    onClick={() => onTargetServingsChange(Math.min(MAX_SERVINGS, targetServings + 1))}
+                    onClick={() =>
+                      onTargetServingsChange(
+                        Math.min(MAX_SERVINGS, targetServings + 1),
+                      )
+                    }
                     disabled={targetServings >= MAX_SERVINGS}
                     className="flex h-7 w-7 items-center justify-center rounded-md border text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                   >
@@ -144,7 +164,9 @@ export const RecipeInfoSection = ({
               </div>
               {targetServings !== recipe.servings && (
                 <p className="mt-2 text-xs text-amber-600">
-                  Recette originale prévue pour {recipe.servings} portion{recipe.servings > 1 ? 's' : ''}. Les épices, le sel et les levures peuvent nécessiter un ajustement.
+                  Recette originale prévue pour {recipe.servings} portion
+                  {recipe.servings > 1 ? 's' : ''}. Les épices, le sel et les
+                  levures peuvent nécessiter un ajustement.
                 </p>
               )}
             </div>
@@ -162,7 +184,9 @@ export const RecipeInfoSection = ({
               rows={3}
               aria-label="Description de la recette"
               aria-invalid={!!error?.description}
-              aria-describedby={error?.description ? 'description-error' : undefined}
+              aria-describedby={
+                error?.description ? 'description-error' : undefined
+              }
               className={clsx(
                 'w-full rounded-md border px-3 py-2 text-sm leading-relaxed text-gray-600 focus:ring-2 focus:outline-none',
                 error?.description
@@ -171,14 +195,20 @@ export const RecipeInfoSection = ({
               )}
             />
             {error?.description && (
-              <p id="description-error" role="alert" className="mt-1 text-sm text-red-500">
+              <p
+                id="description-error"
+                role="alert"
+                className="mt-1 text-sm text-red-500"
+              >
                 {error.description}
               </p>
             )}
           </div>
         ) : (
           recipe.description && (
-            <p className="leading-relaxed text-gray-600">{recipe.description}</p>
+            <p className="leading-relaxed text-gray-600">
+              {recipe.description}
+            </p>
           )
         )}
       </div>

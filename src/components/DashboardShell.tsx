@@ -16,7 +16,11 @@ export const DashboardShell = ({ children, user }: DashboardShellProps) => {
     <div className="flex h-screen">
       <Sidebar isOpen={isOpen} onClose={() => setIsOpen(false)} user={user} />
       <main className="flex-1 overflow-y-auto p-6">
-        <button className="lg:hidden" onClick={() => setIsOpen(true)} aria-label="Ouvrir le menu">
+        <button
+          className="lg:hidden"
+          onClick={() => setIsOpen(true)}
+          aria-label="Ouvrir le menu"
+        >
           <Menu className="h-6 w-6" />
         </button>
         {children}

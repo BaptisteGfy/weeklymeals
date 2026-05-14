@@ -1,7 +1,19 @@
-import clsx from 'clsx';
-import Link from 'next/link';
+'use client';
 
-import { categoryLabels } from '@/features/recipes/constants';
+import { Clock, MoreHorizontal, Users, UtensilsCrossed } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  categoryBadgeStyles,
+  categoryLabels,
+} from '@/features/recipes/constants';
 import type { Recipe } from '@/features/recipes/types';
 
 type Props = {
@@ -9,71 +21,82 @@ type Props = {
   onDelete: (id: string) => void;
 };
 
-const cardButtonStyles =
-  'inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium transition';
-
 export const RecipeCard = ({ recipe, onDelete }: Props) => {
+  const router = useRouter();
+  const totalTime =
+    (recipe.prepTimeMinutes ?? 0) + (recipe.cookTimeMinutes ?? 0);
+
   return (
-    <article className="flex flex-col overflow-hidden rounded-xl border shadow-sm">
-      <div className="h-48 w-full bg-gray-100">
-        {recipe.imageUrl ? (
-          <img
-            src={recipe.imageUrl}
-            alt={recipe.title}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-5xl text-gray-300">
-            🍽️
-          </div>
-        )}
+    <article className="group bg-card relative overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-md">
+      <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow-sm backdrop-blur-sm hover:bg-white">
+              <MoreHorizontal size={16} />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => router.push(`/dashboard/recipes/${recipe.id}`)}
+            >
+              Voir la recette
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(`/dashboard/recipes/${recipe.id}?edit=true`)
+              }
+            >
+              Modifier
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={() => onDelete(recipe.id)}
+            >
+              Supprimer
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
-      <div className="flex flex-1 flex-col justify-between p-4">
-        <div>
-          <h3 className="text-lg font-semibold">{recipe.title}</h3>
-          <p className="mt-1 line-clamp-2 text-sm text-gray-500">
+      <Link href={`/dashboard/recipes/${recipe.id}`} className="block">
+        <div className="from-card to-accent/20 relative h-48 w-full bg-linear-to-br">
+          {recipe.imageUrl ? (
+            <img
+              src={recipe.imageUrl}
+              alt={recipe.title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <UtensilsCrossed size={48} className="text-primary/25" />
+            </div>
+          )}
+        </div>
+
+        <div className="p-4">
+          <h3 className="text-foreground font-semibold">{recipe.title}</h3>
+          <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
             {recipe.description}
           </p>
-          <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-400">
-            <span>{categoryLabels[recipe.category]}</span>
-            <span>·</span>
-            <span>{recipe.servings} portions</span>
-            <span>·</span>
-            <span>{recipe.prepTimeMinutes} min</span>
+          <div className="mt-3 flex items-center gap-3">
+            <span
+              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryBadgeStyles[recipe.category]}`}
+            >
+              {categoryLabels[recipe.category]}
+            </span>
+            {totalTime > 0 && (
+              <span className="text-muted-foreground flex items-center gap-1 text-xs">
+                <Clock size={12} />
+                {totalTime} min
+              </span>
+            )}
+            <span className="text-muted-foreground flex items-center gap-1 text-xs">
+              <Users size={12} />
+              {recipe.servings} pers
+            </span>
           </div>
         </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Link
-            href={`/dashboard/recipes/${recipe.id}`}
-            className={clsx(
-              cardButtonStyles,
-              'border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50',
-            )}
-          >
-            Voir
-          </Link>
-          <Link
-            href={`/dashboard/recipes/${recipe.id}?edit=true`}
-            className={clsx(
-              cardButtonStyles,
-              'border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50',
-            )}
-          >
-            Éditer
-          </Link>
-          <button
-            onClick={() => onDelete(recipe.id)}
-            className={clsx(
-              cardButtonStyles,
-              'border-red-300 text-red-600 hover:border-red-400 hover:bg-red-50',
-            )}
-          >
-            Supprimer
-          </button>
-        </div>
-      </div>
+      </Link>
     </article>
   );
 };

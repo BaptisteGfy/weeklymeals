@@ -1,7 +1,12 @@
-import { redirect } from 'next/navigation';
+import { getCurrentSession } from '@/lib/auth';
 
-const DashboardPage = () => {
-  redirect('/dashboard/recipes');
+import { DashboardView } from './components/DashboardView';
+
+const DashboardPage = async () => {
+  const session = await getCurrentSession();
+  const userName = session?.user?.name ?? '';
+
+  return <DashboardView userName={userName} />;
 };
 
 export default DashboardPage;

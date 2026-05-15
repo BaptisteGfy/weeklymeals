@@ -1,8 +1,10 @@
 'use client';
 
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
 import type { MealIdea } from '@/features/planner/types';
+import { RecipeCard } from '@/features/recipes/components/RecipeCard';
 import type { Recipe } from '@/features/recipes/types';
 
 import { RecipePickerModal } from './RecipePickerModal';
@@ -34,47 +36,39 @@ export const MealIdeasSection = ({
 
   return (
     <section className="mt-10">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold">Idées de repas</h2>
-          <p className="mt-0.5 text-sm text-slate-500">
-            Ces recettes n&apos;alimentent pas la liste de courses
-          </p>
-        </div>
-        <button
-          onClick={() => setShowPicker(true)}
-          className="rounded-md border px-3 py-1.5 text-sm font-medium transition hover:bg-slate-50"
-        >
-          + Ajouter une idée
-        </button>
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold">Idées & inspirations</h2>
+        <p className="text-muted-foreground mt-0.5 text-sm">
+          Repas sans date fixe, pour vous inspirer
+        </p>
       </div>
 
-      {mealIdeas.length === 0 ? (
-        <p className="text-sm text-slate-500">
-          Aucune idée pour l&apos;instant.
-        </p>
-      ) : (
-        <ul className="flex flex-wrap gap-2">
-          {mealIdeas.map((idea) => {
-            const recipe = getRecipeById(idea.recipeId);
-            return (
-              <li
-                key={idea.id}
-                className="flex items-center gap-2 rounded-full border bg-slate-50 px-3 py-1.5 text-sm"
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+        {mealIdeas.map((idea) => {
+          const recipe = getRecipeById(idea.recipeId);
+          if (!recipe) return null;
+          return (
+            <div key={idea.id} className="group relative">
+              <RecipeCard recipe={recipe} variant="mini" />
+              <button
+                onClick={() => onRemoveMealIdea(idea.recipeId)}
+                className="bg-destructive absolute -top-1.5 -right-1.5 hidden h-5 w-5 items-center justify-center rounded-full text-xs text-white group-hover:flex"
+                aria-label={`Retirer ${recipe.title} des idées`}
               >
-                <span>{recipe?.title ?? 'Recette inconnue'}</span>
-                <button
-                  onClick={() => onRemoveMealIdea(idea.recipeId)}
-                  className="text-slate-400 transition hover:text-slate-700"
-                  aria-label={`Retirer ${recipe?.title} des idées`}
-                >
-                  ×
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+                ×
+              </button>
+            </div>
+          );
+        })}
+
+        <button
+          onClick={() => setShowPicker(true)}
+          className="border-border/50 text-muted-foreground/40 hover:border-primary/30 hover:text-primary/50 hover:bg-accent/10 flex h-16 w-full items-center justify-center gap-2 rounded-lg border border-dashed transition-colors"
+        >
+          <Plus size={16} />
+          <span className="text-sm">Ajouter une idée</span>
+        </button>
+      </div>
 
       {showPicker && (
         <RecipePickerModal

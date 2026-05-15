@@ -13,9 +13,24 @@ export const getWeekStart = (weekOffset = 0): Date => {
 export const getWeekLabel = (weekStart: Date): string => {
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 6);
-  const fmt = (d: Date) =>
-    d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-  return `${fmt(weekStart)} – ${fmt(weekEnd)}`;
+
+  const startDay = weekStart.getDate();
+  const endDay = weekEnd.getDate();
+  const sameMonth = weekStart.getMonth() === weekEnd.getMonth();
+
+  const endMonthYear = weekEnd.toLocaleDateString('fr-FR', {
+    month: 'long',
+    year: 'numeric',
+  });
+
+  if (sameMonth) {
+    return `Semaine du ${startDay} au ${endDay} ${endMonthYear}`;
+  }
+
+  const startMonthLabel = weekStart.toLocaleDateString('fr-FR', {
+    month: 'long',
+  });
+  return `Semaine du ${startDay} ${startMonthLabel} au ${endDay} ${endMonthYear}`;
 };
 
 const weekDayOffsets: Record<WeekDay, number> = {

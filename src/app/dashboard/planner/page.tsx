@@ -38,12 +38,9 @@ const PlannerPage = () => {
 
   return (
     <>
-      <MealIdeasSection
-        recipes={recipes}
-        mealIdeas={mealIdeas}
-        onAddMealIdea={handleAddMealIdea}
-        onRemoveMealIdea={handleRemoveMealIdea}
-      />
+      <h1 className="font-heading text-foreground mb-8 text-3xl font-bold">
+        Mon planning
+      </h1>
 
       <PlannerView
         recipes={recipes}
@@ -53,6 +50,13 @@ const PlannerPage = () => {
         onNextWeek={() => setWeekOffset((o) => o + 1)}
         onAddToPlanning={handleAddToPlanning}
         onRemoveFromPlanning={handleRemoveFromPlanning}
+      />
+
+      <MealIdeasSection
+        recipes={recipes}
+        mealIdeas={mealIdeas}
+        onAddMealIdea={handleAddMealIdea}
+        onRemoveMealIdea={handleRemoveMealIdea}
       />
 
       <ShoppingListView recipes={recipes} plannedMeals={currentWeekMeals} />

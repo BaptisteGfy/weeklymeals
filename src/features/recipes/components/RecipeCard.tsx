@@ -18,13 +18,38 @@ import type { Recipe } from '@/features/recipes/types';
 
 type Props = {
   recipe: Recipe;
-  onDelete: (id: string) => void;
+  variant?: 'card' | 'mini';
+  onDelete?: (id: string) => void;
 };
 
-export const RecipeCard = ({ recipe, onDelete }: Props) => {
+export const RecipeCard = ({ recipe, variant = 'card', onDelete }: Props) => {
   const router = useRouter();
   const totalTime =
     (recipe.prepTimeMinutes ?? 0) + (recipe.cookTimeMinutes ?? 0);
+
+  if (variant === 'mini') {
+    return (
+      <Link
+        href={`/dashboard/recipes/${recipe.id}`}
+        className="hover:bg-accent/10 flex items-center gap-3 rounded-lg border p-2 transition-colors"
+      >
+        <div className="bg-accent/20 h-12 w-12 shrink-0 overflow-hidden rounded-md">
+          {recipe.imageUrl ? (
+            <img
+              src={recipe.imageUrl}
+              alt={recipe.title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <UtensilsCrossed size={20} className="text-primary/25" />
+            </div>
+          )}
+        </div>
+        <span className="text-sm font-medium">{recipe.title}</span>
+      </Link>
+    );
+  }
 
   return (
     <article className="group bg-card relative overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-md">
@@ -50,7 +75,7 @@ export const RecipeCard = ({ recipe, onDelete }: Props) => {
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-destructive focus:text-destructive"
-              onClick={() => onDelete(recipe.id)}
+              onClick={() => onDelete?.(recipe.id)}
             >
               Supprimer
             </DropdownMenuItem>

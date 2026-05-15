@@ -3,19 +3,20 @@
 import { useState } from 'react';
 
 import {
-  mealTypeLabels,
-  mealTypes,
+  courseTypeLabels,
+  mealPeriodLabels,
+  mealPeriods,
   weekDayLabels,
   weekDays,
 } from '@/features/planner/constants';
-import { MealType, WeekDay } from '@/features/planner/types';
+import type { CourseType, MealPeriod, WeekDay } from '@/features/planner/types';
 import { weekDayToDate } from '@/features/planner/utils/date';
 
 type Props = {
   isOpen: boolean;
   weekStart: Date;
   onClose: () => void;
-  onAdd: (date: string, mealType: MealType) => void;
+  onAdd: (date: string, mealPeriod: MealPeriod, courseType: CourseType) => void;
 };
 
 export const AddToPlanningModal = ({
@@ -25,9 +26,17 @@ export const AddToPlanningModal = ({
   onAdd,
 }: Props) => {
   const [selectedDay, setSelectedDay] = useState<WeekDay>('monday');
-  const [selectedMealType, setSelectedMealType] = useState<MealType>('lunch');
+  const [selectedMealPeriod, setSelectedMealPeriod] =
+    useState<MealPeriod>('lunch');
+  const [selectedCourseType, setSelectedCourseType] =
+    useState<CourseType>('main');
 
   if (!isOpen) return null;
+
+  const courseTypes: CourseType[] =
+    selectedMealPeriod === 'breakfast'
+      ? ['main']
+      : ['starter', 'main', 'dessert'];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -66,17 +75,42 @@ export const AddToPlanningModal = ({
               Repas
             </label>
             <select
-              value={selectedMealType}
-              onChange={(e) => setSelectedMealType(e.target.value as MealType)}
+              value={selectedMealPeriod}
+              onChange={(e) => {
+                const period = e.target.value as MealPeriod;
+                setSelectedMealPeriod(period);
+                if (period === 'breakfast') setSelectedCourseType('main');
+              }}
               className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-200 focus:outline-none"
             >
-              {mealTypes.map((type) => (
-                <option key={type} value={type}>
-                  {mealTypeLabels[type]}
+              {mealPeriods.map((period) => (
+                <option key={period} value={period}>
+                  {mealPeriodLabels[period]}
                 </option>
               ))}
             </select>
           </div>
+
+          {selectedMealPeriod !== 'breakfast' && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">
+                Type
+              </label>
+              <select
+                value={selectedCourseType}
+                onChange={(e) =>
+                  setSelectedCourseType(e.target.value as CourseType)
+                }
+                className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-200 focus:outline-none"
+              >
+                {courseTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {courseTypeLabels[type]}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="mt-6 flex justify-end gap-2">
@@ -90,7 +124,11 @@ export const AddToPlanningModal = ({
           <button
             type="button"
             onClick={() => {
-              onAdd(weekDayToDate(selectedDay, weekStart), selectedMealType);
+              onAdd(
+                weekDayToDate(selectedDay, weekStart),
+                selectedMealPeriod,
+                selectedCourseType,
+              );
               onClose();
             }}
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"

@@ -47,9 +47,16 @@ enum IngredientCategory {
   other
 }
 
-enum MealType {
+enum MealPeriod {
+  breakfast
   lunch
   dinner
+}
+
+enum CourseType {
+  starter
+  main
+  dessert
 }
 
 model User {
@@ -118,16 +125,17 @@ model RecipeIngredient {
 }
 
 model PlannedMeal {
-  id        String   @id @default(cuid())
-  date      DateTime
-  mealType  MealType
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  recipeId  String
-  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  id         String     @id @default(cuid())
+  date       DateTime
+  mealPeriod MealPeriod
+  courseType CourseType @default(main)
+  createdAt  DateTime   @default(now())
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
+  recipeId   String
+  recipe     Recipe     @relation(fields: [recipeId], references: [id])
 
-  @@unique([userId, date, mealType])
+  @@unique([userId, date, mealPeriod, courseType])
 }
 
 model SavedRecipe {

@@ -7,17 +7,20 @@ export type WeekDay =
   | 'saturday'
   | 'sunday';
 
-export type MealType = 'lunch' | 'dinner';
+export type MealPeriod = 'breakfast' | 'lunch' | 'dinner';
+export type CourseType = 'starter' | 'main' | 'dessert';
 
 export type MealSlot = {
   day: WeekDay;
-  mealType: MealType;
+  mealPeriod: MealPeriod;
+  courseType: CourseType;
 };
 
 export type PlannedMeal = {
   id: string;
   date: string;
-  mealType: MealType;
+  mealPeriod: MealPeriod;
+  courseType: CourseType;
   recipeId: string;
 };
 

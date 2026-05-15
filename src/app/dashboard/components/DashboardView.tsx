@@ -7,8 +7,8 @@ import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { usePlanner } from '@/context/PlannerContext';
 import { useRecipes } from '@/context/RecipesContext';
-import { mealTypes, weekDays } from '@/features/planner/constants';
-import type { MealType, WeekDay } from '@/features/planner/types';
+import { dashboardMealPeriods, weekDays } from '@/features/planner/constants';
+import type { MealPeriod, WeekDay } from '@/features/planner/types';
 import {
   getDayNumber,
   getWeekStart,
@@ -27,7 +27,8 @@ const DAY_SHORT: Record<WeekDay, string> = {
   sunday: 'Dim',
 };
 
-const MEAL_LABEL: Record<MealType, string> = {
+const MEAL_LABEL: Record<MealPeriod, string> = {
+  breakfast: 'Matin',
   lunch: 'Déj.',
   dinner: 'Dîner',
 };
@@ -77,15 +78,18 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
     [recipes],
   );
 
-  const getMealRecipe = (day: WeekDay, mealType: MealType) => {
+  const getMealRecipe = (day: WeekDay, mealPeriod: MealPeriod) => {
     const date = weekDayToDate(day, weekStart);
     const meal = weekMeals.find(
-      (m) => m.date === date && m.mealType === mealType,
+      (m) =>
+        m.date === date &&
+        m.mealPeriod === mealPeriod &&
+        m.courseType === 'main',
     );
     return meal ? (recipeMap.get(meal.recipeId) ?? null) : null;
   };
 
-  const totalSlots = weekDays.length * mealTypes.length;
+  const totalSlots = weekDays.length * dashboardMealPeriods.length;
   const firstName = userName.split(' ')[0];
 
   return (
@@ -116,18 +120,21 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
               </div>
             ))}
 
-            {mealTypes.map((mealType) => (
+            {dashboardMealPeriods.map((mealPeriod) => (
               <>
                 <div
-                  key={`label-${mealType}`}
+                  key={`label-${mealPeriod}`}
                   className="text-muted-foreground flex items-center justify-end text-[10px] font-medium tracking-wide uppercase"
                 >
-                  {MEAL_LABEL[mealType]}
+                  {MEAL_LABEL[mealPeriod]}
                 </div>
                 {weekDays.map((day) => {
-                  const recipe = getMealRecipe(day, mealType);
+                  const recipe = getMealRecipe(day, mealPeriod);
                   return (
-                    <Link key={`${day}-${mealType}`} href="/dashboard/planner">
+                    <Link
+                      key={`${day}-${mealPeriod}`}
+                      href="/dashboard/planner"
+                    >
                       <div
                         className={cn(
                           'truncate rounded-md px-1 py-1.5 text-center text-[10px] leading-tight transition-colors',

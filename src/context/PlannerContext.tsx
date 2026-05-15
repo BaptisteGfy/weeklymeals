@@ -9,7 +9,12 @@ import {
   getPlannedMeals,
   removeFromPlanning,
 } from '@/actions/planner-actions';
-import type { MealIdea, MealType, PlannedMeal } from '@/features/planner/types';
+import type {
+  CourseType,
+  MealIdea,
+  MealPeriod,
+  PlannedMeal,
+} from '@/features/planner/types';
 import { weekDayToDate } from '@/features/planner/utils/date';
 
 type PlannerContextType = {
@@ -17,10 +22,15 @@ type PlannerContextType = {
   loadWeekMeals: (weekStart: Date) => Promise<void>;
   handleAddToPlanning: (
     date: string,
-    mealType: MealType,
+    mealPeriod: MealPeriod,
+    courseType: CourseType,
     recipeId: string,
   ) => Promise<void>;
-  handleRemoveFromPlanning: (date: string, mealType: MealType) => Promise<void>;
+  handleRemoveFromPlanning: (
+    date: string,
+    mealPeriod: MealPeriod,
+    courseType: CourseType,
+  ) => Promise<void>;
   mealIdeas: MealIdea[];
   handleAddMealIdea: (recipeId: string) => Promise<void>;
   handleRemoveMealIdea: (recipeId: string) => Promise<void>;
@@ -43,14 +53,25 @@ export const PlannerProvider = ({
 
   const handleAddToPlanning = async (
     date: string,
-    mealType: MealType,
+    mealPeriod: MealPeriod,
+    courseType: CourseType,
     recipeId: string,
   ) => {
     try {
-      const newMeal = await addToPlanning(date, mealType, recipeId);
+      const newMeal = await addToPlanning(
+        date,
+        mealPeriod,
+        courseType,
+        recipeId,
+      );
       setPlannedMeals((prev) => {
         const filtered = prev.filter(
-          (meal) => !(meal.date === date && meal.mealType === mealType),
+          (meal) =>
+            !(
+              meal.date === date &&
+              meal.mealPeriod === mealPeriod &&
+              meal.courseType === courseType
+            ),
         );
         return [...filtered, newMeal];
       });
@@ -59,12 +80,21 @@ export const PlannerProvider = ({
     }
   };
 
-  const handleRemoveFromPlanning = async (date: string, mealType: MealType) => {
+  const handleRemoveFromPlanning = async (
+    date: string,
+    mealPeriod: MealPeriod,
+    courseType: CourseType,
+  ) => {
     try {
-      await removeFromPlanning(date, mealType);
+      await removeFromPlanning(date, mealPeriod, courseType);
       setPlannedMeals((prev) =>
         prev.filter(
-          (meal) => !(meal.date === date && meal.mealType === mealType),
+          (meal) =>
+            !(
+              meal.date === date &&
+              meal.mealPeriod === mealPeriod &&
+              meal.courseType === courseType
+            ),
         ),
       );
     } catch {

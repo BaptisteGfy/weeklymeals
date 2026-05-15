@@ -1,6 +1,10 @@
 'use server';
 
-import type { MealType, PlannedMeal } from '@/features/planner/types';
+import type {
+  CourseType,
+  MealPeriod,
+  PlannedMeal,
+} from '@/features/planner/types';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
@@ -28,14 +32,16 @@ export const getPlannedMeals = async (
   return meals.map((meal) => ({
     id: meal.id,
     date: toISODate(meal.date),
-    mealType: meal.mealType as MealType,
+    mealPeriod: meal.mealPeriod as MealPeriod,
+    courseType: meal.courseType as CourseType,
     recipeId: meal.recipeId,
   }));
 };
 
 export const addToPlanning = async (
   date: string,
-  mealType: MealType,
+  mealPeriod: MealPeriod,
+  courseType: CourseType,
   recipeId: string,
 ): Promise<PlannedMeal> => {
   const session = await getCurrentSession();
@@ -43,16 +49,18 @@ export const addToPlanning = async (
 
   const meal = await prisma.plannedMeal.upsert({
     where: {
-      userId_date_mealType: {
+      userId_date_mealPeriod_courseType: {
         userId: session.user.id,
         date: toDateTime(date),
-        mealType,
+        mealPeriod,
+        courseType,
       },
     },
     update: { recipeId },
     create: {
       date: toDateTime(date),
-      mealType,
+      mealPeriod,
+      courseType,
       recipeId,
       userId: session.user.id,
     },
@@ -61,24 +69,27 @@ export const addToPlanning = async (
   return {
     id: meal.id,
     date: toISODate(meal.date),
-    mealType: meal.mealType as MealType,
+    mealPeriod: meal.mealPeriod as MealPeriod,
+    courseType: meal.courseType as CourseType,
     recipeId: meal.recipeId,
   };
 };
 
 export const removeFromPlanning = async (
   date: string,
-  mealType: MealType,
+  mealPeriod: MealPeriod,
+  courseType: CourseType,
 ): Promise<void> => {
   const session = await getCurrentSession();
   if (!session) throw new Error('User is not authenticated');
 
   await prisma.plannedMeal.delete({
     where: {
-      userId_date_mealType: {
+      userId_date_mealPeriod_courseType: {
         userId: session.user.id,
         date: toDateTime(date),
-        mealType,
+        mealPeriod,
+        courseType,
       },
     },
   });

@@ -162,6 +162,7 @@ export const useRecipeForm = (
         ...prev.ingredients,
         {
           id: crypto.randomUUID(),
+          category: 'other' as const,
           ...ingredientDraft,
           name: ingredientDraft.name.trim(),
         },

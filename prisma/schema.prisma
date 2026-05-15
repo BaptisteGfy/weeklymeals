@@ -60,20 +60,21 @@ enum CourseType {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  email         String        @unique
-  name          String?
-  role          UserRole      @default(user)
-  emailVerified Boolean       @default(false)
-  image         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  recipes       Recipe[]
-  plannedMeals  PlannedMeal[]
-  savedRecipes  SavedRecipe[]
-  mealIdeas     MealIdea[]
-  sessions      Session[]
-  accounts      Account[]
+  id             String         @id @default(cuid())
+  email          String         @unique
+  name           String?
+  role           UserRole       @default(user)
+  emailVerified  Boolean        @default(false)
+  image          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  recipes        Recipe[]
+  plannedMeals   PlannedMeal[]
+  savedRecipes   SavedRecipe[]
+  mealIdeas      MealIdea[]
+  shoppingLists  ShoppingList[]
+  sessions       Session[]
+  accounts       Account[]
 
   @@map("user")
 }
@@ -147,6 +148,23 @@ model SavedRecipe {
   recipe    Recipe   @relation(fields: [recipeId], references: [id])
 
   @@unique([userId, recipeId])
+}
+
+model ShoppingList {
+  id        String             @id @default(cuid())
+  userId    String
+  user      User               @relation(fields: [userId], references: [id])
+  weekStart DateTime
+  name      String
+  quantity  Float
+  unit      IngredientUnit
+  category  IngredientCategory
+  isChecked Boolean            @default(false)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  @@unique([userId, weekStart, name])
+  @@map("shopping_list")
 }
 
 model MealIdea {

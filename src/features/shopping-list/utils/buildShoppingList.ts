@@ -11,10 +11,11 @@ export const buildShoppingList = (
   const allIngredients = plannedMeals.flatMap((meal) => {
     const recipe = recipes.find((r) => r.id === meal.recipeId);
     if (!recipe) return [];
-    return recipe.ingredients.map(({ name, quantity, unit }) => ({
+    return recipe.ingredients.map(({ name, quantity, unit, category }) => ({
       name,
       quantity,
       unit,
+      category,
     }));
   });
 

@@ -1,12 +1,13 @@
 'use server';
 
+import type { IngredientCategory } from '@/features/recipes/types';
 import {
   IngredientUnit,
   Recipe,
   RecipeCategory,
   RecipeFormValues,
 } from '@/features/recipes/types';
-import { IngredientCategory, Prisma } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
@@ -32,6 +33,7 @@ const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
       name: ri.ingredient.nameFr,
       quantity: ri.quantity,
       unit: ri.unit as IngredientUnit,
+      category: ri.ingredient.category as IngredientCategory,
     })),
     instructions: recipe.instructions.map((text) => ({
       id: crypto.randomUUID(),
@@ -82,7 +84,7 @@ export const createRecipe = async (
           ingredient: {
             connectOrCreate: {
               where: { nameFr: ing.name },
-              create: { nameFr: ing.name, nameEn: ing.name, category: IngredientCategory.other },
+              create: { nameFr: ing.name, nameEn: ing.name, category: 'other' },
             },
           },
         })),
@@ -126,7 +128,7 @@ export const updateRecipe = async (
           ingredient: {
             connectOrCreate: {
               where: { nameFr: ing.name },
-              create: { nameFr: ing.name, nameEn: ing.name, category: IngredientCategory.other },
+              create: { nameFr: ing.name, nameEn: ing.name, category: 'other' },
             },
           },
         })),

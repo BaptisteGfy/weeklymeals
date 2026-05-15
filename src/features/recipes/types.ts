@@ -7,11 +7,26 @@ export type IngredientUnit =
   | 'cas' // cuillère à soupe
   | 'unit';
 
+export type IngredientCategory =
+  | 'vegetables'
+  | 'fruits'
+  | 'meat'
+  | 'fish'
+  | 'dairy'
+  | 'cereals'
+  | 'legumes'
+  | 'oils'
+  | 'condiments'
+  | 'spices'
+  | 'nuts'
+  | 'other';
+
 export type Ingredient = {
   id: string;
   name: string;
   quantity: number;
   unit: IngredientUnit;
+  category: IngredientCategory;
 };
 
 export type IngredientDraft = {

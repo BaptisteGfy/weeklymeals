@@ -8,7 +8,7 @@ import {
   deleteRecipe,
   updateRecipe,
 } from '@/actions/recipe-actions';
-import type { Recipe, RecipeFormValues } from '@/features/recipes/types';
+import type { Recipe, RecipeFormValues } from '@/types/recipes';
 
 type RecipesContextType = {
   recipes: Recipe[];

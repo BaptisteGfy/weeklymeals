@@ -3,26 +3,23 @@
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { Fragment, useState } from 'react';
 
-import {
-  type GridRow,
-  PLANNER_ROWS,
-  weekDayLabels,
-  weekDays,
-} from '@/features/planner/constants';
-import type {
-  CourseType,
-  MealPeriod,
-  MealSlot,
-  PlannedMeal,
-  WeekDay,
-} from '@/features/planner/types';
+import { PLANNER_ROWS, weekDays } from '@/constants/planner';
 import {
   getDayNumber,
   getWeekLabel,
   weekDayToDate,
 } from '@/features/planner/utils/date';
 import { RecipeCard } from '@/features/recipes/components/RecipeCard';
-import type { Recipe } from '@/features/recipes/types';
+import { weekDayLabels } from '@/labels/planner';
+import type {
+  CourseType,
+  GridRow,
+  MealPeriod,
+  MealSlot,
+  PlannedMeal,
+  WeekDay,
+} from '@/types/planner';
+import type { Recipe } from '@/types/recipes';
 
 import { RecipePickerModal } from './RecipePickerModal';
 

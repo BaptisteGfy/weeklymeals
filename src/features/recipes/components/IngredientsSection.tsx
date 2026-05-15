@@ -1,11 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { unitLabels } from '@/features/recipes/constants';
-import {
-  Ingredient,
-  IngredientDraft,
-  IngredientUnit,
-} from '@/features/recipes/types';
+import { unitLabels } from '@/labels/recipes';
+import { Ingredient, IngredientDraft, IngredientUnit } from '@/types/recipes';
 
 const formatQuantity = (value: number): string => {
   if (Number.isInteger(value)) return String(value);

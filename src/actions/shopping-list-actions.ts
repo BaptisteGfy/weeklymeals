@@ -1,16 +1,12 @@
 'use server';
 
-import type {
-  IngredientCategory,
-  IngredientUnit,
-} from '@/features/recipes/types';
-import type { ShoppingListItem } from '@/features/shopping-list/types';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-
-export type PersistedShoppingListItem = ShoppingListItem & {
-  isChecked: boolean;
-};
+import type { IngredientCategory, IngredientUnit } from '@/types/recipes';
+import type {
+  PersistedShoppingListItem,
+  ShoppingListItem,
+} from '@/types/shopping-list';
 
 export const syncShoppingList = async (
   weekStart: Date,

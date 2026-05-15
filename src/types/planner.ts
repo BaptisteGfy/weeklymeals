@@ -28,3 +28,10 @@ export type MealIdea = {
   id: string;
   recipeId: string;
 };
+
+export type GridRow = {
+  mealPeriod: MealPeriod;
+  courseType: CourseType;
+  label: string;
+  pickerLabel: string;
+};

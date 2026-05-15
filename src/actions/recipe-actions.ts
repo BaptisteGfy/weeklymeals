@@ -1,15 +1,15 @@
 'use server';
 
-import type { IngredientCategory } from '@/features/recipes/types';
+import { Prisma } from '@/generated/prisma/client';
+import { getCurrentSession } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import type { IngredientCategory } from '@/types/recipes';
 import {
   IngredientUnit,
   Recipe,
   RecipeCategory,
   RecipeFormValues,
-} from '@/features/recipes/types';
-import { Prisma } from '@/generated/prisma/client';
-import { getCurrentSession } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+} from '@/types/recipes';
 
 type RecipeWithIngredients = Prisma.RecipeGetPayload<{
   include: {

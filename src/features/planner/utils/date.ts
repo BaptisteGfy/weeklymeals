@@ -1,5 +1,5 @@
-import { weekDays } from '@/features/planner/constants';
-import type { WeekDay } from '@/features/planner/types';
+import { weekDays } from '@/constants/planner';
+import type { WeekDay } from '@/types/planner';
 
 export const getWeekStart = (weekOffset = 0): Date => {
   const today = new Date();

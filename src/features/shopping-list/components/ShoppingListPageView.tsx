@@ -14,60 +14,21 @@ import { toast } from 'sonner';
 import { getPlannedMeals } from '@/actions/planner-actions';
 import {
   checkAllItems,
-  type PersistedShoppingListItem,
   resetCheckedItems,
   syncShoppingList,
   toggleCheckedItem,
 } from '@/actions/shopping-list-actions';
-import type { PlannedMeal } from '@/features/planner/types';
+import { COMPACT_UNITS, SHOPPING_LIST_GROUPS } from '@/constants/shopping-list';
 import { getWeekLabel, getWeekStart } from '@/features/planner/utils/date';
-import {
-  ingredientCategoryLabels,
-  unitLabels,
-} from '@/features/recipes/constants';
-import type { IngredientCategory, Recipe } from '@/features/recipes/types';
 import { buildShoppingList } from '@/features/shopping-list/utils/buildShoppingList';
-
-// Groupes d'affichage : viandes + poissons fusionnes visuellement
-const SHOPPING_LIST_GROUPS: {
-  label: string;
-  emoji: string;
-  cats: IngredientCategory[];
-}[] = [
-  { label: 'Legumes', emoji: '🥦', cats: ['vegetables'] },
-  { label: 'Fruits', emoji: '🍎', cats: ['fruits'] },
-  { label: 'Viandes & Poissons', emoji: '🥩', cats: ['meat', 'fish'] },
-  { label: 'Produits laitiers', emoji: '🧀', cats: ['dairy'] },
-  { label: 'Cereales & feculents', emoji: '🌾', cats: ['cereals'] },
-  { label: 'Legumineuses', emoji: '🫘', cats: ['legumes'] },
-  { label: 'Huiles & matieres grasses', emoji: '🫙', cats: ['oils'] },
-  { label: 'Condiments', emoji: '🧴', cats: ['condiments'] },
-  { label: 'Epices & herbes', emoji: '🌿', cats: ['spices'] },
-  { label: 'Fruits secs & noix', emoji: '🥜', cats: ['nuts'] },
-  { label: 'Autres', emoji: '🛒', cats: ['other'] },
-];
-
-// Labels avec accents corrects pour l'affichage
-const GROUP_DISPLAY_LABELS: Record<string, string> = {
-  Legumes: 'Légumes',
-  Fruits: 'Fruits',
-  'Viandes & Poissons': 'Viandes & Poissons',
-  'Produits laitiers': 'Produits laitiers',
-  'Cereales & feculents': 'Céréales & féculents',
-  Legumineuses: 'Légumineuses',
-  'Huiles & matieres grasses': 'Huiles & matières grasses',
-  Condiments: 'Condiments',
-  'Epices & herbes': 'Épices & herbes',
-  'Fruits secs & noix': 'Fruits secs & noix',
-  Autres: 'Autres',
-};
-
-const COMPACT_UNITS = new Set(['g', 'kg', 'ml', 'l']);
+import { unitLabels } from '@/labels/recipes';
+import type { PlannedMeal } from '@/types/planner';
+import type { Recipe } from '@/types/recipes';
+import type { PersistedShoppingListItem } from '@/types/shopping-list';
 
 const formatQuantity = (item: PersistedShoppingListItem): string => {
-  if (item.unit === 'unit') {
-    return `${item.quantity} piece${item.quantity > 1 ? 's' : ''}`;
-  }
+  if (item.unit === 'unit')
+    return `${item.quantity} pièce${item.quantity > 1 ? 's' : ''}`;
   const sep = COMPACT_UNITS.has(item.unit) ? '' : ' ';
   return `${item.quantity}${sep}${unitLabels[item.unit]}`;
 };
@@ -192,9 +153,8 @@ export const ShoppingListPageView = ({
         unchecked.some((i) => g.cats.includes(i.category)),
       ).flatMap((g) => {
         const groupItems = unchecked.filter((i) => g.cats.includes(i.category));
-        const label = GROUP_DISPLAY_LABELS[g.label] ?? g.label;
         return [
-          label,
+          g.label,
           ...groupItems.map((i) => `- ${formatExportLabel(i)}`),
           '',
         ];
@@ -313,20 +273,18 @@ export const ShoppingListPageView = ({
             );
             if (groupItems.length === 0) return null;
             const remaining = groupItems.filter((i) => !i.isChecked).length;
-            const displayLabel =
-              GROUP_DISPLAY_LABELS[group.label] ?? group.label;
             return (
               <section key={group.label}>
                 <h2 className="text-foreground mb-2 flex items-center gap-2 text-sm font-semibold">
                   <span>{group.emoji}</span>
-                  <span>{displayLabel}</span>
+                  <span>{group.label}</span>
                   {remaining > 0 && (
                     <span className="text-muted-foreground font-normal">
                       ({remaining} restant{remaining > 1 ? 's' : ''})
                     </span>
                   )}
                 </h2>
-                <ul className="divide-border bg-muted divide-y overflow-hidden rounded-xl border">
+                <ul className="bg-muted divide-border divide-y overflow-hidden rounded-xl border">
                   {groupItems.map((item) => {
                     const source = recipeSources[item.name];
                     const isMultiple = source === 'Plusieurs recettes';

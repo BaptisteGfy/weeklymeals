@@ -9,13 +9,13 @@ import {
   getPlannedMeals,
   removeFromPlanning,
 } from '@/actions/planner-actions';
+import { weekDayToDate } from '@/features/planner/utils/date';
 import type {
   CourseType,
   MealIdea,
   MealPeriod,
   PlannedMeal,
-} from '@/features/planner/types';
-import { weekDayToDate } from '@/features/planner/utils/date';
+} from '@/types/planner';
 
 type PlannerContextType = {
   plannedMeals: PlannedMeal[];

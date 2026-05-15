@@ -3,9 +3,9 @@
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
-import type { MealIdea } from '@/features/planner/types';
 import { RecipeCard } from '@/features/recipes/components/RecipeCard';
-import type { Recipe } from '@/features/recipes/types';
+import type { MealIdea } from '@/types/planner';
+import type { Recipe } from '@/types/recipes';
 
 import { RecipePickerModal } from './RecipePickerModal';
 

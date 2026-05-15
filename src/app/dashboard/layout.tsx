@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation';
 import { getMealIdeas } from '@/actions/meal-idea-actions';
 import { getPlannedMeals } from '@/actions/planner-actions';
 import { getRecipes } from '@/actions/recipe-actions';
-import { DashboardShell } from '@/components/DashboardShell';
 import { PlannerProvider } from '@/context/PlannerContext';
 import { RecipesProvider } from '@/context/RecipesContext';
+import { DashboardShell } from '@/features/dashboard/components/DashboardShell';
 import { getWeekStart } from '@/features/planner/utils/date';
 import { getCurrentSession } from '@/lib/auth';
 

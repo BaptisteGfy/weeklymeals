@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { authClient } from '@/lib/auth-client';
-import { UserRole } from '@/types/enums';
+import { UserRole } from '@/types/auth';
 
 const navLinks = [
   { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },

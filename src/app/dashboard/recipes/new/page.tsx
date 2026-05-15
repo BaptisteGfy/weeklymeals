@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { useRecipes } from '@/context/RecipesContext';
 import { RecipeDetailView } from '@/features/recipes/components/RecipeDetailView';
-import { Recipe } from '@/features/recipes/types';
+import { Recipe } from '@/types/recipes';
 
 const defaultRecipe: Omit<Recipe, 'id'> = {
   title: '',

@@ -2,15 +2,14 @@
 
 import { useState } from 'react';
 
+import { mealPeriods, weekDays } from '@/constants/planner';
+import { weekDayToDate } from '@/features/planner/utils/date';
 import {
   courseTypeLabels,
   mealPeriodLabels,
-  mealPeriods,
   weekDayLabels,
-  weekDays,
-} from '@/features/planner/constants';
-import type { CourseType, MealPeriod, WeekDay } from '@/features/planner/types';
-import { weekDayToDate } from '@/features/planner/utils/date';
+} from '@/labels/planner';
+import type { CourseType, MealPeriod, WeekDay } from '@/types/planner';
 
 type Props = {
   isOpen: boolean;

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import type { Recipe } from '@/features/recipes/types';
+import type { Recipe } from '@/types/recipes';
 
 type Props = {
   recipes: Recipe[];

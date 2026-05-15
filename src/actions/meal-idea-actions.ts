@@ -1,8 +1,8 @@
 'use server';
 
-import type { MealIdea } from '@/features/planner/types';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import type { MealIdea } from '@/types/planner';
 
 export const getMealIdeas = async (): Promise<MealIdea[]> => {
   const session = await getCurrentSession();

@@ -1,6 +1,5 @@
+import { DashboardView } from '@/features/dashboard/components/DashboardView';
 import { getCurrentSession } from '@/lib/auth';
-
-import { DashboardView } from './components/DashboardView';
 
 const DashboardPage = async () => {
   const session = await getCurrentSession();

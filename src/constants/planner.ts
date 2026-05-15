@@ -1,4 +1,4 @@
-import type { CourseType, MealPeriod, WeekDay } from './types';
+import type { GridRow, MealPeriod, WeekDay } from '@/types/planner';
 
 export const weekDays: WeekDay[] = [
   'monday',
@@ -10,36 +10,9 @@ export const weekDays: WeekDay[] = [
   'sunday',
 ];
 
-export const weekDayLabels: Record<WeekDay, string> = {
-  monday: 'Lundi',
-  tuesday: 'Mardi',
-  wednesday: 'Mercredi',
-  thursday: 'Jeudi',
-  friday: 'Vendredi',
-  saturday: 'Samedi',
-  sunday: 'Dimanche',
-};
-
 export const mealPeriods: MealPeriod[] = ['breakfast', 'lunch', 'dinner'];
 
-export const mealPeriodLabels: Record<MealPeriod, string> = {
-  breakfast: 'Matin',
-  lunch: 'Midi',
-  dinner: 'Soir',
-};
-
-export const courseTypeLabels: Record<CourseType, string> = {
-  starter: 'Entrée',
-  main: 'Plat',
-  dessert: 'Dessert',
-};
-
-export type GridRow = {
-  mealPeriod: MealPeriod;
-  courseType: CourseType;
-  label: string;
-  pickerLabel: string;
-};
+export const dashboardMealPeriods: MealPeriod[] = ['lunch', 'dinner'];
 
 export const PLANNER_ROWS: GridRow[] = [
   {
@@ -85,6 +58,3 @@ export const PLANNER_ROWS: GridRow[] = [
     pickerLabel: 'Dessert (soir)',
   },
 ];
-
-// Utilisé dans le dashboard (aperçu simplifié : midi + soir uniquement)
-export const dashboardMealPeriods: MealPeriod[] = ['lunch', 'dinner'];

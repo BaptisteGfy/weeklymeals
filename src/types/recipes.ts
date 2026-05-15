@@ -1,11 +1,4 @@
-export type IngredientUnit =
-  | 'g'
-  | 'kg'
-  | 'ml'
-  | 'l'
-  | 'cac' // cuillère à café
-  | 'cas' // cuillère à soupe
-  | 'unit';
+export type IngredientUnit = 'g' | 'kg' | 'ml' | 'l' | 'cac' | 'cas' | 'unit';
 
 export type IngredientCategory =
   | 'vegetables'
@@ -21,6 +14,8 @@ export type IngredientCategory =
   | 'nuts'
   | 'other';
 
+export type RecipeCategory = 'breakfast' | 'lunch' | 'dinner' | 'dessert';
+
 export type Ingredient = {
   id: string;
   name: string;
@@ -34,8 +29,6 @@ export type IngredientDraft = {
   quantity: number;
   unit: IngredientUnit;
 };
-
-export type RecipeCategory = 'breakfast' | 'lunch' | 'dinner' | 'dessert';
 
 export type Instruction = {
   id: string;

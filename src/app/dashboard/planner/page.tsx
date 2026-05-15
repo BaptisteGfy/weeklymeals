@@ -7,7 +7,6 @@ import { useRecipes } from '@/context/RecipesContext';
 import { MealIdeasSection } from '@/features/planner/components/MealIdeasSection';
 import { PlannerView } from '@/features/planner/components/PlannerView';
 import { getWeekStart, weekDayToDate } from '@/features/planner/utils/date';
-import { ShoppingListView } from '@/features/shopping-list/components/ShoppingListView';
 
 const PlannerPage = () => {
   const { recipes } = useRecipes();
@@ -58,8 +57,6 @@ const PlannerPage = () => {
         onAddMealIdea={handleAddMealIdea}
         onRemoveMealIdea={handleRemoveMealIdea}
       />
-
-      <ShoppingListView recipes={recipes} plannedMeals={currentWeekMeals} />
     </>
   );
 };

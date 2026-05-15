@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { AddToPlanningModal } from '@/features/planner/components/AddToPlanningModal';
-import { mealPeriodLabels, weekDayLabels } from '@/features/planner/constants';
-import type { CourseType, MealPeriod } from '@/features/planner/types';
 import { dateToWeekDay, getWeekStart } from '@/features/planner/utils/date';
 import { useRecipeForm } from '@/features/recipes/hooks/useRecipeForm';
-import { Recipe, RecipeFormValues } from '@/features/recipes/types';
+import { mealPeriodLabels, weekDayLabels } from '@/labels/planner';
+import type { CourseType, MealPeriod } from '@/types/planner';
+import { Recipe, RecipeFormValues } from '@/types/recipes';
 
 import { IngredientsSection } from './IngredientsSection';
 import { InstructionsSection } from './InstructionsSection';

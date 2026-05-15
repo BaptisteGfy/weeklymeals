@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { categoryLabels } from '@/features/recipes/constants';
-import { Recipe, RecipeFormValues } from '@/features/recipes/types';
+import { categoryLabels } from '@/labels/recipes';
+import { Recipe, RecipeFormValues } from '@/types/recipes';
 
 const MIN_SERVINGS = 1;
 const MAX_SERVINGS = 10;

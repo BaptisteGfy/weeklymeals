@@ -5,47 +5,18 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { dashboardMealPeriods, weekDays } from '@/constants/planner';
 import { usePlanner } from '@/context/PlannerContext';
 import { useRecipes } from '@/context/RecipesContext';
-import { dashboardMealPeriods, weekDays } from '@/features/planner/constants';
-import type { MealPeriod, WeekDay } from '@/features/planner/types';
 import {
   getDayNumber,
   getWeekStart,
   weekDayToDate,
 } from '@/features/planner/utils/date';
-import type { RecipeCategory } from '@/features/recipes/types';
+import { mealPeriodLabels, weekDayShortLabels } from '@/labels/planner';
+import { categoryDotStyles, categoryLabels } from '@/labels/recipes';
 import { cn } from '@/lib/utils';
-
-const DAY_SHORT: Record<WeekDay, string> = {
-  monday: 'Lun',
-  tuesday: 'Mar',
-  wednesday: 'Mer',
-  thursday: 'Jeu',
-  friday: 'Ven',
-  saturday: 'Sam',
-  sunday: 'Dim',
-};
-
-const MEAL_LABEL: Record<MealPeriod, string> = {
-  breakfast: 'Matin',
-  lunch: 'Déj.',
-  dinner: 'Dîner',
-};
-
-const CATEGORY_DOT: Record<RecipeCategory, string> = {
-  breakfast: 'bg-amber-400',
-  lunch: 'bg-emerald-500',
-  dinner: 'bg-primary',
-  dessert: 'bg-violet-400',
-};
-
-const CATEGORY_LABEL: Record<RecipeCategory, string> = {
-  breakfast: 'Petit-déj',
-  lunch: 'Déjeuner',
-  dinner: 'Dîner',
-  dessert: 'Dessert',
-};
+import type { MealPeriod, WeekDay } from '@/types/planner';
 
 type DashboardViewProps = { userName: string };
 
@@ -112,7 +83,7 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
             {weekDays.map((day) => (
               <div key={day} className="text-center">
                 <span className="text-muted-foreground block text-[10px] font-medium tracking-wide uppercase">
-                  {DAY_SHORT[day]}
+                  {weekDayShortLabels[day]}
                 </span>
                 <span className="text-foreground block text-sm font-semibold">
                   {getDayNumber(day, weekStart)}
@@ -126,7 +97,7 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
                   key={`label-${mealPeriod}`}
                   className="text-muted-foreground flex items-center justify-end text-[10px] font-medium tracking-wide uppercase"
                 >
-                  {MEAL_LABEL[mealPeriod]}
+                  {mealPeriodLabels[mealPeriod]}
                 </div>
                 {weekDays.map((day) => {
                   const recipe = getMealRecipe(day, mealPeriod);
@@ -241,14 +212,14 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
                   <span
                     className={cn(
                       'h-2 w-2 shrink-0 rounded-full',
-                      CATEGORY_DOT[recipe.category],
+                      categoryDotStyles[recipe.category],
                     )}
                   />
                   <span className="text-foreground min-w-0 flex-1 truncate text-sm">
                     {recipe.title}
                   </span>
                   <span className="text-muted-foreground shrink-0 text-[10px]">
-                    {CATEGORY_LABEL[recipe.category]}
+                    {categoryLabels[recipe.category]}
                   </span>
                 </Link>
               </li>

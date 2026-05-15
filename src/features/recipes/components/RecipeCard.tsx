@@ -10,11 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  categoryBadgeStyles,
-  categoryLabels,
-} from '@/features/recipes/constants';
-import type { Recipe } from '@/features/recipes/types';
+import { categoryBadgeStyles, categoryLabels } from '@/labels/recipes';
+import type { Recipe } from '@/types/recipes';
 
 type Props = {
   recipe: Recipe;

@@ -1,6 +1,6 @@
-import type { PlannedMeal } from '@/features/planner/types';
-import type { Recipe } from '@/features/recipes/types';
-import type { ShoppingListItem } from '@/features/shopping-list/types';
+import type { PlannedMeal } from '@/types/planner';
+import type { Recipe } from '@/types/recipes';
+import type { ShoppingListItem } from '@/types/shopping-list';
 
 import { convertUnit } from './convertUnit';
 

@@ -1,12 +1,8 @@
 'use server';
 
-import type {
-  CourseType,
-  MealPeriod,
-  PlannedMeal,
-} from '@/features/planner/types';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import type { CourseType, MealPeriod, PlannedMeal } from '@/types/planner';
 
 const toDateTime = (isoDate: string): Date => new Date(isoDate + 'T12:00:00Z');
 

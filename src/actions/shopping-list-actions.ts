@@ -1,11 +1,16 @@
 'use server';
 
-import type { IngredientCategory, IngredientUnit } from '@/features/recipes/types';
+import type {
+  IngredientCategory,
+  IngredientUnit,
+} from '@/features/recipes/types';
 import type { ShoppingListItem } from '@/features/shopping-list/types';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-export type PersistedShoppingListItem = ShoppingListItem & { isChecked: boolean };
+export type PersistedShoppingListItem = ShoppingListItem & {
+  isChecked: boolean;
+};
 
 export const syncShoppingList = async (
   weekStart: Date,
@@ -20,8 +25,14 @@ export const syncShoppingList = async (
     // Upsert tous les items calculés (préserve isChecked si l'item existait déjà)
     for (const item of items) {
       await tx.shoppingList.upsert({
-        where: { userId_weekStart_name: { userId, weekStart, name: item.name } },
-        update: { quantity: item.quantity, unit: item.unit, category: item.category },
+        where: {
+          userId_weekStart_name: { userId, weekStart, name: item.name },
+        },
+        update: {
+          quantity: item.quantity,
+          unit: item.unit,
+          category: item.category,
+        },
         create: {
           userId,
           weekStart,

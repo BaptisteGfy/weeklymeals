@@ -1,4 +1,8 @@
-import type { IngredientCategory, IngredientUnit, RecipeCategory } from './types';
+import type {
+  IngredientCategory,
+  IngredientUnit,
+  RecipeCategory,
+} from './types';
 
 export const unitLabels: Record<IngredientUnit, string> = {
   g: 'g',

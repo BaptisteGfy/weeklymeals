@@ -1,26 +1,39 @@
 'use client';
 
 import clsx from 'clsx';
-import { Check, ChevronLeft, ChevronRight, ClipboardCopy, RotateCcw } from 'lucide-react';
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCopy,
+  RotateCcw,
+} from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import { getPlannedMeals } from '@/actions/planner-actions';
 import {
   checkAllItems,
+  type PersistedShoppingListItem,
   resetCheckedItems,
   syncShoppingList,
   toggleCheckedItem,
-  type PersistedShoppingListItem,
 } from '@/actions/shopping-list-actions';
 import type { PlannedMeal } from '@/features/planner/types';
 import { getWeekLabel, getWeekStart } from '@/features/planner/utils/date';
-import { ingredientCategoryLabels, unitLabels } from '@/features/recipes/constants';
+import {
+  ingredientCategoryLabels,
+  unitLabels,
+} from '@/features/recipes/constants';
 import type { IngredientCategory, Recipe } from '@/features/recipes/types';
 import { buildShoppingList } from '@/features/shopping-list/utils/buildShoppingList';
 
 // Groupes d'affichage : viandes + poissons fusionnes visuellement
-const SHOPPING_LIST_GROUPS: { label: string; emoji: string; cats: IngredientCategory[] }[] = [
+const SHOPPING_LIST_GROUPS: {
+  label: string;
+  emoji: string;
+  cats: IngredientCategory[];
+}[] = [
   { label: 'Legumes', emoji: '🥦', cats: ['vegetables'] },
   { label: 'Fruits', emoji: '🍎', cats: ['fruits'] },
   { label: 'Viandes & Poissons', emoji: '🥩', cats: ['meat', 'fish'] },
@@ -92,10 +105,15 @@ type Props = {
   recipes: Recipe[];
 };
 
-export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipes }: Props) => {
+export const ShoppingListPageView = ({
+  initialItems,
+  initialPlannedMeals,
+  recipes,
+}: Props) => {
   const [weekOffset, setWeekOffset] = useState(0);
   const [items, setItems] = useState<PersistedShoppingListItem[]>(initialItems);
-  const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>(initialPlannedMeals);
+  const [plannedMeals, setPlannedMeals] =
+    useState<PlannedMeal[]>(initialPlannedMeals);
   const [isPending, startTransition] = useTransition();
 
   const weekStart = getWeekStart(weekOffset);
@@ -106,7 +124,8 @@ export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipe
   const checkedCount = items.filter((i) => i.isChecked).length;
   const totalCount = items.length;
   const allChecked = totalCount > 0 && checkedCount === totalCount;
-  const progressPct = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+  const progressPct =
+    totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
 
   const changeWeek = (delta: number) => {
     const newOffset = weekOffset + delta;
@@ -125,13 +144,17 @@ export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipe
     const current = items.find((i) => i.name === name);
     if (!current) return;
     const newChecked = !current.isChecked;
-    setItems((prev) => prev.map((i) => (i.name === name ? { ...i, isChecked: newChecked } : i)));
+    setItems((prev) =>
+      prev.map((i) => (i.name === name ? { ...i, isChecked: newChecked } : i)),
+    );
     startTransition(async () => {
       try {
         await toggleCheckedItem(weekStart, name, newChecked);
       } catch {
         setItems((prev) =>
-          prev.map((i) => (i.name === name ? { ...i, isChecked: !newChecked } : i)),
+          prev.map((i) =>
+            i.name === name ? { ...i, isChecked: !newChecked } : i,
+          ),
         );
         toast.error('Impossible de mettre à jour. Réessaie.');
       }
@@ -170,7 +193,11 @@ export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipe
       ).flatMap((g) => {
         const groupItems = unchecked.filter((i) => g.cats.includes(i.category));
         const label = GROUP_DISPLAY_LABELS[g.label] ?? g.label;
-        return [label, ...groupItems.map((i) => `- ${formatExportLabel(i)}`), ''];
+        return [
+          label,
+          ...groupItems.map((i) => `- ${formatExportLabel(i)}`),
+          '',
+        ];
       }),
     ].join('\n');
 
@@ -235,7 +262,8 @@ export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipe
           {uniqueRecipeCount > 0 && (
             <>
               {' · '}
-              {uniqueRecipeCount} recette{uniqueRecipeCount > 1 ? 's' : ''} planifi
+              {uniqueRecipeCount} recette{uniqueRecipeCount > 1 ? 's' : ''}{' '}
+              planifi
               {uniqueRecipeCount > 1 ? 'ées' : 'ée'}
             </>
           )}
@@ -273,12 +301,20 @@ export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipe
           Aucun repas planifié cette semaine.
         </div>
       ) : (
-        <div className={clsx('space-y-5', isPending && 'opacity-60 transition-opacity')}>
+        <div
+          className={clsx(
+            'space-y-5',
+            isPending && 'opacity-60 transition-opacity',
+          )}
+        >
           {SHOPPING_LIST_GROUPS.map((group) => {
-            const groupItems = items.filter((i) => group.cats.includes(i.category));
+            const groupItems = items.filter((i) =>
+              group.cats.includes(i.category),
+            );
             if (groupItems.length === 0) return null;
             const remaining = groupItems.filter((i) => !i.isChecked).length;
-            const displayLabel = GROUP_DISPLAY_LABELS[group.label] ?? group.label;
+            const displayLabel =
+              GROUP_DISPLAY_LABELS[group.label] ?? group.label;
             return (
               <section key={group.label}>
                 <h2 className="text-foreground mb-2 flex items-center gap-2 text-sm font-semibold">
@@ -290,14 +326,17 @@ export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipe
                     </span>
                   )}
                 </h2>
-                <ul className="divide-border overflow-hidden rounded-xl border bg-muted divide-y">
+                <ul className="divide-border bg-muted divide-y overflow-hidden rounded-xl border">
                   {groupItems.map((item) => {
                     const source = recipeSources[item.name];
                     const isMultiple = source === 'Plusieurs recettes';
                     return (
                       <li
                         key={item.name}
-                        className={clsx('transition-colors', item.isChecked && 'bg-black/4')}
+                        className={clsx(
+                          'transition-colors',
+                          item.isChecked && 'bg-black/4',
+                        )}
                       >
                         <label className="flex cursor-pointer items-center gap-3 px-4 py-3">
                           <input
@@ -319,7 +358,7 @@ export const ShoppingListPageView = ({ initialItems, initialPlannedMeals, recipe
                           {source && (
                             <span
                               className={clsx(
-                                'min-w-0 max-w-35 shrink-0 truncate text-right text-xs',
+                                'max-w-35 min-w-0 shrink-0 truncate text-right text-xs',
                                 isMultiple
                                   ? 'bg-muted text-muted-foreground rounded-full px-2 py-0.5'
                                   : 'text-muted-foreground/70',

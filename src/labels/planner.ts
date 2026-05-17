@@ -10,16 +10,6 @@ export const weekDayLabels: Record<WeekDay, string> = {
   sunday: 'Dimanche',
 };
 
-export const weekDayShortLabels: Record<WeekDay, string> = {
-  monday: 'Lun',
-  tuesday: 'Mar',
-  wednesday: 'Mer',
-  thursday: 'Jeu',
-  friday: 'Ven',
-  saturday: 'Sam',
-  sunday: 'Dim',
-};
-
 export const mealPeriodLabels: Record<MealPeriod, string> = {
   breakfast: 'Matin',
   lunch: 'Midi',

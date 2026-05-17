@@ -13,7 +13,7 @@ import {
   getWeekStart,
   weekDayToDate,
 } from '@/features/planner/utils/date';
-import { mealPeriodLabels, weekDayShortLabels } from '@/labels/planner';
+import { mealPeriodLabels, weekDayLabels } from '@/labels/planner';
 import { categoryDotStyles, categoryLabels } from '@/labels/recipes';
 import { cn } from '@/lib/utils';
 import type { MealPeriod, WeekDay } from '@/types/planner';
@@ -83,7 +83,7 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
             {weekDays.map((day) => (
               <div key={day} className="text-center">
                 <span className="text-muted-foreground block text-[10px] font-medium tracking-wide uppercase">
-                  {weekDayShortLabels[day]}
+                  {weekDayLabels[day].slice(0, 3)}
                 </span>
                 <span className="text-foreground block text-sm font-semibold">
                   {getDayNumber(day, weekStart)}

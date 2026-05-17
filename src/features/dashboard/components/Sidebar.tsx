@@ -8,11 +8,19 @@ import {
   LogOut,
   Shield,
   ShoppingCart,
+  User,
   UtensilsCrossed,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { authClient } from '@/lib/auth-client';
 import { UserRole } from '@/types/auth';
 
@@ -110,23 +118,46 @@ export const Sidebar = ({ isOpen, onClose, user }: SidebarProps) => {
         </nav>
 
         <div className="border-sidebar-border border-t px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-sidebar-accent text-sidebar-accent-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sidebar-foreground truncate text-sm font-medium">
-                {user.name}
-              </p>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <button
-                onClick={handleSignOut}
-                className="text-muted-foreground hover:text-primary flex items-center gap-1 text-xs transition-colors"
+                className={clsx(
+                  'flex w-full items-center gap-3 rounded-lg px-1 py-1 transition-colors',
+                  pathname === '/dashboard/profile'
+                    ? 'bg-sidebar-accent'
+                    : 'hover:bg-sidebar-accent/50',
+                )}
               >
-                <LogOut className="h-3 w-3" />
-                Se déconnecter
+                <div className="bg-sidebar-accent text-sidebar-accent-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1 text-left">
+                  <p className="text-sidebar-foreground truncate text-sm font-medium">
+                    {user.name}
+                  </p>
+                  <p className="text-muted-foreground truncate text-xs">
+                    {user.email}
+                  </p>
+                </div>
               </button>
-            </div>
-          </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="top" align="start" className="w-52">
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/profile" onClick={onClose}>
+                  <User className="h-4 w-4" />
+                  Mon profil
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                className="text-destructive focus:text-destructive"
+              >
+                <LogOut className="h-4 w-4" />
+                Se déconnecter
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </aside>
     </div>

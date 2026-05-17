@@ -3,15 +3,12 @@
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import type { IngredientCategory, IngredientUnit } from '@/types/recipes';
-import type {
-  PersistedShoppingListItem,
-  ShoppingListItem,
-} from '@/types/shopping-list';
+import type { ShoppingListItem } from '@/types/shopping-list';
 
 export const syncShoppingList = async (
   weekStart: Date,
   items: ShoppingListItem[],
-): Promise<PersistedShoppingListItem[]> => {
+): Promise<ShoppingListItem[]> => {
   const session = await getCurrentSession();
   if (!session) throw new Error('User is not authenticated');
 

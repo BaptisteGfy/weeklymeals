@@ -24,16 +24,16 @@ import { buildShoppingList } from '@/features/shopping-list/utils/buildShoppingL
 import { unitLabels } from '@/labels/recipes';
 import type { PlannedMeal } from '@/types/planner';
 import type { Recipe } from '@/types/recipes';
-import type { PersistedShoppingListItem } from '@/types/shopping-list';
+import type { ShoppingListItem } from '@/types/shopping-list';
 
-const formatQuantity = (item: PersistedShoppingListItem): string => {
+const formatQuantity = (item: ShoppingListItem): string => {
   if (item.unit === 'unit')
     return `${item.quantity} pièce${item.quantity > 1 ? 's' : ''}`;
   const sep = COMPACT_UNITS.has(item.unit) ? '' : ' ';
   return `${item.quantity}${sep}${unitLabels[item.unit]}`;
 };
 
-const formatExportLabel = (item: PersistedShoppingListItem): string => {
+const formatExportLabel = (item: ShoppingListItem): string => {
   if (item.unit === 'unit') return `${item.quantity} ${item.name}`;
   const sep = COMPACT_UNITS.has(item.unit) ? '' : ' ';
   return `${item.quantity}${sep}${unitLabels[item.unit]} de ${item.name}`;
@@ -61,7 +61,7 @@ const computeRecipeSources = (
 };
 
 type Props = {
-  initialItems: PersistedShoppingListItem[];
+  initialItems: ShoppingListItem[];
   initialPlannedMeals: PlannedMeal[];
   recipes: Recipe[];
 };
@@ -72,7 +72,7 @@ export const ShoppingListPageView = ({
   recipes,
 }: Props) => {
   const [weekOffset, setWeekOffset] = useState(0);
-  const [items, setItems] = useState<PersistedShoppingListItem[]>(initialItems);
+  const [items, setItems] = useState<ShoppingListItem[]>(initialItems);
   const [plannedMeals, setPlannedMeals] =
     useState<PlannedMeal[]>(initialPlannedMeals);
   const [isPending, startTransition] = useTransition();

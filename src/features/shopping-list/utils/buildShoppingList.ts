@@ -16,6 +16,7 @@ export const buildShoppingList = (
       quantity,
       unit,
       category,
+      isChecked: false,
     }));
   });
 

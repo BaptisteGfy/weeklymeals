@@ -5,8 +5,5 @@ export type ShoppingListItem = {
   quantity: number;
   unit: IngredientUnit;
   category: IngredientCategory;
-};
-
-export type PersistedShoppingListItem = ShoppingListItem & {
   isChecked: boolean;
 };

@@ -1,12 +1,9 @@
 'use server';
 
+import { toDateTime, toISODate } from '@/features/planner/utils/date';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import type { CourseType, MealPeriod, PlannedMeal } from '@/types/planner';
-
-const toDateTime = (isoDate: string): Date => new Date(isoDate + 'T12:00:00Z');
-
-const toISODate = (date: Date): string => date.toISOString().split('T')[0];
 
 export const getPlannedMeals = async (
   weekStart: Date,

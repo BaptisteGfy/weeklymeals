@@ -1,6 +1,12 @@
 import { weekDays } from '@/constants/planner';
 import type { WeekDay } from '@/types/planner';
 
+export const toDateTime = (isoDate: string): Date =>
+  new Date(isoDate + 'T12:00:00Z');
+
+export const toISODate = (date: Date): string =>
+  date.toISOString().split('T')[0];
+
 export const getWeekStart = (weekOffset = 0): Date => {
   const today = new Date();
   const diff = (today.getDay() + 6) % 7;

@@ -18,25 +18,26 @@ import {
   syncShoppingList,
   toggleCheckedItem,
 } from '@/actions/shopping-list-actions';
-import { COMPACT_UNITS, SHOPPING_LIST_GROUPS } from '@/constants/shopping-list';
 import { getWeekLabel, getWeekStart } from '@/features/planner/utils/date';
 import { buildShoppingList } from '@/features/shopping-list/utils/buildShoppingList';
+import {
+  ingredientCategoryEmojis,
+  ingredientCategoryLabels,
+} from '@/labels/ingredients';
 import { unitLabels } from '@/labels/recipes';
 import type { PlannedMeal } from '@/types/planner';
-import type { Recipe } from '@/types/recipes';
+import type { IngredientCategory, Recipe } from '@/types/recipes';
 import type { ShoppingListItem } from '@/types/shopping-list';
 
 const formatQuantity = (item: ShoppingListItem): string => {
   if (item.unit === 'unit')
     return `${item.quantity} pièce${item.quantity > 1 ? 's' : ''}`;
-  const sep = COMPACT_UNITS.has(item.unit) ? '' : ' ';
-  return `${item.quantity}${sep}${unitLabels[item.unit]}`;
+  return `${item.quantity} ${unitLabels[item.unit]}`;
 };
 
 const formatExportLabel = (item: ShoppingListItem): string => {
   if (item.unit === 'unit') return `${item.quantity} ${item.name}`;
-  const sep = COMPACT_UNITS.has(item.unit) ? '' : ' ';
-  return `${item.quantity}${sep}${unitLabels[item.unit]} de ${item.name}`;
+  return `${item.quantity} ${unitLabels[item.unit]} de ${item.name}`;
 };
 
 const computeRecipeSources = (
@@ -146,19 +147,25 @@ export const ShoppingListPageView = ({
 
   const handleCopy = async () => {
     const unchecked = items.filter((i) => !i.isChecked);
+    const categories = Object.keys(ingredientCategoryLabels) as IngredientCategory[];
     const lines = [
       `Liste de courses — ${weekLabel}`,
       '',
-      ...SHOPPING_LIST_GROUPS.filter((g) =>
-        unchecked.some((i) => g.cats.includes(i.category)),
-      ).flatMap((g) => {
-        const groupItems = unchecked.filter((i) => g.cats.includes(i.category));
-        return [
-          g.label,
-          ...groupItems.map((i) => `- ${formatExportLabel(i)}`),
-          '',
-        ];
-      }),
+      ...categories
+        .filter((cat) => cat !== 'fish')
+        .flatMap((cat) => {
+          const cats: IngredientCategory[] =
+            cat === 'meat' ? ['meat', 'fish'] : [cat];
+          const label =
+            cat === 'meat' ? 'Viandes & Poissons' : ingredientCategoryLabels[cat];
+          const groupItems = unchecked.filter((i) => cats.includes(i.category));
+          if (groupItems.length === 0) return [];
+          return [
+            label,
+            ...groupItems.map((i) => `- ${formatExportLabel(i)}`),
+            '',
+          ];
+        }),
     ].join('\n');
 
     await navigator.clipboard.writeText(lines);
@@ -267,17 +274,22 @@ export const ShoppingListPageView = ({
             isPending && 'opacity-60 transition-opacity',
           )}
         >
-          {SHOPPING_LIST_GROUPS.map((group) => {
-            const groupItems = items.filter((i) =>
-              group.cats.includes(i.category),
-            );
+          {(Object.keys(ingredientCategoryLabels) as IngredientCategory[])
+            .filter((cat) => cat !== 'fish')
+            .map((cat) => {
+            const cats: IngredientCategory[] =
+              cat === 'meat' ? ['meat', 'fish'] : [cat];
+            const label =
+              cat === 'meat' ? 'Viandes & Poissons' : ingredientCategoryLabels[cat];
+            const emoji = ingredientCategoryEmojis[cat];
+            const groupItems = items.filter((i) => cats.includes(i.category));
             if (groupItems.length === 0) return null;
             const remaining = groupItems.filter((i) => !i.isChecked).length;
             return (
-              <section key={group.label}>
+              <section key={cat}>
                 <h2 className="text-foreground mb-2 flex items-center gap-2 text-sm font-semibold">
-                  <span>{group.emoji}</span>
-                  <span>{group.label}</span>
+                  <span>{emoji}</span>
+                  <span>{label}</span>
                   {remaining > 0 && (
                     <span className="text-muted-foreground font-normal">
                       ({remaining} restant{remaining > 1 ? 's' : ''})

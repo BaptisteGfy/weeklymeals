@@ -83,10 +83,10 @@ async function seed() {
       ingredients: [
         { nameFr: 'Farine', nameEn: 'Flour', quantity: 250, unit: 'g' as IngredientUnit, category: 'cereals' as const },
         { nameFr: 'Lait', nameEn: 'Milk', quantity: 300, unit: 'ml' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 2, unit: 'unit' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Sucre', nameEn: 'Sugar', quantity: 2, unit: 'cas' as IngredientUnit, category: 'condiments' as const },
-        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Levure chimique', nameEn: 'Baking powder', quantity: 1, unit: 'cac' as IngredientUnit, category: 'other' as const },
+        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 2, unit: 'unit' as IngredientUnit, category: 'eggs' as const },
+        { nameFr: 'Sucre', nameEn: 'Sugar', quantity: 2, unit: 'cas' as IngredientUnit, category: 'sweeteners' as const },
+        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'fats' as const },
+        { nameFr: 'Levure chimique', nameEn: 'Baking powder', quantity: 1, unit: 'cac' as IngredientUnit, category: 'condiments' as const },
       ],
       instructions: [
         'Dans un saladier, mélanger la farine, le sucre et la levure chimique.',
@@ -105,7 +105,7 @@ async function seed() {
       cookTimeMinutes: 60,
       ingredients: [
         { nameFr: 'Poulet entier', nameEn: 'Whole chicken', quantity: 1, unit: 'unit' as IngredientUnit, category: 'meat' as const },
-        { nameFr: 'Herbes de Provence', nameEn: 'Herbes de Provence', quantity: 2, unit: 'cas' as IngredientUnit, category: 'spices' as const },
+        { nameFr: 'Herbes de Provence', nameEn: 'Herbes de Provence', quantity: 2, unit: 'cas' as IngredientUnit, category: 'herbs' as const },
         { nameFr: 'Huile d\'olive', nameEn: 'Olive oil', quantity: 3, unit: 'cas' as IngredientUnit, category: 'oils' as const },
         { nameFr: 'Ail', nameEn: 'Garlic', quantity: 4, unit: 'unit' as IngredientUnit, category: 'vegetables' as const },
         { nameFr: 'Citron', nameEn: 'Lemon', quantity: 1, unit: 'unit' as IngredientUnit, category: 'fruits' as const },
@@ -127,10 +127,10 @@ async function seed() {
       cookTimeMinutes: 35,
       restTimeMinutes: 30,
       ingredients: [
-        { nameFr: 'Pâte brisée', nameEn: 'Shortcrust pastry', quantity: 1, unit: 'unit' as IngredientUnit, category: 'other' as const },
-        { nameFr: 'Lardons fumés', nameEn: 'Smoked bacon lardons', quantity: 200, unit: 'g' as IngredientUnit, category: 'meat' as const },
+        { nameFr: 'Pâte brisée', nameEn: 'Shortcrust pastry', quantity: 1, unit: 'unit' as IngredientUnit, category: 'pastry' as const },
+        { nameFr: 'Lardons fumés', nameEn: 'Smoked bacon lardons', quantity: 200, unit: 'g' as IngredientUnit, category: 'deli' as const },
         { nameFr: 'Crème fraîche épaisse', nameEn: 'Heavy cream', quantity: 200, unit: 'ml' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 3, unit: 'unit' as IngredientUnit, category: 'dairy' as const },
+        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 3, unit: 'unit' as IngredientUnit, category: 'eggs' as const },
         { nameFr: 'Gruyère râpé', nameEn: 'Grated gruyère', quantity: 80, unit: 'g' as IngredientUnit, category: 'dairy' as const },
       ],
       instructions: [
@@ -153,7 +153,7 @@ async function seed() {
         { nameFr: 'Haricots verts', nameEn: 'Green beans', quantity: 200, unit: 'g' as IngredientUnit, category: 'vegetables' as const },
         { nameFr: 'Tomates', nameEn: 'Tomatoes', quantity: 3, unit: 'unit' as IngredientUnit, category: 'vegetables' as const },
         { nameFr: 'Olives noires', nameEn: 'Black olives', quantity: 80, unit: 'g' as IngredientUnit, category: 'condiments' as const },
-        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 2, unit: 'unit' as IngredientUnit, category: 'dairy' as const },
+        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 2, unit: 'unit' as IngredientUnit, category: 'eggs' as const },
         { nameFr: 'Filets d\'anchois', nameEn: 'Anchovy fillets', quantity: 30, unit: 'g' as IngredientUnit, category: 'fish' as const },
         { nameFr: 'Huile d\'olive', nameEn: 'Olive oil', quantity: 3, unit: 'cas' as IngredientUnit, category: 'oils' as const },
       ],
@@ -172,10 +172,10 @@ async function seed() {
       prepTimeMinutes: 20,
       cookTimeMinutes: 35,
       ingredients: [
-        { nameFr: 'Pâte brisée', nameEn: 'Shortcrust pastry', quantity: 1, unit: 'unit' as IngredientUnit, category: 'other' as const },
+        { nameFr: 'Pâte brisée', nameEn: 'Shortcrust pastry', quantity: 1, unit: 'unit' as IngredientUnit, category: 'pastry' as const },
         { nameFr: 'Pommes', nameEn: 'Apples', quantity: 4, unit: 'unit' as IngredientUnit, category: 'fruits' as const },
-        { nameFr: 'Sucre', nameEn: 'Sugar', quantity: 80, unit: 'g' as IngredientUnit, category: 'condiments' as const },
-        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'dairy' as const },
+        { nameFr: 'Sucre', nameEn: 'Sugar', quantity: 80, unit: 'g' as IngredientUnit, category: 'sweeteners' as const },
+        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'fats' as const },
         { nameFr: 'Cannelle', nameEn: 'Cinnamon', quantity: 1, unit: 'cac' as IngredientUnit, category: 'spices' as const },
       ],
       instructions: [
@@ -218,11 +218,11 @@ async function seed() {
       prepTimeMinutes: 10,
       cookTimeMinutes: 10,
       ingredients: [
-        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 4, unit: 'unit' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Champignons de Paris', nameEn: 'Button mushrooms', quantity: 200, unit: 'g' as IngredientUnit, category: 'vegetables' as const },
+        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 4, unit: 'unit' as IngredientUnit, category: 'eggs' as const },
+        { nameFr: 'Champignons de Paris', nameEn: 'Button mushrooms', quantity: 200, unit: 'g' as IngredientUnit, category: 'mushrooms' as const },
         { nameFr: 'Crème fraîche épaisse', nameEn: 'Heavy cream', quantity: 2, unit: 'cas' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Persil frais', nameEn: 'Fresh parsley', quantity: 5, unit: 'g' as IngredientUnit, category: 'spices' as const },
+        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'fats' as const },
+        { nameFr: 'Persil frais', nameEn: 'Fresh parsley', quantity: 5, unit: 'g' as IngredientUnit, category: 'herbs' as const },
       ],
       instructions: [
         'Nettoyer et émincer les champignons. Les faire sauter dans la moitié du beurre à feu vif jusqu\'à évaporation complète de l\'eau, assaisonner et réserver.',
@@ -241,12 +241,12 @@ async function seed() {
       cookTimeMinutes: 30,
       ingredients: [
         { nameFr: 'Riz arborio', nameEn: 'Arborio rice', quantity: 320, unit: 'g' as IngredientUnit, category: 'cereals' as const },
-        { nameFr: 'Champignons de Paris', nameEn: 'Button mushrooms', quantity: 300, unit: 'g' as IngredientUnit, category: 'vegetables' as const },
+        { nameFr: 'Champignons de Paris', nameEn: 'Button mushrooms', quantity: 300, unit: 'g' as IngredientUnit, category: 'mushrooms' as const },
         { nameFr: 'Bouillon de légumes', nameEn: 'Vegetable stock', quantity: 1, unit: 'l' as IngredientUnit, category: 'condiments' as const },
-        { nameFr: 'Vin blanc sec', nameEn: 'Dry white wine', quantity: 150, unit: 'ml' as IngredientUnit, category: 'condiments' as const },
+        { nameFr: 'Vin blanc sec', nameEn: 'Dry white wine', quantity: 150, unit: 'ml' as IngredientUnit, category: 'alcohol' as const },
         { nameFr: 'Parmesan râpé', nameEn: 'Grated parmesan', quantity: 60, unit: 'g' as IngredientUnit, category: 'dairy' as const },
         { nameFr: 'Oignon', nameEn: 'Onion', quantity: 1, unit: 'unit' as IngredientUnit, category: 'vegetables' as const },
-        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 40, unit: 'g' as IngredientUnit, category: 'dairy' as const },
+        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 40, unit: 'g' as IngredientUnit, category: 'fats' as const },
       ],
       instructions: [
         'Faire chauffer le bouillon dans une casserole à part et le maintenir frémissant tout au long de la cuisson.',
@@ -268,8 +268,8 @@ async function seed() {
       ingredients: [
         { nameFr: 'Farine', nameEn: 'Flour', quantity: 250, unit: 'g' as IngredientUnit, category: 'cereals' as const },
         { nameFr: 'Lait', nameEn: 'Milk', quantity: 500, unit: 'ml' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 3, unit: 'unit' as IngredientUnit, category: 'dairy' as const },
-        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'dairy' as const },
+        { nameFr: 'Œufs', nameEn: 'Eggs', quantity: 3, unit: 'unit' as IngredientUnit, category: 'eggs' as const },
+        { nameFr: 'Beurre', nameEn: 'Butter', quantity: 30, unit: 'g' as IngredientUnit, category: 'fats' as const },
         { nameFr: 'Sucre', nameEn: 'Sugar', quantity: 1, unit: 'cas' as IngredientUnit, category: 'condiments' as const },
       ],
       instructions: [
@@ -292,15 +292,11 @@ async function seed() {
     for (const ing of ingredients) {
       const { quantity, unit, ...ingredientData } = ing;
 
-      let ingredient = await prisma.ingredient.findFirst({
+      const ingredient = await prisma.ingredient.upsert({
         where: { nameFr: ingredientData.nameFr },
+        create: ingredientData,
+        update: { category: ingredientData.category },
       });
-
-      if (!ingredient) {
-        ingredient = await prisma.ingredient.create({
-          data: ingredientData,
-        });
-      }
 
       await prisma.recipeIngredient.create({
         data: { recipeId: recipe.id, ingredientId: ingredient.id, quantity, unit },

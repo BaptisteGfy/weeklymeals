@@ -2,16 +2,30 @@ export type IngredientUnit = 'g' | 'kg' | 'ml' | 'l' | 'cac' | 'cas' | 'unit';
 
 export type IngredientCategory =
   | 'vegetables'
+  | 'tubers'
   | 'fruits'
+  | 'legumes'
+  | 'nuts'
+  | 'mushrooms'
   | 'meat'
+  | 'deli'
+  | 'eggs'
   | 'fish'
+  | 'shellfish'
   | 'dairy'
   | 'cereals'
-  | 'legumes'
+  | 'bread'
   | 'oils'
-  | 'condiments'
+  | 'fats'
+  | 'sweeteners'
+  | 'sweets'
+  | 'pastry'
+  | 'beverages'
+  | 'alcohol'
   | 'spices'
-  | 'nuts'
+  | 'herbs'
+  | 'condiments'
+  | 'plant_proteins'
   | 'other';
 
 export type RecipeCategory = 'breakfast' | 'lunch' | 'dinner' | 'dessert';

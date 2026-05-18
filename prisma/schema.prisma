@@ -148,6 +148,7 @@ model Recipe {
   instructions    String[]
   imageUrl        String?
   isLibrary       Boolean            @default(false)
+  isPublic        Boolean            @default(false)
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   userId          String

@@ -5,6 +5,7 @@ import {
   BookOpen,
   CalendarDays,
   LayoutDashboard,
+  Library,
   LogOut,
   Shield,
   ShoppingCart,
@@ -27,6 +28,7 @@ import { UserRole } from '@/types/auth';
 const navLinks = [
   { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
   { href: '/dashboard/recipes', label: 'Mes recettes', icon: BookOpen },
+  { href: '/dashboard/library', label: 'Bibliothèque', icon: Library },
   { href: '/dashboard/planner', label: 'Mon planning', icon: CalendarDays },
   {
     href: '/dashboard/shopping-list',

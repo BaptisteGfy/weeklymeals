@@ -1,8 +1,16 @@
 'use client';
 
-import { Clock, MoreHorizontal, Users, UtensilsCrossed } from 'lucide-react';
+import {
+  BookMarked,
+  Clock,
+  MoreHorizontal,
+  Plus,
+  Users,
+  UtensilsCrossed,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 
 import {
   DropdownMenu,
@@ -11,18 +19,51 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { categoryBadgeStyles, categoryLabels } from '@/labels/recipes';
-import type { Recipe } from '@/types/recipes';
+import type { Recipe, RecipeCategory } from '@/types/recipes';
 
-type Props = {
-  recipe: Recipe;
-  variant?: 'card' | 'mini';
-  onDelete?: (id: string) => void;
+type RecipeBadge = {
+  label: string;
+  variant: 'library' | 'user';
 };
 
-export const RecipeCard = ({ recipe, variant = 'card', onDelete }: Props) => {
+type Props = {
+  recipe: Pick<
+    Recipe,
+    | 'id'
+    | 'title'
+    | 'description'
+    | 'category'
+    | 'servings'
+    | 'prepTimeMinutes'
+    | 'cookTimeMinutes'
+    | 'imageUrl'
+  >;
+  variant?: 'card' | 'mini';
+  onDelete?: (id: string) => void;
+  // Props bibliothèque
+  badge?: RecipeBadge;
+  onSave?: () => void;
+  isSaved?: boolean;
+};
+
+export const RecipeCard = ({
+  recipe,
+  variant = 'card',
+  onDelete,
+  badge,
+  onSave,
+  isSaved,
+}: Props) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const totalTime =
     (recipe.prepTimeMinutes ?? 0) + (recipe.cookTimeMinutes ?? 0);
+
+  const handleSave = () => {
+    startTransition(() => {
+      onSave?.();
+    });
+  };
 
   if (variant === 'mini') {
     return (
@@ -50,34 +91,56 @@ export const RecipeCard = ({ recipe, variant = 'card', onDelete }: Props) => {
 
   return (
     <article className="group bg-card relative overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-md">
-      <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow-sm backdrop-blur-sm hover:bg-white">
-              <MoreHorizontal size={16} />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => router.push(`/dashboard/recipes/${recipe.id}`)}
-            >
-              Voir la recette
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                router.push(`/dashboard/recipes/${recipe.id}?edit=true`)
-              }
-            >
-              Modifier
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive focus:text-destructive"
-              onClick={() => onDelete?.(recipe.id)}
-            >
-              Supprimer
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      {/* Bouton action en haut à droite */}
+      <div className="absolute top-2 right-2 z-10">
+        {onSave ? (
+          // Mode bibliothèque : bouton rond +
+          <button
+            onClick={handleSave}
+            disabled={isPending}
+            title={
+              isSaved ? 'Retirer de mes recettes' : 'Ajouter à mes recettes'
+            }
+            className={`flex h-8 w-8 items-center justify-center rounded-full shadow-sm backdrop-blur-sm transition-colors ${
+              isSaved
+                ? 'bg-primary text-primary-foreground hover:bg-destructive hover:text-white'
+                : 'bg-white/80 text-gray-700 hover:bg-white'
+            }`}
+          >
+            {isSaved ? <BookMarked size={14} /> : <Plus size={16} />}
+          </button>
+        ) : (
+          // Mode mes recettes : menu 3 points
+          <div className="opacity-0 transition-opacity group-hover:opacity-100">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow-sm backdrop-blur-sm hover:bg-white">
+                  <MoreHorizontal size={16} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => router.push(`/dashboard/recipes/${recipe.id}`)}
+                >
+                  Voir la recette
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    router.push(`/dashboard/recipes/${recipe.id}?edit=true`)
+                  }
+                >
+                  Modifier
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onClick={() => onDelete?.(recipe.id)}
+                >
+                  Supprimer
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
       </div>
 
       <Link href={`/dashboard/recipes/${recipe.id}`} className="block">
@@ -93,6 +156,19 @@ export const RecipeCard = ({ recipe, variant = 'card', onDelete }: Props) => {
               <UtensilsCrossed size={48} className="text-primary/25" />
             </div>
           )}
+
+          {/* Bannière source en bas à droite de l'image */}
+          {badge &&
+            (badge.variant === 'library' ? (
+              <span className="bg-primary text-primary-foreground absolute right-0 bottom-0 flex items-center gap-1 rounded-tl-lg px-2.5 py-1 text-xs font-medium">
+                <BookMarked size={10} />
+                {badge.label}
+              </span>
+            ) : (
+              <span className="absolute right-0 bottom-0 rounded-tl-lg bg-white/90 px-2.5 py-1 text-xs font-medium text-gray-700">
+                {badge.label}
+              </span>
+            ))}
         </div>
 
         <div className="p-4">
@@ -102,9 +178,9 @@ export const RecipeCard = ({ recipe, variant = 'card', onDelete }: Props) => {
           </p>
           <div className="mt-3 flex items-center gap-3">
             <span
-              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryBadgeStyles[recipe.category]}`}
+              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryBadgeStyles[recipe.category as RecipeCategory]}`}
             >
-              {categoryLabels[recipe.category]}
+              {categoryLabels[recipe.category as RecipeCategory]}
             </span>
             {totalTime > 0 && (
               <span className="text-muted-foreground flex items-center gap-1 text-xs">

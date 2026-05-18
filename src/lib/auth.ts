@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { cache } from 'react';
 
 import { prisma } from './prisma';
+import { resend } from './resend';
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
@@ -13,6 +14,14 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      await resend.emails.send({
+        from: 'WeeklyMeals <no-reply@weeklymeals.fr>',
+        to: user.email,
+        subject: 'Réinitialisation de votre mot de passe',
+        html: `<p>Cliquez sur ce lien pour réinitialiser votre mot de passe :</p><a href="${url}">${url}</a>`,
+      });
+    },
   },
   user: {
     additionalFields: {

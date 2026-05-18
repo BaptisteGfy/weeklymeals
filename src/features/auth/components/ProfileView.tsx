@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { authClient } from '@/lib/auth-client';
 
 type ProfileViewProps = {
@@ -129,9 +130,8 @@ const ProfileView = ({ user }: ProfileViewProps) => {
             <label htmlFor="currentPassword" className="text-sm font-medium text-foreground">
               Mot de passe actuel
             </label>
-            <Input
+            <PasswordInput
               id="currentPassword"
-              type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
@@ -143,9 +143,8 @@ const ProfileView = ({ user }: ProfileViewProps) => {
             <label htmlFor="newPassword" className="text-sm font-medium text-foreground">
               Nouveau mot de passe
             </label>
-            <Input
+            <PasswordInput
               id="newPassword"
-              type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required

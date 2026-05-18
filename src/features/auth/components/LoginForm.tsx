@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { authClient } from '@/lib/auth-client';
 
 const LoginForm = () => {
@@ -63,14 +64,19 @@ const LoginForm = () => {
         <label htmlFor="password" className="text-sm font-medium text-foreground">
           Mot de passe
         </label>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           autoComplete="current-password"
         />
+      </div>
+
+      <div className="flex justify-end">
+        <Link href="/forgot-password" className="text-sm text-muted-foreground hover:text-primary">
+          Mot de passe oublié ?
+        </Link>
       </div>
 
       <Button type="submit" className="w-full" disabled={isLoading}>

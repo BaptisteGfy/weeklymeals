@@ -33,17 +33,46 @@ enum IngredientUnit {
 }
 
 enum IngredientCategory {
+  // Végétaux
   vegetables
+  tubers
   fruits
-  dairy
-  meat
-  fish
-  cereals
   legumes
-  spices
-  condiments
-  oils
   nuts
+  mushrooms
+
+  // Produits animaux
+  meat
+  deli
+  eggs
+  fish
+  shellfish
+  dairy
+
+  // Féculents & Céréales
+  cereals
+  bread
+
+  // Matières grasses
+  oils
+  fats
+
+  // Sucré & Pâtisserie
+  sweeteners
+  sweets
+  pastry
+
+  // Boissons
+  beverages
+  alcohol
+
+  // Condiments & Aromates
+  spices
+  herbs
+  condiments
+
+  // Protéines végétales & divers
+  plant_proteins
   other
 }
 
@@ -81,15 +110,30 @@ model User {
 
 model Ingredient {
   id       String             @id @default(cuid())
-  nameEn   String?
   nameFr   String             @unique
+  nameEn   String?
   category IngredientCategory
-  calories Float?
-  proteins Float?
-  carbs    Float?
-  fats     Float?
-  fiber    Float?
-  recipes  RecipeIngredient[]
+
+  // Macros de base pour 100g (PA, PB, PD)
+  energyKj      Float?
+  energyKcal    Float?
+  proteins      Float?
+  carbs         Float?
+  sugars        Float?
+  fats          Float?
+  saturatedFats Float?
+  fiber         Float?
+  salt          Float?
+
+  // Micronutriments (PC)
+  calcium  Float?
+  iron     Float?
+  vitaminD Float?
+
+  // Données complètes pour les pros (PE - V3)
+  nutritionFull Json?
+
+  recipes RecipeIngredient[]
 }
 
 model Recipe {

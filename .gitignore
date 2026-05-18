@@ -39,3 +39,6 @@ next-env.d.ts
 # TypeScript build cache
 tsconfig.tsbuildinfo
 /src/generated/prisma
+
+# Fichiers de données externes (non versionnés)
+prisma/*.xlsx

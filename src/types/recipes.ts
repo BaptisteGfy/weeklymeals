@@ -64,6 +64,7 @@ export type Recipe = {
 };
 
 export type RecipeFormValues = {
+  imageUrl?: string;
   title: string;
   description: string;
   ingredients: Ingredient[];

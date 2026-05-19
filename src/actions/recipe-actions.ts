@@ -68,6 +68,7 @@ export const createRecipe = async (
   }
   const created = await prisma.recipe.create({
     data: {
+      imageUrl: values.imageUrl,
       title: values.title,
       description: values.description,
       servings: values.servings,
@@ -112,6 +113,7 @@ export const updateRecipe = async (
   const updated = await prisma.recipe.update({
     where: { id, userId: session.user.id },
     data: {
+      imageUrl: values.imageUrl,
       title: values.title,
       description: values.description,
       servings: values.servings,

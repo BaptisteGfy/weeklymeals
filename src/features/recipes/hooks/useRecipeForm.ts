@@ -80,6 +80,7 @@ const initialIngredientDraft: IngredientDraft = {
 };
 
 const recipeToFormValues = (recipe: Recipe): RecipeFormValues => ({
+  imageUrl: recipe.imageUrl,
   title: recipe.title,
   description: recipe.description,
   servings: recipe.servings,

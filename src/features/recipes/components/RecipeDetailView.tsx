@@ -96,6 +96,19 @@ export const RecipeDetailView = ({
         )}
       </div>
 
+      {isEditing && (
+        <div className="mt-2">
+          <input
+            type="url"
+            name="imageUrl"
+            value={formValues.imageUrl ?? ''}
+            onChange={handleFieldChange}
+            placeholder="URL de l'image (optionnel)"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+          />
+        </div>
+      )}
+
       <RecipeInfoSection
         recipe={recipe}
         formValues={formValues}

@@ -165,7 +165,7 @@ model RecipeIngredient {
   unit         IngredientUnit
   note         String?
   recipeId     String
-  recipe       Recipe         @relation(fields: [recipeId], references: [id])
+  recipe       Recipe         @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   ingredientId String
   ingredient   Ingredient     @relation(fields: [ingredientId], references: [id])
 }
@@ -179,7 +179,7 @@ model PlannedMeal {
   userId     String
   user       User       @relation(fields: [userId], references: [id])
   recipeId   String
-  recipe     Recipe     @relation(fields: [recipeId], references: [id])
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date, mealPeriod, courseType])
 }
@@ -190,7 +190,7 @@ model SavedRecipe {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   recipeId  String
-  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@unique([userId, recipeId])
 }
@@ -218,7 +218,7 @@ model MealIdea {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   recipeId  String
-  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@unique([userId, recipeId])
 }

@@ -51,9 +51,11 @@ export const RecipesProvider = ({
   };
 
   const handleDeleteRecipe = async (id: string) => {
+    const recipe = recipes.find((r) => r.id === id);
     try {
       await deleteRecipe(id);
-      setRecipes((prev) => prev.filter((recipe) => recipe.id !== id));
+      setRecipes((prev) => prev.filter((r) => r.id !== id));
+      toast.success(`« ${recipe?.title} » supprimée.`);
     } catch {
       toast.error('Impossible de supprimer la recette. Réessaie.');
     }

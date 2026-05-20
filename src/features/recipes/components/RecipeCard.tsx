@@ -12,13 +12,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { categoryBadgeStyles, categoryLabels } from '@/labels/recipes';
+import { categoryLabels } from '@/labels/recipes';
 import type { Recipe, RecipeCategory } from '@/types/recipes';
 
 type RecipeBadge = {
@@ -158,17 +159,15 @@ export const RecipeCard = ({
           )}
 
           {/* Bannière source en bas à droite de l'image */}
-          {badge &&
-            (badge.variant === 'library' ? (
-              <span className="bg-primary text-primary-foreground absolute right-0 bottom-0 flex items-center gap-1 rounded-tl-lg px-2.5 py-1 text-xs font-medium">
-                <BookMarked size={10} />
-                {badge.label}
-              </span>
-            ) : (
-              <span className="absolute right-0 bottom-0 rounded-tl-lg bg-white/90 px-2.5 py-1 text-xs font-medium text-gray-700">
-                {badge.label}
-              </span>
-            ))}
+          {badge && (
+            <Badge
+              variant={badge.variant === 'library' ? 'source-library' : 'source-user'}
+              className="absolute right-0 bottom-0 rounded-none rounded-tl-lg h-auto py-1 px-2.5"
+            >
+              {badge.variant === 'library' && <BookMarked size={10} />}
+              {badge.label}
+            </Badge>
+          )}
         </div>
 
         <div className="p-4">
@@ -177,11 +176,9 @@ export const RecipeCard = ({
             {recipe.description}
           </p>
           <div className="mt-3 flex items-center gap-3">
-            <span
-              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryBadgeStyles[recipe.category as RecipeCategory]}`}
-            >
+            <Badge variant={recipe.category as RecipeCategory}>
               {categoryLabels[recipe.category as RecipeCategory]}
-            </span>
+            </Badge>
             {totalTime > 0 && (
               <span className="text-muted-foreground flex items-center gap-1 text-xs">
                 <Clock size={12} />

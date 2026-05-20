@@ -17,12 +17,6 @@ export const categoryLabels: Record<RecipeCategory, string> = {
   dessert: 'Dessert',
 };
 
-export const categoryBadgeStyles: Record<RecipeCategory, string> = {
-  dinner: 'bg-primary text-primary-foreground',
-  lunch: 'bg-accent text-accent-foreground',
-  dessert: 'bg-amber-100 text-amber-800',
-  breakfast: 'bg-sky-100 text-sky-800',
-};
 
 export const categoryDotStyles: Record<RecipeCategory, string> = {
   dinner: 'bg-primary',

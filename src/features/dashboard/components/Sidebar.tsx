@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Library,
   LogOut,
+  Palette,
   Shield,
   ShoppingCart,
   User,
@@ -38,7 +39,8 @@ const navLinks = [
 ];
 
 const adminNavLinks = [
-  { href: '/dashboard/admin', label: 'Admin', icon: Shield },
+  { href: '/dashboard/admin', label: 'Admin', icon: Shield, sub: false },
+  { href: '/dashboard/admin/design-system', label: 'Design System', icon: Palette, sub: true },
 ];
 
 type SidebarProps = {
@@ -93,7 +95,7 @@ export const Sidebar = ({ isOpen, onClose, user }: SidebarProps) => {
 
         <nav className="flex-1 px-3 py-3">
           <ul className="space-y-0.5">
-            {links.map(({ href, label, icon: Icon }) => {
+            {links.map(({ href, label, icon: Icon, sub }) => {
               const isActive =
                 href === '/dashboard'
                   ? pathname === '/dashboard'
@@ -105,6 +107,7 @@ export const Sidebar = ({ isOpen, onClose, user }: SidebarProps) => {
                     onClick={onClose}
                     className={clsx(
                       'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                      sub && 'ml-3 text-xs',
                       isActive
                         ? 'border-sidebar-accent-foreground bg-sidebar-accent text-sidebar-accent-foreground border-l-2'
                         : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground',

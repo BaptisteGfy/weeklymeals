@@ -2,8 +2,9 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 import { Inter, Lora } from 'next/font/google';
-import { Toaster } from 'sonner';
 
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -19,8 +20,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="fr" className={cn('font-sans', inter.variable, lora.variable)}>
       <body>
-        {children}
-        <Toaster />
+        <TooltipProvider>
+          {children}
+          <Toaster />
+        </TooltipProvider>
       </body>
     </html>
   );

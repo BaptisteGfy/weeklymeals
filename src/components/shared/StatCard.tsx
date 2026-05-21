@@ -8,6 +8,8 @@ interface StatCardProps {
   label: string;
   value: string | number;
   delta?: string;
+  deltaClassName?: string;
+  badge?: string;
   icon?: LucideIcon;
   variant?: StatCardVariant;
   className?: string;
@@ -44,6 +46,8 @@ export const StatCard = ({
   label,
   value,
   delta,
+  deltaClassName,
+  badge,
   icon: Icon,
   variant = 'default',
   className,
@@ -68,6 +72,11 @@ export const StatCard = ({
         >
           {label}
         </p>
+        {badge && (
+          <span className={cn('ml-auto text-xs tabular-nums', s.delta)}>
+            {badge}
+          </span>
+        )}
       </div>
       <p
         className={cn(
@@ -77,7 +86,9 @@ export const StatCard = ({
       >
         {value}
       </p>
-      {delta && <p className={cn('text-xs', s.delta)}>{delta}</p>}
+      {delta && (
+        <p className={cn('text-xs', s.delta, deltaClassName)}>{delta}</p>
+      )}
     </div>
   );
 };

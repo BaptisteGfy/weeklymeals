@@ -61,6 +61,7 @@ export type Recipe = {
   cookTimeMinutes: number | undefined;
   restTimeMinutes: number | undefined;
   category: RecipeCategory;
+  isLibrary: boolean;
 };
 
 export type RecipeFormValues = {

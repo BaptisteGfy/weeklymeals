@@ -10,13 +10,22 @@ export const unitLabels: Record<IngredientUnit, string> = {
   unit: 'pièce',
 };
 
+export const unitShortLabels: Record<IngredientUnit, string> = {
+  g: 'g',
+  kg: 'kg',
+  ml: 'ml',
+  l: 'l',
+  cac: 'c. à c.',
+  cas: 'c. à s.',
+  unit: 'pcs',
+};
+
 export const categoryLabels: Record<RecipeCategory, string> = {
   breakfast: 'Petit-déjeuner',
   lunch: 'Déjeuner',
   dinner: 'Dîner',
   dessert: 'Dessert',
 };
-
 
 export const categoryDotStyles: Record<RecipeCategory, string> = {
   dinner: 'bg-primary',

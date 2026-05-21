@@ -1,6 +1,7 @@
+import { Trash2 } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 
-import { unitLabels } from '@/labels/recipes';
+import { unitLabels, unitShortLabels } from '@/labels/recipes';
 import { Ingredient, IngredientDraft, IngredientUnit } from '@/types/recipes';
 
 const formatQuantity = (value: number): string => {
@@ -13,6 +14,7 @@ type Props = {
   isEditing: boolean;
   ingredients: Ingredient[];
   scalingMultiplier?: number;
+  targetServings?: number;
   ingredientDraft: IngredientDraft;
   setIngredientDraft: Dispatch<SetStateAction<IngredientDraft>>;
   handleIngredientChange: (
@@ -29,6 +31,7 @@ export const IngredientsSection = ({
   isEditing,
   ingredients,
   scalingMultiplier = 1,
+  targetServings,
   ingredientDraft,
   setIngredientDraft,
   handleIngredientChange,
@@ -37,14 +40,30 @@ export const IngredientsSection = ({
   error,
 }: Props) => {
   return (
-    <section className="mt-8">
-      <h2 className="mb-3 text-xl font-semibold">Ingrédients</h2>
-      <ul className="space-y-2">
+    <div className="border-neutre-100 flex h-full flex-col rounded-xl border bg-white p-5">
+      {/* Section title — italic terracotta, text-2xl (30px) */}
+      <h2 className="text-terracotta-600 mb-5 font-serif text-3xl font-normal italic">
+        Ingrédients
+      </h2>
+
+      {!isEditing && ingredients.length > 0 && targetServings && (
+        <p className="text-neutre-400 -mt-3 mb-4 text-sm">
+          Pour {targetServings} personne{targetServings > 1 ? 's' : ''}
+        </p>
+      )}
+
+      <ul className="divide-neutre-100 divide-y">
         {ingredients.map((ingredient) => (
-          <li key={ingredient.id} className="flex items-center gap-2 text-sm">
-            <span className="text-gray-400">•</span>
+          <li
+            key={ingredient.id}
+            className="group flex items-center gap-2 py-2"
+          >
             {isEditing ? (
               <>
+                {/* Drag handle — visible on hover */}
+                <span className="text-neutre-300 cursor-grab opacity-0 transition-opacity select-none group-hover:opacity-100">
+                  ⋮⋮
+                </span>
                 <input
                   value={ingredient.name}
                   onChange={(e) =>
@@ -54,11 +73,11 @@ export const IngredientsSection = ({
                       e.target.value,
                     )
                   }
-                  className="min-w-0 flex-1 rounded border px-2 py-1 text-sm"
+                  className="border-neutre-200 text-neutre-700 min-w-0 flex-1 rounded-lg border px-2 py-1 text-sm focus:outline-none"
                 />
                 <input
                   type="number"
-                  min="1"
+                  min="0"
                   value={ingredient.quantity}
                   onChange={(e) =>
                     handleIngredientChange(
@@ -67,7 +86,7 @@ export const IngredientsSection = ({
                       Number(e.target.value),
                     )
                   }
-                  className="w-16 rounded border px-2 py-1 text-sm"
+                  className="border-neutre-200 w-16 rounded-lg border px-2 py-1 text-sm focus:outline-none"
                 />
                 <select
                   value={ingredient.unit}
@@ -78,35 +97,42 @@ export const IngredientsSection = ({
                       e.target.value as IngredientUnit,
                     )
                   }
-                  className="rounded border px-2 py-1 text-sm"
+                  className="border-neutre-200 w-20 rounded-lg border px-2 py-1 text-sm focus:outline-none"
                 >
                   {(Object.keys(unitLabels) as IngredientUnit[]).map((unit) => (
                     <option key={unit} value={unit}>
-                      {unitLabels[unit]}
+                      {unitShortLabels[unit]}
                     </option>
                   ))}
                 </select>
+                {/* Delete — visible on hover */}
                 <button
                   type="button"
                   onClick={() => handleDeleteIngredient(ingredient.id)}
-                  className="text-gray-400 transition hover:text-red-500"
+                  className="text-neutre-300 hover:text-bordeaux-500 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg opacity-0 transition-all group-hover:opacity-100"
                 >
-                  ✕
+                  <Trash2 size={13} />
                 </button>
               </>
             ) : (
-              <span className="text-gray-700">
-                {ingredient.name} —{' '}
-                {formatQuantity(ingredient.quantity * scalingMultiplier)}{' '}
-                {unitLabels[ingredient.unit]}
-              </span>
+              <>
+                <span className="text-neutre-700 min-w-0 flex-1 text-sm">
+                  {ingredient.name}
+                </span>
+                <span className="text-neutre-400 shrink-0 font-mono text-xs">
+                  {formatQuantity(ingredient.quantity * scalingMultiplier)}{' '}
+                  {unitLabels[ingredient.unit]}
+                </span>
+              </>
             )}
           </li>
         ))}
+      </ul>
 
-        {isEditing && (
-          <li className="flex items-center gap-2 pt-1">
-            <span className="text-gray-300">+</span>
+      {/* Add ingredient — dashed terracotta button */}
+      {isEditing && (
+        <>
+          <div className="mt-3 flex items-center gap-2">
             <input
               value={ingredientDraft.name}
               onChange={(e) =>
@@ -115,12 +141,15 @@ export const IngredientsSection = ({
                   name: e.target.value,
                 }))
               }
-              placeholder="Nouvel ingrédient"
-              className="min-w-0 flex-1 rounded border px-2 py-1 text-sm placeholder-gray-300"
+              onKeyDown={(e) =>
+                e.key === 'Enter' && (e.preventDefault(), handleAddIngredient())
+              }
+              placeholder="Nouvel ingrédient…"
+              className="border-neutre-200 text-neutre-700 placeholder:text-neutre-300 min-w-0 flex-1 rounded-lg border px-2 py-1.5 text-sm focus:outline-none"
             />
             <input
               type="number"
-              min="1"
+              min="0"
               value={ingredientDraft.quantity}
               onChange={(e) =>
                 setIngredientDraft((prev) => ({
@@ -128,7 +157,7 @@ export const IngredientsSection = ({
                   quantity: Number(e.target.value),
                 }))
               }
-              className="w-16 rounded border px-2 py-1 text-sm"
+              className="border-neutre-200 w-16 rounded-lg border px-2 py-1.5 text-sm focus:outline-none"
             />
             <select
               value={ingredientDraft.unit}
@@ -138,33 +167,30 @@ export const IngredientsSection = ({
                   unit: e.target.value as IngredientUnit,
                 }))
               }
-              className="rounded border px-2 py-1 text-sm"
+              className="border-neutre-200 w-20 rounded-lg border px-2 py-1.5 text-sm focus:outline-none"
             >
               {(Object.keys(unitLabels) as IngredientUnit[]).map((unit) => (
                 <option key={unit} value={unit}>
-                  {unitLabels[unit]}
+                  {unitShortLabels[unit]}
                 </option>
               ))}
             </select>
-            <button
-              type="button"
-              onClick={handleAddIngredient}
-              className="rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition hover:bg-gray-50"
-            >
-              Ajouter
-            </button>
-          </li>
-        )}
-      </ul>
+          </div>
+          <button
+            type="button"
+            onClick={handleAddIngredient}
+            className="border-terracotta-300 text-terracotta-600 hover:bg-terracotta-50 mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed px-3 py-2 text-sm font-medium transition-colors"
+          >
+            + Ajouter un ingrédient
+          </button>
+        </>
+      )}
+
       {isEditing && error && (
-        <p
-          id="ingredients-error"
-          role="alert"
-          className="mt-2 text-sm text-red-500"
-        >
+        <p role="alert" className="text-bordeaux-500 mt-2 text-xs">
           {error}
         </p>
       )}
-    </section>
+    </div>
   );
 };

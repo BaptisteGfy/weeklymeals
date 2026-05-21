@@ -63,6 +63,8 @@ export type Recipe = {
   category: RecipeCategory;
   isLibrary: boolean;
   isPublic: boolean;
+  isSaved: boolean;
+  createdAt: string;
 };
 
 export type RecipeFormValues = {

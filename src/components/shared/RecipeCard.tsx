@@ -53,6 +53,7 @@ interface RecipeCardProps {
   >;
   variant?: RecipeCardVariant;
   onDelete?: (id: string) => void;
+  onUnsave?: (id: string) => void;
   badge?: RecipeBadge;
   onSave?: () => void;
   isSaved?: boolean;
@@ -63,6 +64,7 @@ export const RecipeCard = ({
   recipe,
   variant = 'card',
   onDelete,
+  onUnsave,
   badge,
   onSave,
   isSaved,
@@ -199,19 +201,30 @@ export const RecipeCard = ({
                 >
                   Voir la recette
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() =>
-                    router.push(`/dashboard/recipes/${recipe.id}?edit=true`)
-                  }
-                >
-                  Modifier
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-destructive focus:text-destructive"
-                  onClick={() => onDelete?.(recipe.id)}
-                >
-                  Supprimer
-                </DropdownMenuItem>
+                {!onUnsave && (
+                  <DropdownMenuItem
+                    onClick={() =>
+                      router.push(`/dashboard/recipes/${recipe.id}?edit=true`)
+                    }
+                  >
+                    Modifier
+                  </DropdownMenuItem>
+                )}
+                {onUnsave ? (
+                  <DropdownMenuItem
+                    className="text-destructive focus:text-destructive"
+                    onClick={() => onUnsave(recipe.id)}
+                  >
+                    Retirer de mes recettes
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem
+                    className="text-destructive focus:text-destructive"
+                    onClick={() => onDelete?.(recipe.id)}
+                  >
+                    Supprimer
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -251,13 +264,7 @@ export const RecipeCard = ({
           <h3 className="text-neutre-800 leading-snug font-semibold">
             {recipe.title}
           </h3>
-          {recipe.description && (
-            <p className="text-neutre-500 mt-1 line-clamp-2 text-sm">
-              {recipe.description}
-            </p>
-          )}
-
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <span
               className={cn(
                 'rounded-full px-2 py-0.5 text-xs font-medium',

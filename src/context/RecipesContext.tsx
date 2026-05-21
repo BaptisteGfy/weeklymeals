@@ -1,8 +1,9 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+import { unsaveRecipe } from '@/actions/library-actions';
 import {
   createRecipe,
   deleteRecipe,
@@ -15,6 +16,7 @@ type RecipesContextType = {
   handleCreateRecipe: (values: RecipeFormValues) => Promise<Recipe>;
   handleUpdateRecipe: (id: string, values: RecipeFormValues) => Promise<void>;
   handleDeleteRecipe: (id: string) => Promise<void>;
+  handleUnsaveRecipe: (id: string) => Promise<void>;
 };
 
 const RecipesContext = createContext<RecipesContextType | null>(null);
@@ -27,6 +29,10 @@ export const RecipesProvider = ({
   initialRecipes: Recipe[];
 }) => {
   const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes);
+
+  useEffect(() => {
+    setRecipes(initialRecipes);
+  }, [initialRecipes]);
 
   const handleCreateRecipe = async (values: RecipeFormValues) => {
     try {
@@ -61,6 +67,17 @@ export const RecipesProvider = ({
     }
   };
 
+  const handleUnsaveRecipe = async (id: string) => {
+    const recipe = recipes.find((r) => r.id === id);
+    try {
+      await unsaveRecipe(id);
+      setRecipes((prev) => prev.filter((r) => r.id !== id));
+      toast.success(`« ${recipe?.title} » retirée de vos recettes.`);
+    } catch {
+      toast.error('Impossible de retirer la recette. Réessaie.');
+    }
+  };
+
   return (
     <RecipesContext.Provider
       value={{
@@ -68,6 +85,7 @@ export const RecipesProvider = ({
         handleCreateRecipe,
         handleUpdateRecipe,
         handleDeleteRecipe,
+        handleUnsaveRecipe,
       }}
     >
       {children}

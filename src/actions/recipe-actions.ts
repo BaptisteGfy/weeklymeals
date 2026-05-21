@@ -17,7 +17,10 @@ type RecipeWithIngredients = Prisma.RecipeGetPayload<{
   };
 }>;
 
-const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
+const transformRecipeFromDB = (
+  recipe: RecipeWithIngredients,
+  savedIds?: Set<string>,
+): Recipe => {
   return {
     id: recipe.id,
     imageUrl: recipe.imageUrl ?? undefined,
@@ -30,6 +33,8 @@ const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
     category: recipe.category as RecipeCategory,
     isLibrary: recipe.isLibrary,
     isPublic: recipe.isPublic,
+    isSaved: savedIds?.has(recipe.id) ?? false,
+    createdAt: recipe.createdAt.toISOString(),
     ingredients: recipe.ingredients.map((ri) => ({
       id: ri.id,
       name: ri.ingredient.nameFr,
@@ -49,16 +54,25 @@ export const getRecipes = async () => {
   if (!session) {
     throw new Error('User is not authenticated');
   }
-  const recipes = await prisma.recipe.findMany({
-    where: { userId: session.user.id },
-    include: {
-      ingredients: {
-        include: { ingredient: true },
+  const [recipes, savedRecipes] = await Promise.all([
+    prisma.recipe.findMany({
+      where: {
+        OR: [
+          { userId: session.user.id, isLibrary: false },
+          { savedBy: { some: { userId: session.user.id } } },
+        ],
       },
-    },
-  });
+      include: { ingredients: { include: { ingredient: true } } },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.savedRecipe.findMany({
+      where: { userId: session.user.id },
+      select: { recipeId: true },
+    }),
+  ]);
 
-  return recipes.map(transformRecipeFromDB);
+  const savedIds = new Set(savedRecipes.map((s) => s.recipeId));
+  return recipes.map((r) => transformRecipeFromDB(r, savedIds));
 };
 
 export const createRecipe = async (

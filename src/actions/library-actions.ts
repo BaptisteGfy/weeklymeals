@@ -68,6 +68,7 @@ export const saveRecipe = async (recipeId: string) => {
   });
 
   revalidatePath('/dashboard/library');
+  revalidatePath('/dashboard/recipes');
 };
 
 export const unsaveRecipe = async (recipeId: string) => {
@@ -79,4 +80,5 @@ export const unsaveRecipe = async (recipeId: string) => {
   });
 
   revalidatePath('/dashboard/library');
+  revalidatePath('/dashboard/recipes');
 };

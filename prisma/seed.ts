@@ -33,6 +33,20 @@ async function seed() {
   });
   console.log('Rôle admin confirmé.');
 
+  // User système WeeklyMeals — propriétaire des recettes de bibliothèque
+  const systemUser = await prisma.user.upsert({
+    where: { email: 'app@weeklymeals.fr' },
+    create: {
+      email: 'app@weeklymeals.fr',
+      name: 'WeeklyMeals',
+      emailVerified: false,
+      role: 'user',
+    },
+    update: {},
+  });
+  const systemId = systemUser.id;
+  console.log('User système WeeklyMeals :', systemId);
+
   // Reset des recettes de bibliothèque existantes pour garantir un état propre
   const existingLibrary = await prisma.recipe.findMany({
     where: { isLibrary: true },
@@ -666,7 +680,7 @@ async function seed() {
     const { ingredients, ...recipeFields } = recipeData;
 
     const recipe = await prisma.recipe.create({
-      data: { ...recipeFields, isLibrary: true, userId: adminId },
+      data: { ...recipeFields, isLibrary: true, userId: systemId },
     });
 
     for (const ing of ingredients) {

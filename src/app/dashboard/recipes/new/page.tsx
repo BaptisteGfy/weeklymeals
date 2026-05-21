@@ -16,6 +16,8 @@ const defaultRecipe: Omit<Recipe, 'id'> = {
   category: 'dinner',
   isLibrary: false,
   isPublic: false,
+  isSaved: false,
+  createdAt: new Date().toISOString(),
   ingredients: [],
   instructions: [],
 };

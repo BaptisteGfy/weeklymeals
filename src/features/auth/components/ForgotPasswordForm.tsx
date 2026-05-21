@@ -2,6 +2,7 @@
 
 import { Bell, Check, Info } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { FormField } from '@/components/shared/FormField';
@@ -10,20 +11,26 @@ import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
 
 const ForgotPasswordForm = () => {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
+
+  const sendOtp = async (targetEmail: string) => {
+    const { error } = await authClient.emailOtp.sendVerificationOtp({
+      email: targetEmail,
+      type: 'forget-password',
+    });
+    return error;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    const { error } = await authClient.requestPasswordReset({
-      email,
-      redirectTo: '/reset-password',
-    });
+    const error = await sendOtp(email);
 
     if (error) {
       setError('Une erreur est survenue. Veuillez réessayer.');
@@ -32,13 +39,19 @@ const ForgotPasswordForm = () => {
     }
 
     setIsSent(true);
+    setIsLoading(false);
+  };
+
+  const handleResend = async () => {
+    setError('');
+    const error = await sendOtp(email);
+    if (error) setError('Impossible de renvoyer le code. Réessayez.');
   };
 
   if (isSent) {
     return (
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-md">
         <div className="flex flex-col items-center text-center">
-          {/* Icône succès olive */}
           <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-olive-50">
             <Check size={24} className="text-olive-500" />
           </div>
@@ -47,13 +60,11 @@ const ForgotPasswordForm = () => {
             Email <em className="text-terracotta-600">envoyé</em>.
           </h1>
           <p className="text-neutre-500 mb-6 text-sm leading-relaxed">
-            Nous avons envoyé un lien à{' '}
-            <strong className="text-neutre-800">{email}</strong>. Cliquez dessus
-            dans les prochaines minutes pour confirmer votre adresse et
-            démarrer.
+            Nous avons envoyé un code à 6 chiffres à{' '}
+            <strong className="text-neutre-800">{email}</strong>. Saisissez-le
+            sur la page suivante.
           </p>
 
-          {/* Info box */}
           <div className="bg-neutre-50 border-neutre-200 mb-6 w-full rounded-xl border p-4 text-left">
             <div className="text-neutre-800 mb-2 flex items-center gap-2 text-sm font-semibold">
               <Info size={14} className="text-neutre-500 shrink-0" />
@@ -63,18 +74,36 @@ const ForgotPasswordForm = () => {
               <li>Vérifiez le dossier spams / promotions</li>
               <li>
                 L&apos;expéditeur est{' '}
-                <em className="text-neutre-700">hello@weeklymeals.fr</em>
+                <em className="text-neutre-700">no-reply@weeklymeals.fr</em>
               </li>
               <li>
-                Le lien expire dans{' '}
-                <strong className="text-neutre-700">60 minutes</strong>
+                Le code expire dans{' '}
+                <strong className="text-neutre-700">10 minutes</strong>
               </li>
             </ul>
           </div>
 
-          <Button variant="outline" className="mb-3 w-full gap-2">
+          {error && <p className="text-bordeaux-600 mb-3 text-sm">{error}</p>}
+
+          <Button
+            className="mb-3 w-full"
+            size="lg"
+            onClick={() =>
+              router.push(
+                `/verify?email=${encodeURIComponent(email)}&type=forget-password`,
+              )
+            }
+          >
+            Entrer mon code →
+          </Button>
+
+          <Button
+            variant="outline"
+            className="mb-4 w-full gap-2"
+            onClick={handleResend}
+          >
             <Bell size={14} />
-            Renvoyer l&apos;email
+            Renvoyer le code
           </Button>
 
           <p className="text-neutre-400 text-sm">
@@ -93,7 +122,6 @@ const ForgotPasswordForm = () => {
 
   return (
     <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-md">
-      {/* Icône cloche */}
       <div className="bg-terracotta-50 mb-6 flex h-14 w-14 items-center justify-center rounded-full">
         <Bell size={24} className="text-terracotta-500" />
       </div>
@@ -106,8 +134,8 @@ const ForgotPasswordForm = () => {
         Ça arrive.
       </h1>
       <p className="text-neutre-500 mb-6 text-sm leading-relaxed">
-        Saisissez l&apos;email de votre compte. Nous vous enverrons un lien pour
-        choisir un nouveau mot de passe.
+        Saisissez l&apos;email de votre compte. Nous vous enverrons un code à 6
+        chiffres.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,7 +161,7 @@ const ForgotPasswordForm = () => {
         </FormField>
 
         <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-          {isLoading ? 'Envoi…' : 'Recevoir le lien de réinitialisation'}
+          {isLoading ? 'Envoi…' : 'Recevoir le code'}
         </Button>
       </form>
 

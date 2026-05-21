@@ -146,7 +146,8 @@ model Recipe {
   prepTimeMinutes Int?
   cookTimeMinutes Int?
   restTimeMinutes Int?
-  instructions    String[]
+  instructions    Json
+  notes           String?
   imageUrl        String?
   isLibrary       Boolean            @default(false)
   isPublic        Boolean            @default(false)

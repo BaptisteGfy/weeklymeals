@@ -47,6 +47,7 @@ export type IngredientDraft = {
 export type Instruction = {
   id: string;
   text: string;
+  tip?: string;
 };
 
 export type Recipe = {
@@ -54,6 +55,7 @@ export type Recipe = {
   imageUrl?: string;
   title: string;
   description: string;
+  notes?: string;
   ingredients: Ingredient[];
   instructions: Instruction[];
   servings: number;
@@ -72,6 +74,7 @@ export type RecipeFormValues = {
   imageUrl?: string;
   title: string;
   description: string;
+  notes?: string;
   ingredients: Ingredient[];
   instructions: Instruction[];
   servings: number;

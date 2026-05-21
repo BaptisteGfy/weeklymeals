@@ -26,6 +26,7 @@ const transformRecipeFromDB = (
     imageUrl: recipe.imageUrl ?? undefined,
     title: recipe.title,
     description: recipe.description,
+    notes: recipe.notes ?? undefined,
     servings: recipe.servings,
     prepTimeMinutes: recipe.prepTimeMinutes ?? undefined,
     cookTimeMinutes: recipe.cookTimeMinutes ?? undefined,
@@ -43,9 +44,12 @@ const transformRecipeFromDB = (
       unit: ri.unit as IngredientUnit,
       category: ri.ingredient.category as IngredientCategory,
     })),
-    instructions: recipe.instructions.map((text) => ({
+    instructions: (
+      recipe.instructions as Array<{ text: string; tip?: string }>
+    ).map((inst) => ({
       id: crypto.randomUUID(),
-      text,
+      text: inst.text,
+      tip: inst.tip,
     })),
   };
 };
@@ -101,7 +105,11 @@ export const createRecipe = async (
       cookTimeMinutes: values.cookTimeMinutes,
       restTimeMinutes: values.restTimeMinutes,
       category: values.category,
-      instructions: values.instructions.map((i) => i.text),
+      instructions: values.instructions.map((i) => ({
+        text: i.text,
+        ...(i.tip ? { tip: i.tip } : {}),
+      })),
+      notes: values.notes,
       isPublic: values.isPublic,
       userId: session.user.id,
       ingredients: {
@@ -147,7 +155,11 @@ export const updateRecipe = async (
       cookTimeMinutes: values.cookTimeMinutes,
       restTimeMinutes: values.restTimeMinutes,
       category: values.category,
-      instructions: values.instructions.map((i) => i.text),
+      instructions: values.instructions.map((i) => ({
+        text: i.text,
+        ...(i.tip ? { tip: i.tip } : {}),
+      })),
+      notes: values.notes,
       isPublic: values.isPublic,
       ingredients: {
         deleteMany: {},

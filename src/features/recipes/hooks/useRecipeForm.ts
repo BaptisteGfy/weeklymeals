@@ -83,6 +83,7 @@ const recipeToFormValues = (recipe: Recipe): RecipeFormValues => ({
   imageUrl: recipe.imageUrl,
   title: recipe.title,
   description: recipe.description,
+  notes: recipe.notes,
   servings: recipe.servings,
   prepTimeMinutes: recipe.prepTimeMinutes,
   cookTimeMinutes: recipe.cookTimeMinutes,
@@ -191,6 +192,15 @@ export const useRecipeForm = (
     setErrors((prev) => ({ ...prev, instructions: undefined }));
   };
 
+  const handleInstructionTipChange = (id: string, tip: string) => {
+    setFormValues((prev) => ({
+      ...prev,
+      instructions: prev.instructions.map((i) =>
+        i.id === id ? { ...i, tip: tip || undefined } : i,
+      ),
+    }));
+  };
+
   const handleAddInstruction = () => {
     if (!instructionDraft.trim()) return;
     setFormValues((prev) => ({
@@ -228,6 +238,7 @@ export const useRecipeForm = (
     handleAddIngredient,
     handleDeleteIngredient,
     handleInstructionChange,
+    handleInstructionTipChange,
     handleAddInstruction,
     handleDeleteInstruction,
     errors,

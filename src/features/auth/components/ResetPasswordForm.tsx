@@ -34,7 +34,9 @@ const STRENGTH_COLOR = [
 const ResetPasswordForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+  const email = searchParams.get('email') ?? '';
+  const otp = searchParams.get('otp') ?? '';
+  const token = !email ? searchParams.get('token') : null;
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -44,7 +46,7 @@ const ResetPasswordForm = () => {
   const metCriteria = CRITERIA.map((c) => c.test(password));
   const metCount = metCriteria.filter(Boolean).length;
 
-  if (!token) {
+  if (!email && !token) {
     return (
       <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-md">
         <div className="bg-bordeaux-50 mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full">
@@ -77,10 +79,16 @@ const ResetPasswordForm = () => {
 
     setIsLoading(true);
 
-    const { error } = await authClient.resetPassword({
-      newPassword: password,
-      token,
-    });
+    const { error } = email
+      ? await authClient.emailOtp.resetPassword({
+          email,
+          otp,
+          password,
+        })
+      : await authClient.resetPassword({
+          newPassword: password,
+          token: token!,
+        });
 
     if (error) {
       setError('Une erreur est survenue. Le lien est peut-être expiré.');

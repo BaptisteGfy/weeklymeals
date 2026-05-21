@@ -28,6 +28,7 @@ const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
     cookTimeMinutes: recipe.cookTimeMinutes ?? undefined,
     restTimeMinutes: recipe.restTimeMinutes ?? undefined,
     category: recipe.category as RecipeCategory,
+    isLibrary: recipe.isLibrary,
     ingredients: recipe.ingredients.map((ri) => ({
       id: ri.id,
       name: ri.ingredient.nameFr,

@@ -36,6 +36,7 @@ export type Ingredient = {
   quantity: number;
   unit: IngredientUnit;
   category: IngredientCategory;
+  group?: string;
 };
 
 export type IngredientDraft = {

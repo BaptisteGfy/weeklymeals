@@ -43,6 +43,7 @@ const transformRecipeFromDB = (
       quantity: ri.quantity,
       unit: ri.unit as IngredientUnit,
       category: ri.ingredient.category as IngredientCategory,
+      group: ri.group ?? undefined,
     })),
     instructions: (
       recipe.instructions as Array<{ text: string; tip?: string }>
@@ -116,6 +117,7 @@ export const createRecipe = async (
         create: values.ingredients.map((ing) => ({
           quantity: ing.quantity,
           unit: ing.unit,
+          group: ing.group,
           ingredient: {
             connectOrCreate: {
               where: { nameFr: ing.name },
@@ -166,6 +168,7 @@ export const updateRecipe = async (
         create: values.ingredients.map((ing) => ({
           quantity: ing.quantity,
           unit: ing.unit,
+          group: ing.group,
           ingredient: {
             connectOrCreate: {
               where: { nameFr: ing.name },

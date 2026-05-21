@@ -73,11 +73,9 @@ const NUMERIC_FIELDS = [
   'restTimeMinutes',
 ];
 
-const initialIngredientDraft: IngredientDraft = {
-  name: '',
-  quantity: 1,
-  unit: 'unit',
-};
+const deriveGroups = (ingredients: Ingredient[]): string[] => [
+  ...new Set(ingredients.map((i) => i.group).filter(Boolean) as string[]),
+];
 
 const recipeToFormValues = (recipe: Recipe): RecipeFormValues => ({
   imageUrl: recipe.imageUrl,
@@ -102,11 +100,10 @@ export const useRecipeForm = (
   const [formValues, setFormValues] = useState<RecipeFormValues>(
     recipeToFormValues(recipe),
   );
-  const [ingredientDraft, setIngredientDraft] = useState<IngredientDraft>(
-    initialIngredientDraft,
+  const [ingredientGroups, setIngredientGroups] = useState<string[]>(() =>
+    deriveGroups(recipe.ingredients),
   );
   const [instructionDraft, setInstructionDraft] = useState('');
-
   const [errors, setErrors] = useState<FormErrors>({});
 
   const handleCancel = () => {
@@ -115,7 +112,7 @@ export const useRecipeForm = (
       return;
     }
     setFormValues(recipeToFormValues(recipe));
-    setIngredientDraft(initialIngredientDraft);
+    setIngredientGroups(deriveGroups(recipe.ingredients));
     setInstructionDraft('');
     setIsEditing(false);
     setErrors({});
@@ -157,8 +154,8 @@ export const useRecipeForm = (
     setErrors((prev) => ({ ...prev, ingredients: undefined }));
   };
 
-  const handleAddIngredient = () => {
-    if (!ingredientDraft.name.trim()) return;
+  const handleAddIngredient = (draft: IngredientDraft, group?: string) => {
+    if (!draft.name.trim()) return;
     setFormValues((prev) => ({
       ...prev,
       ingredients: [
@@ -166,12 +163,12 @@ export const useRecipeForm = (
         {
           id: crypto.randomUUID(),
           category: 'other' as const,
-          ...ingredientDraft,
-          name: ingredientDraft.name.trim(),
+          ...draft,
+          name: draft.name.trim(),
+          group,
         },
       ],
     }));
-    setIngredientDraft(initialIngredientDraft);
     setErrors((prev) => ({ ...prev, ingredients: undefined }));
   };
 
@@ -179,6 +176,36 @@ export const useRecipeForm = (
     setFormValues((prev) => ({
       ...prev,
       ingredients: prev.ingredients.filter((i) => i.id !== id),
+    }));
+  };
+
+  const handleAddGroup = (name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed || ingredientGroups.includes(trimmed)) return;
+    setIngredientGroups((prev) => [...prev, trimmed]);
+  };
+
+  const handleRenameGroup = (oldName: string, newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed) return;
+    setIngredientGroups((prev) =>
+      prev.map((g) => (g === oldName ? trimmed : g)),
+    );
+    setFormValues((prev) => ({
+      ...prev,
+      ingredients: prev.ingredients.map((i) =>
+        i.group === oldName ? { ...i, group: trimmed } : i,
+      ),
+    }));
+  };
+
+  const handleDeleteGroup = (name: string) => {
+    setIngredientGroups((prev) => prev.filter((g) => g !== name));
+    setFormValues((prev) => ({
+      ...prev,
+      ingredients: prev.ingredients.map((i) =>
+        i.group === name ? { ...i, group: undefined } : i,
+      ),
     }));
   };
 
@@ -225,8 +252,7 @@ export const useRecipeForm = (
     isEditing,
     startEditing: () => setIsEditing(true),
     formValues,
-    ingredientDraft,
-    setIngredientDraft,
+    ingredientGroups,
     instructionDraft,
     setInstructionDraft,
     handleCancel,
@@ -237,6 +263,9 @@ export const useRecipeForm = (
     handleIngredientChange,
     handleAddIngredient,
     handleDeleteIngredient,
+    handleAddGroup,
+    handleRenameGroup,
+    handleDeleteGroup,
     handleInstructionChange,
     handleInstructionTipChange,
     handleAddInstruction,

@@ -46,8 +46,7 @@ export const RecipeDetailView = ({
     isEditing,
     startEditing,
     formValues,
-    ingredientDraft,
-    setIngredientDraft,
+    ingredientGroups,
     instructionDraft,
     setInstructionDraft,
     handleCancel,
@@ -57,6 +56,9 @@ export const RecipeDetailView = ({
     handleIngredientChange,
     handleAddIngredient,
     handleDeleteIngredient,
+    handleAddGroup,
+    handleRenameGroup,
+    handleDeleteGroup,
     handleInstructionChange,
     handleInstructionTipChange,
     handleAddInstruction,
@@ -207,13 +209,15 @@ export const RecipeDetailView = ({
             <IngredientsSection
               isEditing={isEditing}
               ingredients={formValues.ingredients}
+              ingredientGroups={ingredientGroups}
               scalingMultiplier={scalingMultiplier}
               targetServings={targetServings}
-              ingredientDraft={ingredientDraft}
-              setIngredientDraft={setIngredientDraft}
               handleIngredientChange={handleIngredientChange}
               handleAddIngredient={handleAddIngredient}
               handleDeleteIngredient={handleDeleteIngredient}
+              handleAddGroup={handleAddGroup}
+              handleRenameGroup={handleRenameGroup}
+              handleDeleteGroup={handleDeleteGroup}
               error={errors.ingredients}
             />
           </div>

@@ -81,7 +81,7 @@ const applyFilter = (recipes: Recipe[], filter: RecipeFilter): Recipe[] => {
       return recipes;
     case 'main':
       return recipes.filter(
-        (r) => r.category === 'lunch' || r.category === 'dinner',
+        (r) => r.category === 'starter' || r.category === 'main',
       );
     case 'dessert':
       return recipes.filter((r) => r.category === 'dessert');
@@ -114,8 +114,8 @@ const applySort = (recipes: Recipe[], sort: SortOrder): Recipe[] => {
 
 const categoryTokens: Record<RecipeCategory, string> = {
   breakfast: 'bg-sky-100 text-sky-700',
-  lunch: 'bg-olive-100 text-olive-700',
-  dinner: 'bg-terracotta-100 text-terracotta-700',
+  starter: 'bg-olive-100 text-olive-700',
+  main: 'bg-terracotta-100 text-terracotta-700',
   dessert: 'bg-sable-200 text-sable-700',
 };
 

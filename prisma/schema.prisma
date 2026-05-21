@@ -17,8 +17,8 @@ enum UserRole {
 
 enum RecipeCategory {
   breakfast
-  lunch
-  dinner
+  starter
+  main
   dessert
 }
 

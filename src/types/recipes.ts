@@ -28,7 +28,7 @@ export type IngredientCategory =
   | 'plant_proteins'
   | 'other';
 
-export type RecipeCategory = 'breakfast' | 'lunch' | 'dinner' | 'dessert';
+export type RecipeCategory = 'breakfast' | 'starter' | 'main' | 'dessert';
 
 export type Ingredient = {
   id: string;

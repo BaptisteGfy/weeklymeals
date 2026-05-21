@@ -22,14 +22,14 @@ export const unitShortLabels: Record<IngredientUnit, string> = {
 
 export const categoryLabels: Record<RecipeCategory, string> = {
   breakfast: 'Petit-déjeuner',
-  lunch: 'Déjeuner',
-  dinner: 'Dîner',
+  starter: 'Entrée',
+  main: 'Plat principal',
   dessert: 'Dessert',
 };
 
 export const categoryDotStyles: Record<RecipeCategory, string> = {
-  dinner: 'bg-primary',
-  lunch: 'bg-accent',
+  main: 'bg-primary',
+  starter: 'bg-accent',
   dessert: 'bg-amber-400',
   breakfast: 'bg-sky-400',
 };

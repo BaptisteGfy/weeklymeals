@@ -13,7 +13,7 @@ const mockRecipes = [
   {
     id: '1',
     title: 'Risotto champignons & thym',
-    category: 'dinner' as const,
+    category: 'main' as const,
     imageUrl:
       'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=400&h=300&fit=crop',
     ...MOCK_BASE,
@@ -21,7 +21,7 @@ const mockRecipes = [
   {
     id: '2',
     title: 'Curry pois chiches',
-    category: 'lunch' as const,
+    category: 'starter' as const,
     imageUrl:
       'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop',
     ...MOCK_BASE,
@@ -29,7 +29,7 @@ const mockRecipes = [
   {
     id: '3',
     title: 'Tarte aux poireaux',
-    category: 'dinner' as const,
+    category: 'main' as const,
     imageUrl: null,
     ...MOCK_BASE,
   },

@@ -84,7 +84,7 @@ const applyFilter = (
       });
     case 'main':
       return recipes.filter(
-        (r) => r.category === 'lunch' || r.category === 'dinner',
+        (r) => r.category === 'starter' || r.category === 'main',
       );
     case 'dessert':
       return recipes.filter((r) => r.category === 'dessert');

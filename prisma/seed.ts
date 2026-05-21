@@ -71,7 +71,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=800&q=80',
       description:
         'Un grand classique italien : une sauce mijotée à base de bœuf haché et de tomates, généreuse et réconfortante.',
-      category: 'dinner' as const,
+      category: 'main' as const,
       servings: 4,
       prepTimeMinutes: 15,
       cookTimeMinutes: 25,
@@ -196,7 +196,7 @@ async function seed() {
         'https://plus.unsplash.com/premium_photo-1726812054316-10bc1d562596?q=80&w=1421&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       description:
         "Un poulet entier doré au four avec des herbes de Provence et de l'ail, croustillant dehors et juteux dedans.",
-      category: 'dinner' as const,
+      category: 'main' as const,
       servings: 4,
       prepTimeMinutes: 15,
       cookTimeMinutes: 60,
@@ -251,7 +251,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1650844010413-3f24dc1c182b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       description:
         'La quiche lorraine traditionnelle avec ses lardons fumés et son appareil crémeux, une valeur sûre pour le déjeuner.',
-      category: 'lunch' as const,
+      category: 'starter' as const,
       servings: 6,
       prepTimeMinutes: 20,
       cookTimeMinutes: 35,
@@ -307,7 +307,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1604909052743-94e838986d24?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       description:
         'La salade niçoise authentique : thon, haricots verts, œufs durs et anchois, sans cuisson de légumes superflue.',
-      category: 'lunch' as const,
+      category: 'starter' as const,
       servings: 2,
       prepTimeMinutes: 20,
       cookTimeMinutes: 12,
@@ -430,7 +430,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1605909388460-74ec8b204127?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       description:
         'Une soupe veloutée et épicée aux lentilles corail, rapide à préparer et très nourrissante.',
-      category: 'dinner' as const,
+      category: 'main' as const,
       servings: 4,
       prepTimeMinutes: 10,
       cookTimeMinutes: 25,
@@ -499,7 +499,7 @@ async function seed() {
         'https://plus.unsplash.com/premium_photo-1667807521536-bc35c8d8b64b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       description:
         'Une omelette baveuse et crémeuse garnie de champignons sautés, prête en 20 minutes.',
-      category: 'lunch' as const,
+      category: 'starter' as const,
       servings: 2,
       prepTimeMinutes: 10,
       cookTimeMinutes: 10,
@@ -554,7 +554,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800&q=80',
       description:
         "Un risotto crémeux et parfumé aux champignons, préparé dans les règles de l'art avec la technique de la mantecatura.",
-      category: 'dinner' as const,
+      category: 'main' as const,
       servings: 4,
       prepTimeMinutes: 15,
       cookTimeMinutes: 30,

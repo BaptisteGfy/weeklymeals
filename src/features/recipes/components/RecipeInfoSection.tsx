@@ -78,8 +78,8 @@ export const RecipeInfoSection = ({
           className="border-neutre-200 text-terracotta-600 mb-3 w-fit rounded-md border px-2 py-1 text-[11px] font-semibold tracking-wider uppercase"
         >
           <option value="breakfast">Petit-déjeuner</option>
-          <option value="lunch">Déjeuner</option>
-          <option value="dinner">Dîner</option>
+          <option value="starter">Entrée</option>
+          <option value="main">Plat principal</option>
           <option value="dessert">Dessert</option>
         </select>
       ) : (

@@ -43,10 +43,10 @@ export const BadgesDisplay = () => {
         </div>
       </Block>
 
-      <Block title="Badge — catégories repas">
+      <Block title="Badge — catégories recette">
         <div className="flex flex-wrap gap-2">
-          <Badge variant="dinner">Dîner</Badge>
-          <Badge variant="lunch">Déjeuner</Badge>
+          <Badge variant="main">Plat principal</Badge>
+          <Badge variant="starter">Entrée</Badge>
           <Badge variant="dessert">Dessert</Badge>
           <Badge variant="breakfast">Petit-déj.</Badge>
         </div>

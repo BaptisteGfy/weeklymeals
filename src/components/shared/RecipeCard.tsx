@@ -28,8 +28,8 @@ import type { Recipe, RecipeCategory } from '@/types/recipes';
 
 const categoryTokens: Record<RecipeCategory, string> = {
   breakfast: 'bg-sky-100 text-sky-700',
-  lunch: 'bg-olive-100 text-olive-700',
-  dinner: 'bg-terracotta-100 text-terracotta-700',
+  starter: 'bg-olive-100 text-olive-700',
+  main: 'bg-terracotta-100 text-terracotta-700',
   dessert: 'bg-sable-200 text-sable-700',
 };
 

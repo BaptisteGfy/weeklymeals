@@ -14,12 +14,14 @@ const SIZES: Record<LogoSize, { mark: string; icon: number; text: string }> = {
 interface LogoProps {
   size?: LogoSize;
   variant?: LogoVariant;
+  onDark?: boolean;
   className?: string;
 }
 
 export const Logo = ({
   size = 'md',
   variant = 'full',
+  onDark = false,
   className,
 }: LogoProps) => {
   const s = SIZES[size];
@@ -27,15 +29,23 @@ export const Logo = ({
     <div className={cn('flex items-center gap-2.5', className)}>
       <div
         className={cn(
-          'bg-terracotta-500 flex items-center justify-center rounded-lg',
+          'flex items-center justify-center rounded-lg',
           s.mark,
+          onDark ? 'bg-white' : 'bg-terracotta-500',
         )}
       >
-        <UtensilsCrossed size={s.icon} className="text-white" />
+        <UtensilsCrossed
+          size={s.icon}
+          className={onDark ? 'text-terracotta-500' : 'text-white'}
+        />
       </div>
       {variant === 'full' && (
         <span
-          className={cn('text-neutre-800 font-serif font-semibold', s.text)}
+          className={cn(
+            'font-serif font-semibold',
+            s.text,
+            onDark ? 'text-white' : 'text-neutre-800',
+          )}
         >
           WeeklyMeals
         </span>

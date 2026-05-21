@@ -64,6 +64,7 @@ export type Recipe = {
   isLibrary: boolean;
   isPublic: boolean;
   isSaved: boolean;
+  isFavorite: boolean;
   createdAt: string;
 };
 

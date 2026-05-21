@@ -5,6 +5,7 @@ import {
   Clock,
   MoreHorizontal,
   Plus,
+  Star,
   User,
   Users,
   UtensilsCrossed,
@@ -54,6 +55,8 @@ interface RecipeCardProps {
   variant?: RecipeCardVariant;
   onDelete?: (id: string) => void;
   onUnsave?: (id: string) => void;
+  onToggleFavorite?: (id: string) => void;
+  isFavorite?: boolean;
   badge?: RecipeBadge;
   onSave?: () => void;
   isSaved?: boolean;
@@ -65,6 +68,8 @@ export const RecipeCard = ({
   variant = 'card',
   onDelete,
   onUnsave,
+  onToggleFavorite,
+  isFavorite,
   badge,
   onSave,
   isSaved,
@@ -169,6 +174,30 @@ export const RecipeCard = ({
         className,
       )}
     >
+      {/* Favorite button — top-left overlay */}
+      {onToggleFavorite && (
+        <div
+          className={cn(
+            'absolute top-2 left-2 z-10 transition-opacity',
+            !isFavorite && 'opacity-0 group-hover:opacity-100',
+          )}
+        >
+          <button
+            type="button"
+            onClick={() => onToggleFavorite(recipe.id)}
+            title={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+            className={cn(
+              'flex h-8 w-8 items-center justify-center rounded-full shadow-sm backdrop-blur-sm transition-colors',
+              isFavorite
+                ? 'bg-sable-400 text-white'
+                : 'text-neutre-600 bg-white/80 hover:bg-white',
+            )}
+          >
+            <Star size={14} className={isFavorite ? 'fill-current' : ''} />
+          </button>
+        </div>
+      )}
+
       {/* Action button — top-right overlay */}
       <div className="absolute top-2 right-2 z-10">
         {onSave ? (

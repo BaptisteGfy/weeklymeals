@@ -34,6 +34,7 @@ const transformRecipeFromDB = (
     isLibrary: recipe.isLibrary,
     isPublic: recipe.isPublic,
     isSaved: savedIds?.has(recipe.id) ?? false,
+    isFavorite: false,
     createdAt: recipe.createdAt.toISOString(),
     ingredients: recipe.ingredients.map((ri) => ({
       id: ri.id,
@@ -54,7 +55,7 @@ export const getRecipes = async () => {
   if (!session) {
     throw new Error('User is not authenticated');
   }
-  const [recipes, savedRecipes] = await Promise.all([
+  const [recipes, savedRecipes, favoriteRecipes] = await Promise.all([
     prisma.recipe.findMany({
       where: {
         OR: [
@@ -69,10 +70,18 @@ export const getRecipes = async () => {
       where: { userId: session.user.id },
       select: { recipeId: true },
     }),
+    prisma.userFavoriteRecipe.findMany({
+      where: { userId: session.user.id },
+      select: { recipeId: true },
+    }),
   ]);
 
   const savedIds = new Set(savedRecipes.map((s) => s.recipeId));
-  return recipes.map((r) => transformRecipeFromDB(r, savedIds));
+  const favoriteIds = new Set(favoriteRecipes.map((f) => f.recipeId));
+  return recipes.map((r) => ({
+    ...transformRecipeFromDB(r, savedIds),
+    isFavorite: favoriteIds.has(r.id),
+  }));
 };
 
 export const createRecipe = async (
@@ -162,6 +171,25 @@ export const updateRecipe = async (
   });
 
   return transformRecipeFromDB(updated);
+};
+
+export const toggleFavorite = async (id: string) => {
+  const session = await getCurrentSession();
+  if (!session) throw new Error('User is not authenticated');
+
+  const existing = await prisma.userFavoriteRecipe.findUnique({
+    where: { userId_recipeId: { userId: session.user.id, recipeId: id } },
+  });
+
+  if (existing) {
+    await prisma.userFavoriteRecipe.delete({
+      where: { userId_recipeId: { userId: session.user.id, recipeId: id } },
+    });
+  } else {
+    await prisma.userFavoriteRecipe.create({
+      data: { userId: session.user.id, recipeId: id },
+    });
+  }
 };
 
 export const deleteRecipe = async (id: string) => {

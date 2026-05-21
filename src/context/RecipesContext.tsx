@@ -7,6 +7,7 @@ import { unsaveRecipe } from '@/actions/library-actions';
 import {
   createRecipe,
   deleteRecipe,
+  toggleFavorite,
   updateRecipe,
 } from '@/actions/recipe-actions';
 import type { Recipe, RecipeFormValues } from '@/types/recipes';
@@ -17,6 +18,7 @@ type RecipesContextType = {
   handleUpdateRecipe: (id: string, values: RecipeFormValues) => Promise<void>;
   handleDeleteRecipe: (id: string) => Promise<void>;
   handleUnsaveRecipe: (id: string) => Promise<void>;
+  handleToggleFavorite: (id: string) => Promise<void>;
 };
 
 const RecipesContext = createContext<RecipesContextType | null>(null);
@@ -78,6 +80,19 @@ export const RecipesProvider = ({
     }
   };
 
+  const handleToggleFavorite = async (id: string) => {
+    try {
+      await toggleFavorite(id);
+      setRecipes((prev) =>
+        prev.map((r) =>
+          r.id === id ? { ...r, isFavorite: !r.isFavorite } : r,
+        ),
+      );
+    } catch {
+      toast.error('Impossible de modifier les favoris. Réessaie.');
+    }
+  };
+
   return (
     <RecipesContext.Provider
       value={{
@@ -86,6 +101,7 @@ export const RecipesProvider = ({
         handleUpdateRecipe,
         handleDeleteRecipe,
         handleUnsaveRecipe,
+        handleToggleFavorite,
       }}
     >
       {children}

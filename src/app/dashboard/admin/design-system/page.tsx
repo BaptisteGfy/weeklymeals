@@ -15,6 +15,7 @@ import { TokensSection } from './components/foundations/tokens-section';
 import { TypographySection } from './components/foundations/typography-section';
 import { EmptyStateDisplay } from './components/molecules/empty-state-display';
 import { PageHeaderDisplay } from './components/molecules/page-header-display';
+import { RecipeCardDisplay } from './components/molecules/recipe-card-display';
 import { StatCardDisplay } from './components/molecules/stat-card-display';
 
 const DesignSystemPage = () => (
@@ -115,9 +116,7 @@ const DesignSystemPage = () => (
                 <PageHeaderDisplay />
               </TabsContent>
               <TabsContent value="recipe-card">
-                <div className="border-neutre-200 flex h-32 items-center justify-center rounded-lg border border-dashed">
-                  <p className="text-neutre-400 text-sm">À venir</p>
-                </div>
+                <RecipeCardDisplay />
               </TabsContent>
               <TabsContent value="form-field">
                 <div className="border-neutre-200 flex h-32 items-center justify-center rounded-lg border border-dashed">

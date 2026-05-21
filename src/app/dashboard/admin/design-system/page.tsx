@@ -14,6 +14,7 @@ import { ShadowsSection } from './components/foundations/shadows-section';
 import { TokensSection } from './components/foundations/tokens-section';
 import { TypographySection } from './components/foundations/typography-section';
 import { EmptyStateDisplay } from './components/molecules/empty-state-display';
+import { FormFieldDisplay } from './components/molecules/form-field-display';
 import { PageHeaderDisplay } from './components/molecules/page-header-display';
 import { RecipeCardDisplay } from './components/molecules/recipe-card-display';
 import { StatCardDisplay } from './components/molecules/stat-card-display';
@@ -119,9 +120,7 @@ const DesignSystemPage = () => (
                 <RecipeCardDisplay />
               </TabsContent>
               <TabsContent value="form-field">
-                <div className="border-neutre-200 flex h-32 items-center justify-center rounded-lg border border-dashed">
-                  <p className="text-neutre-400 text-sm">À venir</p>
-                </div>
+                <FormFieldDisplay />
               </TabsContent>
             </Tabs>
           </TabsContent>

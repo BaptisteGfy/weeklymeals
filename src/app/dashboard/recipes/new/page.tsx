@@ -9,6 +9,7 @@ import { Recipe } from '@/types/recipes';
 const defaultRecipe: Omit<Recipe, 'id'> = {
   title: '',
   description: '',
+  notes: undefined,
   servings: 4,
   prepTimeMinutes: 30,
   cookTimeMinutes: undefined,

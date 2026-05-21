@@ -13,7 +13,7 @@ type Props = {
 };
 
 const RecipeDetailContent = ({ params }: Props) => {
-  const { recipes, handleUpdateRecipe } = useRecipes();
+  const { recipes, handleUpdateRecipe, handleDeleteRecipe } = useRecipes();
   const { handleAddToPlanning } = usePlanner();
   const { id } = use(params);
   const searchParams = useSearchParams();
@@ -35,6 +35,14 @@ const RecipeDetailContent = ({ params }: Props) => {
     <RecipeDetailView
       recipe={recipe}
       onSave={(values) => handleUpdateRecipe(recipe.id, values)}
+      onDelete={
+        !recipe.isSaved
+          ? () => {
+              handleDeleteRecipe(recipe.id);
+              router.push('/dashboard/recipes');
+            }
+          : undefined
+      }
       initialIsEditing={initialIsEditing}
       onAddToPlanning={(date, mealPeriod, courseType) =>
         handleAddToPlanning(date, mealPeriod, courseType, recipe.id)

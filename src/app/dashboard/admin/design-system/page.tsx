@@ -14,6 +14,7 @@ import { ShadowsSection } from './components/foundations/shadows-section';
 import { TokensSection } from './components/foundations/tokens-section';
 import { TypographySection } from './components/foundations/typography-section';
 import { EmptyStateDisplay } from './components/molecules/empty-state-display';
+import { StatCardDisplay } from './components/molecules/stat-card-display';
 
 const DesignSystemPage = () => (
   <div className="mx-auto max-w-5xl space-y-4 px-6 py-12">
@@ -94,8 +95,37 @@ const DesignSystemPage = () => (
             </Tabs>
           </TabsContent>
 
-          <TabsContent value="molecules" className="space-y-6">
-            <EmptyStateDisplay />
+          <TabsContent value="molecules">
+            <Tabs defaultValue="empty-state">
+              <TabsList className="mb-8">
+                <TabsTrigger value="empty-state">EmptyState</TabsTrigger>
+                <TabsTrigger value="stat-card">StatCard</TabsTrigger>
+                <TabsTrigger value="page-header">PageHeader</TabsTrigger>
+                <TabsTrigger value="recipe-card">RecipeCard</TabsTrigger>
+                <TabsTrigger value="form-field">FormField</TabsTrigger>
+              </TabsList>
+              <TabsContent value="empty-state">
+                <EmptyStateDisplay />
+              </TabsContent>
+              <TabsContent value="stat-card">
+                <StatCardDisplay />
+              </TabsContent>
+              <TabsContent value="page-header">
+                <div className="border-neutre-200 flex h-32 items-center justify-center rounded-lg border border-dashed">
+                  <p className="text-neutre-400 text-sm">À venir</p>
+                </div>
+              </TabsContent>
+              <TabsContent value="recipe-card">
+                <div className="border-neutre-200 flex h-32 items-center justify-center rounded-lg border border-dashed">
+                  <p className="text-neutre-400 text-sm">À venir</p>
+                </div>
+              </TabsContent>
+              <TabsContent value="form-field">
+                <div className="border-neutre-200 flex h-32 items-center justify-center rounded-lg border border-dashed">
+                  <p className="text-neutre-400 text-sm">À venir</p>
+                </div>
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           {/* Organismes — à venir */}

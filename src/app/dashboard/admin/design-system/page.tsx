@@ -13,6 +13,7 @@ import { RadiusSection } from './components/foundations/radius-section';
 import { ShadowsSection } from './components/foundations/shadows-section';
 import { TokensSection } from './components/foundations/tokens-section';
 import { TypographySection } from './components/foundations/typography-section';
+import { EmptyStateDisplay } from './components/molecules/empty-state-display';
 
 const DesignSystemPage = () => (
   <div className="mx-auto max-w-5xl space-y-4 px-6 py-12">
@@ -93,16 +94,8 @@ const DesignSystemPage = () => (
             </Tabs>
           </TabsContent>
 
-          {/* Molécules — à venir */}
-          <TabsContent value="molecules">
-            <div className="border-neutre-200 flex h-40 flex-col items-center justify-center gap-2 rounded-lg border border-dashed">
-              <p className="text-neutre-500 text-sm font-medium">
-                Molécules — à venir
-              </p>
-              <p className="text-neutre-400 text-xs">
-                FormField, RecipeCard, StatCard, EmptyState…
-              </p>
-            </div>
+          <TabsContent value="molecules" className="space-y-6">
+            <EmptyStateDisplay />
           </TabsContent>
 
           {/* Organismes — à venir */}

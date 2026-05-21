@@ -4,82 +4,280 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   @theme inline
+   Expose les variables CSS comme classes utilitaires Tailwind.
+   Ex : bg-terracotta-500, text-olive-600, border-neutre-200
+   ============================================================ */
 @theme inline {
+  /* Fonts */
   --font-heading: var(--font-serif);
   --font-sans: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
+
+  /* Radius — valeurs fixes du DS */
+  --radius-xs:   0.25rem;   /* 4px  */
+  --radius-sm:   0.375rem;  /* 6px  */
+  --radius-md:   0.5rem;    /* 8px  — défaut boutons/inputs */
+  --radius-lg:   0.75rem;   /* 12px — cards */
+  --radius-xl:   1rem;      /* 16px — modales */
+  --radius-2xl:  1.5rem;    /* 24px */
+  --radius-pill: 9999px;
+
+  /* shadcn → Tailwind (bg-primary, text-foreground, etc.) */
+  --color-background:             var(--background);
+  --color-foreground:             var(--foreground);
+  --color-card:                   var(--card);
+  --color-card-foreground:        var(--card-foreground);
+  --color-popover:                var(--popover);
+  --color-popover-foreground:     var(--popover-foreground);
+  --color-primary:                var(--primary);
+  --color-primary-foreground:     var(--primary-foreground);
+  --color-secondary:              var(--secondary);
+  --color-secondary-foreground:   var(--secondary-foreground);
+  --color-muted:                  var(--muted);
+  --color-muted-foreground:       var(--muted-foreground);
+  --color-accent:                 var(--accent);
+  --color-accent-foreground:      var(--accent-foreground);
+  --color-destructive:            var(--destructive);
+  --color-border:                 var(--border);
+  --color-input:                  var(--input);
+  --color-ring:                   var(--ring);
+  --color-sidebar:                var(--sidebar);
+  --color-sidebar-foreground:     var(--sidebar-foreground);
+  --color-sidebar-primary:        var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-sidebar-accent:         var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:         var(--sidebar-border);
+  --color-sidebar-ring:           var(--sidebar-ring);
+
+  /* Primitives DS → Tailwind (bg-terracotta-500, text-olive-600…) */
+  --color-terracotta-50:  var(--terracotta-50);
+  --color-terracotta-100: var(--terracotta-100);
+  --color-terracotta-200: var(--terracotta-200);
+  --color-terracotta-300: var(--terracotta-300);
+  --color-terracotta-400: var(--terracotta-400);
+  --color-terracotta-500: var(--terracotta-500);
+  --color-terracotta-600: var(--terracotta-600);
+  --color-terracotta-700: var(--terracotta-700);
+  --color-terracotta-800: var(--terracotta-800);
+  --color-terracotta-900: var(--terracotta-900);
+
+  --color-olive-50:  var(--olive-50);
+  --color-olive-100: var(--olive-100);
+  --color-olive-200: var(--olive-200);
+  --color-olive-300: var(--olive-300);
+  --color-olive-400: var(--olive-400);
+  --color-olive-500: var(--olive-500);
+  --color-olive-600: var(--olive-600);
+  --color-olive-700: var(--olive-700);
+  --color-olive-800: var(--olive-800);
+  --color-olive-900: var(--olive-900);
+
+  --color-sable-50:  var(--sable-50);
+  --color-sable-100: var(--sable-100);
+  --color-sable-200: var(--sable-200);
+  --color-sable-300: var(--sable-300);
+  --color-sable-400: var(--sable-400);
+  --color-sable-500: var(--sable-500);
+  --color-sable-600: var(--sable-600);
+  --color-sable-700: var(--sable-700);
+  --color-sable-800: var(--sable-800);
+  --color-sable-900: var(--sable-900);
+
+  --color-bordeaux-50:  var(--bordeaux-50);
+  --color-bordeaux-100: var(--bordeaux-100);
+  --color-bordeaux-200: var(--bordeaux-200);
+  --color-bordeaux-300: var(--bordeaux-300);
+  --color-bordeaux-400: var(--bordeaux-400);
+  --color-bordeaux-500: var(--bordeaux-500);
+  --color-bordeaux-600: var(--bordeaux-600);
+  --color-bordeaux-700: var(--bordeaux-700);
+  --color-bordeaux-800: var(--bordeaux-800);
+  --color-bordeaux-900: var(--bordeaux-900);
+
+  --color-neutre-50:  var(--neutre-50);
+  --color-neutre-100: var(--neutre-100);
+  --color-neutre-200: var(--neutre-200);
+  --color-neutre-300: var(--neutre-300);
+  --color-neutre-400: var(--neutre-400);
+  --color-neutre-500: var(--neutre-500);
+  --color-neutre-600: var(--neutre-600);
+  --color-neutre-700: var(--neutre-700);
+  --color-neutre-800: var(--neutre-800);
+  --color-neutre-900: var(--neutre-900);
 }
 
 :root {
-  --background: oklch(0.98 0.008 75);
-  --foreground: oklch(0.22 0.01 50);
+  /* ============================================================
+     NIVEAU 1 — PRIMITIVES
+     Valeurs exactes du design system (oklch calculé depuis hex)
+     ============================================================ */
 
-  --card: oklch(0.97 0.01 75);
-  --card-foreground: oklch(0.22 0.01 50);
+  /* Terracotta — primary */
+  --terracotta-50:  oklch(0.9574 0.0170 50.43); /* #FBEEE7 */
+  --terracotta-100: oklch(0.8985 0.0405 53.86); /* #F4D7C5 */
+  --terracotta-200: oklch(0.8255 0.0691 52.08); /* #EBBA9D */
+  --terracotta-300: oklch(0.7393 0.0969 48.31); /* #DD9874 */
+  --terracotta-400: oklch(0.6524 0.1153 43.24); /* #CA7754 */
+  --terracotta-500: oklch(0.5797 0.1270 38.62); /* #B85C3E */
+  --terracotta-600: oklch(0.5109 0.1188 37.81); /* #9E4A30 */
+  --terracotta-700: oklch(0.4321 0.1019 38.18); /* #7E3923 */
+  --terracotta-800: oklch(0.3480 0.0803 39.64); /* #5C2917 */
+  --terracotta-900: oklch(0.2540 0.0533 35.12); /* #381810 */
 
-  --popover: oklch(0.97 0.01 75);
-  --popover-foreground: oklch(0.22 0.01 50);
+  /* Olive — accent végétal */
+  --olive-50:  oklch(0.9601 0.0159 110.55); /* #F2F3E7 */
+  --olive-100: oklch(0.9062 0.0454 114.10); /* #DFE4C2 */
+  --olive-200: oklch(0.8308 0.0737 115.58); /* #C5CE97 */
+  --olive-300: oklch(0.7406 0.0908 117.63); /* #A6B370 */
+  --olive-400: oklch(0.6607 0.1018 121.08); /* #899C52 */
+  --olive-500: oklch(0.5529 0.0849 120.96); /* #6B7A3F */
+  --olive-600: oklch(0.4857 0.0760 121.89); /* #586633 */
+  --olive-700: oklch(0.4074 0.0625 121.84); /* #444F27 */
+  --olive-800: oklch(0.3241 0.0487 123.23); /* #2F381B */
+  --olive-900: oklch(0.2363 0.0317 124.61); /* #1B2110 */
 
-  --primary: oklch(0.55 0.12 38);
-  --primary-foreground: oklch(0.98 0 0);
+  /* Sable — secondary chaud */
+  --sable-50:  oklch(0.9611 0.0221 80.69); /* #FAF1E2 */
+  --sable-100: oklch(0.9203 0.0416 83.87); /* #F2E3C6 */
+  --sable-200: oklch(0.8507 0.0563 73.13); /* #E5C9A6 */
+  --sable-300: oklch(0.7685 0.0707 68.60); /* #D2AC83 */
+  --sable-400: oklch(0.6778 0.0774 65.23); /* #B98E64 */
+  --sable-500: oklch(0.5778 0.0708 64.90); /* #97714C */
+  --sable-600: oklch(0.4912 0.0590 65.72); /* #785A3C */
+  --sable-700: oklch(0.4045 0.0456 65.94); /* #5A442E */
+  --sable-800: oklch(0.3166 0.0322 68.17); /* #3D2F20 */
+  --sable-900: oklch(0.2248 0.0194 66.57); /* #221A12 */
 
-  --secondary: oklch(0.93 0.012 75);
-  --secondary-foreground: oklch(0.22 0.01 50);
+  /* Bordeaux — destructive */
+  --bordeaux-50:  oklch(0.9489 0.0198  9.78); /* #FBE9EB */
+  --bordeaux-100: oklch(0.8661 0.0504 10.49); /* #F2C6CB */
+  --bordeaux-200: oklch(0.7689 0.0803 12.21); /* #E29FA6 */
+  --bordeaux-300: oklch(0.6541 0.1159 14.57); /* #CD717A */
+  --bordeaux-400: oklch(0.5585 0.1340 18.37); /* #B54E55 */
+  --bordeaux-500: oklch(0.4663 0.1459 24.82); /* #9B2D2D */
+  --bordeaux-600: oklch(0.4051 0.1275 24.34); /* #802324 */
+  --bordeaux-700: oklch(0.3403 0.1037 23.80); /* #631B1C */
+  --bordeaux-800: oklch(0.2669 0.0771 22.88); /* #441213 */
+  --bordeaux-900: oklch(0.1947 0.0522 21.39); /* #28090A */
 
-  --muted: oklch(0.93 0.012 75);
-  --muted-foreground: oklch(0.55 0.01 50);
+  /* Neutre — warm gray */
+  --neutre-50:  oklch(0.9721 0.0107 76.60); /* #FAF5EE */
+  --neutre-100: oklch(0.9332 0.0177 81.33); /* #EFE8DC */
+  --neutre-200: oklch(0.8703 0.0255 81.12); /* #DDD3C2 */
+  --neutre-300: oklch(0.7808 0.0308 80.62); /* #C2B6A2 */
+  --neutre-400: oklch(0.6689 0.0283 76.68); /* #9F9382 */
+  --neutre-500: oklch(0.5488 0.0205 64.68); /* #7A6F65 */
+  --neutre-600: oklch(0.4485 0.0175 64.02); /* #5C534B */
+  --neutre-700: oklch(0.3575 0.0141 62.98); /* #423B35 */
+  --neutre-800: oklch(0.2508 0.0195 45.68); /* #2A1F1A */
+  --neutre-900: oklch(0.1852 0.0142 51.27); /* #18110D */
 
-  --accent: oklch(0.88 0.04 140);
-  --accent-foreground: oklch(0.3 0.05 140);
+  /* ============================================================
+     NIVEAU 2 — TOKENS SHADCN
+     Remappés sur nos primitives — les composants shadcn
+     continuent de fonctionner sans modification.
+     ============================================================ */
 
-  --destructive: oklch(0.577 0.245 27.325);
+  --background:         var(--neutre-50);
+  --foreground:         var(--neutre-800);
 
-  --border: oklch(0.9 0.01 75);
-  --input: oklch(0.9 0.01 75);
-  --ring: oklch(0.55 0.12 38);
+  --card:               oklch(1 0 0);
+  --card-foreground:    var(--neutre-800);
 
-  --radius: 0.75rem;
+  --popover:            oklch(1 0 0);
+  --popover-foreground: var(--neutre-800);
 
-  --sidebar: oklch(0.95 0.015 75);
-  --sidebar-foreground: oklch(0.22 0.01 50);
-  --sidebar-primary: oklch(0.55 0.12 38);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.91 0.022 58);
-  --sidebar-accent-foreground: oklch(0.63 0.1 45);
-  --sidebar-border: oklch(0.88 0.012 75);
-  --sidebar-ring: oklch(0.55 0.12 38);
+  --primary:            var(--terracotta-500);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary:          var(--sable-100);
+  --secondary-foreground: var(--neutre-700);
+
+  --muted:              var(--neutre-100);
+  --muted-foreground:   var(--neutre-500);
+
+  --accent:             var(--olive-100);
+  --accent-foreground:  var(--olive-700);
+
+  --destructive:        var(--bordeaux-500);
+
+  --border:             var(--neutre-200);
+  --input:              var(--neutre-200);
+  --ring:               var(--terracotta-400);
+
+  --radius: 0.5rem;
+
+  /* Sidebar */
+  --sidebar:                        var(--neutre-50);
+  --sidebar-foreground:             var(--neutre-700);
+  --sidebar-primary:                var(--terracotta-500);
+  --sidebar-primary-foreground:     oklch(1 0 0);
+  --sidebar-accent:                 var(--terracotta-50);
+  --sidebar-accent-foreground:      var(--terracotta-700);
+  --sidebar-border:                 var(--neutre-200);
+  --sidebar-ring:                   var(--terracotta-400);
+
+  /* ============================================================
+     NIVEAU 2 — TOKENS SÉMANTIQUES DS
+     Pour nos propres composants — nommage métier clair.
+     ============================================================ */
+
+  --color-action-primary:         var(--terracotta-500);
+  --color-action-primary-hover:   var(--terracotta-600);
+  --color-action-primary-active:  var(--terracotta-700);
+  --color-action-primary-subtle:  var(--terracotta-50);
+  --color-action-secondary:       var(--sable-200);
+  --color-action-secondary-hover: var(--sable-300);
+
+  --color-surface-page:    var(--neutre-50);
+  --color-surface-card:    oklch(1 0 0);
+  --color-surface-muted:   var(--neutre-100);
+  --color-surface-inverse: var(--neutre-800);
+
+  --color-text-primary:    var(--neutre-800);
+  --color-text-secondary:  var(--neutre-500);
+  --color-text-tertiary:   var(--neutre-400);
+  --color-text-on-action:  oklch(1 0 0);
+  --color-text-link:       var(--terracotta-600);
+
+  --color-border-subtle:   var(--neutre-100);
+  --color-border-default:  var(--neutre-200);
+  --color-border-strong:   var(--neutre-300);
+  --color-border-focus:    var(--terracotta-400);
+
+  --color-success:         var(--olive-500);
+  --color-success-subtle:  var(--olive-50);
+  --color-danger:          var(--bordeaux-500);
+  --color-danger-subtle:   var(--bordeaux-50);
+  --color-warning:         var(--sable-500);
+  --color-warning-subtle:  var(--sable-50);
+
+  /* ============================================================
+     OMBRES — teintées espresso (neutre-800) pour rester chaudes
+     ============================================================ */
+
+  --shadow-xs: 0 1px 2px oklch(0.2508 0.0195 45.68 / 0.04);
+  --shadow-sm: 0 2px 6px oklch(0.2508 0.0195 45.68 / 0.06),
+               0 1px 2px oklch(0.2508 0.0195 45.68 / 0.04);
+  --shadow-md: 0 8px 20px oklch(0.2508 0.0195 45.68 / 0.08),
+               0 2px 4px  oklch(0.2508 0.0195 45.68 / 0.05);
+  --shadow-lg: 0 16px 40px oklch(0.2508 0.0195 45.68 / 0.12),
+               0 4px 8px   oklch(0.2508 0.0195 45.68 / 0.06);
+  --shadow-xl: 0 28px 64px oklch(0.2508 0.0195 45.68 / 0.18),
+               0 8px 16px  oklch(0.2508 0.0195 45.68 / 0.08);
+  --shadow-focus: 0 0 0 3px oklch(0.6524 0.1153 43.24 / 0.35);
+
+  /* ============================================================
+     ANIMATIONS
+     ============================================================ */
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --ease-out:    cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.5, 0, 0.2, 1);
 }
 
 @layer base {

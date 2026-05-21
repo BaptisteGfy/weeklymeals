@@ -1,6 +1,14 @@
 'use client';
 
-import { BookMarked, Clock, MoreHorizontal, Plus, Users } from 'lucide-react';
+import {
+  BookMarked,
+  Clock,
+  MoreHorizontal,
+  Plus,
+  User,
+  Users,
+  UtensilsCrossed,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
@@ -229,7 +237,11 @@ export const RecipeCard = ({
               }
               className="absolute right-0 bottom-0 h-auto rounded-none rounded-tl-lg px-2.5 py-1"
             >
-              {badge.variant === 'library' && <BookMarked size={10} />}
+              {badge.variant === 'library' ? (
+                <UtensilsCrossed size={10} />
+              ) : (
+                <User size={10} />
+              )}
               {badge.label}
             </Badge>
           )}

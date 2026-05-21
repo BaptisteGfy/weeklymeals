@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 
 interface FilterChipProps {
   label: string;
+  icon?: React.ReactNode;
   active?: boolean;
   onClick?: () => void;
   className?: string;
@@ -11,6 +12,7 @@ interface FilterChipProps {
 
 export const FilterChip = ({
   label,
+  icon,
   active = false,
   onClick,
   className,
@@ -20,7 +22,7 @@ export const FilterChip = ({
     onClick={onClick}
     aria-pressed={active}
     className={cn(
-      'inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors',
+      'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors',
       'focus-visible:outline-terracotta-400 focus-visible:outline-2 focus-visible:outline-offset-2',
       active
         ? 'bg-terracotta-500 text-white'
@@ -28,6 +30,7 @@ export const FilterChip = ({
       className,
     )}
   >
+    {icon}
     {label}
   </button>
 );

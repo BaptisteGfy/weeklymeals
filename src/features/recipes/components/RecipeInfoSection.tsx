@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 
+import { Switch } from '@/components/ui/switch';
 import { categoryLabels } from '@/labels/recipes';
 import { Recipe, RecipeFormValues } from '@/types/recipes';
 
@@ -17,6 +18,7 @@ type Props = {
   ) => void;
   targetServings: number;
   onTargetServingsChange: (n: number) => void;
+  onPublicToggle?: (value: boolean) => void;
   error?: {
     title?: string;
     description?: string;
@@ -29,6 +31,7 @@ export const RecipeInfoSection = ({
   formValues,
   isEditing,
   handleFieldChange,
+  onPublicToggle,
   targetServings,
   onTargetServingsChange,
   error,
@@ -212,6 +215,29 @@ export const RecipeInfoSection = ({
           )
         )}
       </div>
+
+      {isEditing ? (
+        <div className="border-neutre-100 bg-sable-50 mt-4 flex items-center justify-between rounded-lg border px-4 py-3">
+          <div>
+            <p className="text-neutre-700 text-sm font-medium">
+              Partager dans la bibliothèque
+            </p>
+            <p className="text-neutre-400 text-xs">
+              Visible par tous les utilisateurs de WeeklyMeals
+            </p>
+          </div>
+          <Switch
+            checked={formValues.isPublic}
+            onCheckedChange={onPublicToggle}
+          />
+        </div>
+      ) : (
+        recipe.isPublic && (
+          <p className="mt-3 text-xs text-olive-600">
+            ✓ Partagée dans la bibliothèque
+          </p>
+        )
+      )}
     </>
   );
 };

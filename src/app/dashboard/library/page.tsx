@@ -1,42 +1,44 @@
-import { Library } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 
 import {
   getLibraryRecipes,
   saveRecipe,
   unsaveRecipe,
 } from '@/actions/library-actions';
+import { PageHeader } from '@/components/shared/PageHeader';
+import { Button } from '@/components/ui/button';
 import { LibraryView } from '@/features/library/components/LibraryView';
 
 export default async function LibraryPage() {
   const { recipes, savedRecipeIds } = await getLibraryRecipes();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-8">
-        <h1 className="font-heading text-foreground text-2xl font-semibold">
-          Bibliothèque
-        </h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          {recipes.length} recette{recipes.length > 1 ? 's' : ''} disponible
-          {recipes.length > 1 ? 's' : ''}
-        </p>
-      </div>
+    <div className="mx-auto max-w-6xl space-y-8 px-4 py-8">
+      <PageHeader
+        eyebrow={`Bibliothèque · ${recipes.length} recette${recipes.length > 1 ? 's' : ''}`}
+        title={
+          <>
+            Une <em>idée</em> pour chaque envie.
+          </>
+        }
+        description="Filtrez, explorez, sauvegardez ce qui vous fait envie."
+        actions={
+          <Button asChild>
+            <Link href="/dashboard/recipes/new">
+              <Plus size={16} />
+              Créer une recette
+            </Link>
+          </Button>
+        }
+      />
 
-      {recipes.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <Library className="text-muted-foreground/40 mb-4 h-12 w-12" />
-          <p className="text-muted-foreground text-sm">
-            Aucune recette dans la bibliothèque pour l&apos;instant.
-          </p>
-        </div>
-      ) : (
-        <LibraryView
-          recipes={recipes}
-          savedRecipeIds={savedRecipeIds}
-          onSave={saveRecipe}
-          onUnsave={unsaveRecipe}
-        />
-      )}
+      <LibraryView
+        recipes={recipes}
+        savedRecipeIds={savedRecipeIds}
+        onSave={saveRecipe}
+        onUnsave={unsaveRecipe}
+      />
     </div>
   );
 }

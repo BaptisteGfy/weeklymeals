@@ -48,6 +48,7 @@ export const RecipeDetailView = ({
     handleCancel,
     handleSave,
     handleFieldChange,
+    handlePublicToggle,
     handleIngredientChange,
     handleAddIngredient,
     handleDeleteIngredient,
@@ -104,7 +105,7 @@ export const RecipeDetailView = ({
             value={formValues.imageUrl ?? ''}
             onChange={handleFieldChange}
             placeholder="URL de l'image (optionnel)"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-(--color-primary) focus:outline-none"
           />
         </div>
       )}
@@ -114,6 +115,7 @@ export const RecipeDetailView = ({
         formValues={formValues}
         isEditing={isEditing}
         handleFieldChange={handleFieldChange}
+        onPublicToggle={handlePublicToggle}
         targetServings={targetServings}
         onTargetServingsChange={setTargetServings}
         error={{

@@ -29,6 +29,7 @@ const transformRecipeFromDB = (recipe: RecipeWithIngredients): Recipe => {
     restTimeMinutes: recipe.restTimeMinutes ?? undefined,
     category: recipe.category as RecipeCategory,
     isLibrary: recipe.isLibrary,
+    isPublic: recipe.isPublic,
     ingredients: recipe.ingredients.map((ri) => ({
       id: ri.id,
       name: ri.ingredient.nameFr,
@@ -78,6 +79,7 @@ export const createRecipe = async (
       restTimeMinutes: values.restTimeMinutes,
       category: values.category,
       instructions: values.instructions.map((i) => i.text),
+      isPublic: values.isPublic,
       userId: session.user.id,
       ingredients: {
         create: values.ingredients.map((ing) => ({
@@ -123,6 +125,7 @@ export const updateRecipe = async (
       restTimeMinutes: values.restTimeMinutes,
       category: values.category,
       instructions: values.instructions.map((i) => i.text),
+      isPublic: values.isPublic,
       ingredients: {
         deleteMany: {},
         create: values.ingredients.map((ing) => ({

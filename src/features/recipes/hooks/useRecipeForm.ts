@@ -88,6 +88,7 @@ const recipeToFormValues = (recipe: Recipe): RecipeFormValues => ({
   cookTimeMinutes: recipe.cookTimeMinutes,
   restTimeMinutes: recipe.restTimeMinutes,
   category: recipe.category,
+  isPublic: recipe.isPublic,
   ingredients: recipe.ingredients,
   instructions: recipe.instructions,
 });
@@ -221,6 +222,8 @@ export const useRecipeForm = (
     handleCancel,
     handleSave,
     handleFieldChange,
+    handlePublicToggle: (value: boolean) =>
+      setFormValues((prev) => ({ ...prev, isPublic: value })),
     handleIngredientChange,
     handleAddIngredient,
     handleDeleteIngredient,

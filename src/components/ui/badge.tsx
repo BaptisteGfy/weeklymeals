@@ -27,7 +27,7 @@ const badgeVariants = cva(
         breakfast: 'bg-sky-100 text-sky-800',
         // source bibliothèque
         'source-library': 'bg-primary text-primary-foreground',
-        'source-user': 'bg-white/90 text-gray-700',
+        'source-user': 'bg-primary text-primary-foreground',
       },
     },
     defaultVariants: {

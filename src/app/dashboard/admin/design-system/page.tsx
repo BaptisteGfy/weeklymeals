@@ -15,8 +15,11 @@ import { TokensSection } from './components/foundations/tokens-section';
 import { TypographySection } from './components/foundations/typography-section';
 import { EmptyStateDisplay } from './components/molecules/empty-state-display';
 import { FormFieldDisplay } from './components/molecules/form-field-display';
+import { MealSlotDisplay } from './components/molecules/meal-slot-display';
 import { PageHeaderDisplay } from './components/molecules/page-header-display';
 import { RecipeCardDisplay } from './components/molecules/recipe-card-display';
+import { SectionHeaderDisplay } from './components/molecules/section-header-display';
+import { ShoppingCategoryHeaderDisplay } from './components/molecules/shopping-category-header-display';
 import { StatCardDisplay } from './components/molecules/stat-card-display';
 
 const DesignSystemPage = () => (
@@ -106,6 +109,11 @@ const DesignSystemPage = () => (
                 <TabsTrigger value="page-header">PageHeader</TabsTrigger>
                 <TabsTrigger value="recipe-card">RecipeCard</TabsTrigger>
                 <TabsTrigger value="form-field">FormField</TabsTrigger>
+                <TabsTrigger value="section-header">SectionHeader</TabsTrigger>
+                <TabsTrigger value="shopping-category">
+                  ShoppingCategory
+                </TabsTrigger>
+                <TabsTrigger value="meal-slot">MealSlot</TabsTrigger>
               </TabsList>
               <TabsContent value="empty-state">
                 <EmptyStateDisplay />
@@ -121,6 +129,15 @@ const DesignSystemPage = () => (
               </TabsContent>
               <TabsContent value="form-field">
                 <FormFieldDisplay />
+              </TabsContent>
+              <TabsContent value="section-header">
+                <SectionHeaderDisplay />
+              </TabsContent>
+              <TabsContent value="shopping-category">
+                <ShoppingCategoryHeaderDisplay />
+              </TabsContent>
+              <TabsContent value="meal-slot">
+                <MealSlotDisplay />
               </TabsContent>
             </Tabs>
           </TabsContent>

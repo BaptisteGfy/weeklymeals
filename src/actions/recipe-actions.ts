@@ -55,6 +55,46 @@ const transformRecipeFromDB = (
   };
 };
 
+export const getRecipeById = async (id: string): Promise<Recipe | null> => {
+  const session = await getCurrentSession();
+  if (!session) {
+    throw new Error('User is not authenticated');
+  }
+
+  const [recipe, savedRecipes, favoriteRecipes] = await Promise.all([
+    prisma.recipe.findFirst({
+      where: {
+        id,
+        OR: [
+          { isLibrary: true },
+          { isPublic: true },
+          { userId: session.user.id },
+          { savedBy: { some: { userId: session.user.id } } },
+        ],
+      },
+      include: { ingredients: { include: { ingredient: true } } },
+    }),
+    prisma.savedRecipe.findMany({
+      where: { userId: session.user.id },
+      select: { recipeId: true },
+    }),
+    prisma.userFavoriteRecipe.findMany({
+      where: { userId: session.user.id },
+      select: { recipeId: true },
+    }),
+  ]);
+
+  if (!recipe) return null;
+
+  const savedIds = new Set(savedRecipes.map((s) => s.recipeId));
+  const favoriteIds = new Set(favoriteRecipes.map((f) => f.recipeId));
+
+  return {
+    ...transformRecipeFromDB(recipe, savedIds),
+    isFavorite: favoriteIds.has(recipe.id),
+  };
+};
+
 export const getRecipes = async () => {
   const session = await getCurrentSession();
   if (!session) {

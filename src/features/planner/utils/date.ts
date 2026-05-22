@@ -61,6 +61,25 @@ export const getDayNumber = (day: WeekDay, weekStart: Date): number => {
   return date.getDate();
 };
 
+const getISOWeekNumber = (date: Date): number => {
+  const d = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+};
+
+export const getWeekEyebrow = (weekStart: Date): string => {
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+  const weekNum = getISOWeekNumber(weekStart);
+  const startDay = weekStart.getDate();
+  const endDay = weekEnd.getDate();
+  const endMonth = weekEnd.toLocaleDateString('fr-FR', { month: 'long' });
+  return `Semaine ${weekNum} · ${startDay} — ${endDay} ${endMonth}`;
+};
+
 export const dateToWeekDay = (isoDate: string): WeekDay => {
   const date = new Date(isoDate + 'T12:00:00');
   const index = (date.getDay() + 6) % 7;

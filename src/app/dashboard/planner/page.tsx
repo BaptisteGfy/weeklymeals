@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { usePlanner } from '@/context/PlannerContext';
 import { useRecipes } from '@/context/RecipesContext';
-import { MealIdeasSection } from '@/features/planner/components/MealIdeasSection';
-import { PlannerView } from '@/features/planner/components/PlannerView';
+import { PlannerGridView } from '@/features/planner/components/PlannerGridView';
 import { getWeekStart, weekDayToDate } from '@/features/planner/utils/date';
 
 const PlannerPage = () => {
@@ -15,9 +14,6 @@ const PlannerPage = () => {
     handleAddToPlanning,
     handleRemoveFromPlanning,
     loadWeekMeals,
-    mealIdeas,
-    handleAddMealIdea,
-    handleRemoveMealIdea,
   } = usePlanner();
   const [weekOffset, setWeekOffset] = useState(0);
 
@@ -36,28 +32,16 @@ const PlannerPage = () => {
   }, [weekOffset, loadWeekMeals]);
 
   return (
-    <>
-      <h1 className="font-heading text-foreground mb-8 text-3xl font-bold">
-        Mon planning
-      </h1>
-
-      <PlannerView
-        recipes={recipes}
-        plannedMeals={currentWeekMeals}
-        weekStart={weekStart}
-        onPrevWeek={() => setWeekOffset((o) => o - 1)}
-        onNextWeek={() => setWeekOffset((o) => o + 1)}
-        onAddToPlanning={handleAddToPlanning}
-        onRemoveFromPlanning={handleRemoveFromPlanning}
-      />
-
-      <MealIdeasSection
-        recipes={recipes}
-        mealIdeas={mealIdeas}
-        onAddMealIdea={handleAddMealIdea}
-        onRemoveMealIdea={handleRemoveMealIdea}
-      />
-    </>
+    <PlannerGridView
+      recipes={recipes}
+      plannedMeals={currentWeekMeals}
+      weekStart={weekStart}
+      onPrevWeek={() => setWeekOffset((o) => o - 1)}
+      onNextWeek={() => setWeekOffset((o) => o + 1)}
+      onCurrentWeek={() => setWeekOffset(0)}
+      onAddToPlanning={handleAddToPlanning}
+      onRemoveFromPlanning={handleRemoveFromPlanning}
+    />
   );
 };
 

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { RecipePlaceholder } from '@/components/ui/recipe-placeholder';
 import { AddToPlanningModal } from '@/features/planner/components/AddToPlanningModal';
-import { dateToWeekDay, getWeekStart } from '@/features/planner/utils/date';
+import { dateToWeekDay } from '@/features/planner/utils/date';
 import { useRecipeForm } from '@/features/recipes/hooks/useRecipeForm';
 import { mealPeriodLabels, weekDayLabels } from '@/labels/planner';
 import type { CourseType, MealPeriod } from '@/types/planner';
@@ -66,8 +66,6 @@ export const RecipeDetailView = ({
     handleDeleteInstruction,
     errors,
   } = useRecipeForm(recipe, { onSave, onCancel, initialIsEditing });
-
-  const weekStart = getWeekStart();
 
   const handleStartEditing = () => {
     setTargetServings(recipe.servings);
@@ -269,7 +267,6 @@ export const RecipeDetailView = ({
       {onAddToPlanning && (
         <AddToPlanningModal
           isOpen={isModalOpen}
-          weekStart={weekStart}
           recipe={{
             title: recipe.title,
             imageUrl: recipe.imageUrl,

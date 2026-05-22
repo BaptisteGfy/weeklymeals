@@ -34,6 +34,7 @@ type Props = {
     mealPeriod: MealPeriod,
     courseType: CourseType,
     recipeId: string,
+    servings: number,
   ) => Promise<void>;
   onRemoveFromPlanning: (
     date: string,
@@ -91,11 +92,13 @@ export const PlannerView = ({
   const handleSelectRecipe = (recipeId: string) => {
     if (!selectedSlot) return;
     const date = weekDayToDate(selectedSlot.day, weekStart);
+    const recipe = getRecipeById(recipeId);
     onAddToPlanning(
       date,
       selectedSlot.mealPeriod,
       selectedSlot.courseType,
       recipeId,
+      recipe?.servings ?? 1,
     );
     setSelectedSlot(null);
   };

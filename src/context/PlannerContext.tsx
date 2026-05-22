@@ -25,6 +25,7 @@ type PlannerContextType = {
     mealPeriod: MealPeriod,
     courseType: CourseType,
     recipeId: string,
+    servings: number,
   ) => Promise<void>;
   handleRemoveFromPlanning: (
     date: string,
@@ -56,6 +57,7 @@ export const PlannerProvider = ({
     mealPeriod: MealPeriod,
     courseType: CourseType,
     recipeId: string,
+    servings: number,
   ) => {
     try {
       const newMeal = await addToPlanning(
@@ -63,6 +65,7 @@ export const PlannerProvider = ({
         mealPeriod,
         courseType,
         recipeId,
+        servings,
       );
       setPlannedMeals((prev) => {
         const filtered = prev.filter(

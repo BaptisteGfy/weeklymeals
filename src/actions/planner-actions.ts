@@ -27,6 +27,7 @@ export const getPlannedMeals = async (
     date: toISODate(meal.date),
     mealPeriod: meal.mealPeriod as MealPeriod,
     courseType: meal.courseType as CourseType,
+    servings: meal.servings,
     recipeId: meal.recipeId,
   }));
 };
@@ -36,6 +37,7 @@ export const addToPlanning = async (
   mealPeriod: MealPeriod,
   courseType: CourseType,
   recipeId: string,
+  servings: number,
 ): Promise<PlannedMeal> => {
   const session = await getCurrentSession();
   if (!session) throw new Error('User is not authenticated');
@@ -49,12 +51,13 @@ export const addToPlanning = async (
         courseType,
       },
     },
-    update: { recipeId },
+    update: { recipeId, servings },
     create: {
       date: toDateTime(date),
       mealPeriod,
       courseType,
       recipeId,
+      servings,
       userId: session.user.id,
     },
   });
@@ -64,6 +67,7 @@ export const addToPlanning = async (
     date: toISODate(meal.date),
     mealPeriod: meal.mealPeriod as MealPeriod,
     courseType: meal.courseType as CourseType,
+    servings: meal.servings,
     recipeId: meal.recipeId,
   };
 };

@@ -27,6 +27,7 @@ type Props = {
     date: string,
     mealPeriod: MealPeriod,
     courseType: CourseType,
+    servings: number,
   ) => void;
 };
 
@@ -269,9 +270,16 @@ export const RecipeDetailView = ({
         <AddToPlanningModal
           isOpen={isModalOpen}
           weekStart={weekStart}
+          recipe={{
+            title: recipe.title,
+            imageUrl: recipe.imageUrl,
+            servings: recipe.servings,
+            cookTimeMinutes: recipe.cookTimeMinutes,
+            ingredientCount: recipe.ingredients.length,
+          }}
           onClose={() => setIsModalOpen(false)}
-          onAdd={(date, mealPeriod, courseType) => {
-            onAddToPlanning(date, mealPeriod, courseType);
+          onAdd={(date, mealPeriod, courseType, servings) => {
+            onAddToPlanning(date, mealPeriod, courseType, servings);
             toast.success(
               `${recipe.title} ajouté au planning du ${weekDayLabels[dateToWeekDay(date)]} ${mealPeriodLabels[mealPeriod]}`,
             );

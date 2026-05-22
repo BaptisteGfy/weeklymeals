@@ -21,6 +21,7 @@ export type PlannedMeal = {
   date: string;
   mealPeriod: MealPeriod;
   courseType: CourseType;
+  servings: number;
   recipeId: string;
 };
 

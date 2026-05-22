@@ -18,6 +18,6 @@ export const mealPeriodLabels: Record<MealPeriod, string> = {
 
 export const courseTypeLabels: Record<CourseType, string> = {
   starter: 'Entrée',
-  main: 'Plat',
+  main: 'Plat principal',
   dessert: 'Dessert',
 };

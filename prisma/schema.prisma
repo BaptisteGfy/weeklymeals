@@ -179,6 +179,7 @@ model PlannedMeal {
   date       DateTime
   mealPeriod MealPeriod
   courseType CourseType @default(main)
+  servings   Int        @default(1)
   createdAt  DateTime   @default(now())
   userId     String
   user       User       @relation(fields: [userId], references: [id])

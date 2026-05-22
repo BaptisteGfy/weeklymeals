@@ -60,8 +60,8 @@ const RecipeDetailContent = ({ params }: Props) => {
           : undefined
       }
       initialIsEditing={initialIsEditing}
-      onAddToPlanning={(date, mealPeriod, courseType) =>
-        handleAddToPlanning(date, mealPeriod, courseType, recipe.id)
+      onAddToPlanning={(date, mealPeriod, courseType, servings) =>
+        handleAddToPlanning(date, mealPeriod, courseType, recipe.id, servings)
       }
     />
   );

@@ -7,10 +7,12 @@ import {
   Minus,
   Moon,
   Plus,
+  ShoppingCart,
   Sun,
   Users,
   X,
 } from 'lucide-react';
+import Link from 'next/link';
 import { Fragment, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -123,6 +125,23 @@ export const PlannerGridView = ({
   };
 
   const getRecipeById = (id: string) => recipes.find((r) => r.id === id);
+
+  const totalMeals = plannedMeals.length;
+  const coveredDays = new Set(plannedMeals.map((m) => m.date)).size;
+  const distinctRecipes = new Set(plannedMeals.map((m) => m.recipeId)).size;
+  const totalCookMinutes = plannedMeals.reduce((sum, meal) => {
+    const recipe = getRecipeById(meal.recipeId);
+    if (!recipe) return sum;
+    return sum + (recipe.prepTimeMinutes ?? 0) + (recipe.cookTimeMinutes ?? 0);
+  }, 0);
+
+  const formatCookTime = (minutes: number): string => {
+    if (minutes === 0) return '—';
+    if (minutes < 60) return `~${minutes} min`;
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return m > 0 ? `~${h} h ${m}` : `~${h} h`;
+  };
 
   return (
     <div>
@@ -252,7 +271,7 @@ export const PlannerGridView = ({
                 const hasMeals = meals.length > 0;
 
                 return (
-                  <div key={day} className="min-h-[88px] bg-white p-2">
+                  <div key={day} className="min-h-22 bg-white p-2">
                     {!hasMeals ? (
                       <button
                         onClick={() =>
@@ -262,7 +281,7 @@ export const PlannerGridView = ({
                             courseType: 'main',
                           })
                         }
-                        className="border-neutre-200 text-neutre-300 hover:border-terracotta-200 hover:text-terracotta-400 flex h-full min-h-[68px] w-full items-center justify-center rounded-md border border-dashed transition-colors"
+                        className="border-neutre-200 text-neutre-300 hover:border-terracotta-200 hover:text-terracotta-400 flex h-full min-h-17 w-full items-center justify-center rounded-md border border-dashed transition-colors"
                         aria-label={`Ajouter ${PERIOD_LABELS[period]} — ${weekDayLabels[day]}`}
                       >
                         <Plus size={14} />
@@ -335,6 +354,46 @@ export const PlannerGridView = ({
             </Fragment>
           );
         })}
+      </div>
+
+      {/* Bas de page : Suggestions + Récap semaine */}
+      <div className="mt-8 grid grid-cols-[1.5fr_1fr] gap-6">
+        {/* Suggestions — placeholder */}
+        <div className="border-neutre-200 rounded-xl border bg-white p-6">
+          <div className="mb-5 flex items-baseline justify-between">
+            <h2 className="font-serif text-xl font-normal">
+              Suggestions pour compléter
+            </h2>
+          </div>
+          <p className="text-neutre-400 mb-4 text-sm">
+            Bientôt — des idées de recettes pour remplir les créneaux vides de
+            votre semaine.
+          </p>
+        </div>
+
+        {/* Récap semaine */}
+        <div className="border-neutre-200 rounded-xl border bg-white p-6">
+          <div className="mb-5 flex items-baseline justify-between">
+            <h2 className="font-serif text-xl font-normal">Récap semaine</h2>
+          </div>
+
+          <div className="divide-neutre-100 divide-y">
+            {[
+              { label: 'Repas planifiés', value: String(totalMeals) },
+              { label: 'Jours couverts', value: `${coveredDays} / 7` },
+              { label: 'Recettes distinctes', value: String(distinctRecipes) },
+              {
+                label: 'Temps total cuisine',
+                value: formatCookTime(totalCookMinutes),
+              },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex justify-between py-3 text-sm">
+                <span className="text-neutre-600">{label}</span>
+                <span className="text-neutre-400 font-mono">{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Modale unifiée — slots "+" et bouton "Ajouter un repas" */}

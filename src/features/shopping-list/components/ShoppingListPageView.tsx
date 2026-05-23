@@ -6,7 +6,10 @@ import {
   ChevronLeft,
   ChevronRight,
   ClipboardCopy,
+  Info,
   RotateCcw,
+  Share2,
+  Trash2,
 } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -28,6 +31,39 @@ import { unitLabels } from '@/labels/recipes';
 import type { PlannedMeal } from '@/types/planner';
 import type { IngredientCategory, Recipe } from '@/types/recipes';
 import type { ShoppingListItem } from '@/types/shopping-list';
+
+// ─── Color theming ────────────────────────────────────────────────────────────
+
+type CategoryTheme = 'olive' | 'terracotta' | 'sable' | 'bordeaux';
+
+const CATEGORY_THEMES: Partial<Record<IngredientCategory, CategoryTheme>> = {
+  vegetables: 'olive',
+  tubers: 'olive',
+  fruits: 'olive',
+  legumes: 'olive',
+  nuts: 'olive',
+  mushrooms: 'olive',
+  herbs: 'olive',
+  plant_proteins: 'olive',
+  meat: 'bordeaux',
+  fish: 'bordeaux',
+  deli: 'bordeaux',
+  shellfish: 'bordeaux',
+  dairy: 'sable',
+  eggs: 'sable',
+};
+
+const getCategoryTheme = (cat: IngredientCategory): CategoryTheme =>
+  CATEGORY_THEMES[cat] ?? 'terracotta';
+
+const THEME_COLORS: Record<CategoryTheme, { bg: string; text: string }> = {
+  olive: { bg: 'var(--olive-50)', text: 'var(--olive-600)' },
+  terracotta: { bg: 'var(--terracotta-50)', text: 'var(--terracotta-600)' },
+  sable: { bg: 'var(--sable-50)', text: 'var(--sable-600)' },
+  bordeaux: { bg: 'var(--bordeaux-50)', text: 'var(--bordeaux-600)' },
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const formatQuantity = (item: ShoppingListItem): string => {
   if (item.unit === 'unit')
@@ -56,16 +92,20 @@ const computeRecipeSources = (
   return Object.fromEntries(
     Object.entries(sources).map(([name, titles]) => [
       name,
-      titles.size === 1 ? [...titles][0] : 'Plusieurs recettes',
+      [...titles].join(', '),
     ]),
   );
 };
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type Props = {
   initialItems: ShoppingListItem[];
   initialPlannedMeals: PlannedMeal[];
   recipes: Recipe[];
 };
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export const ShoppingListPageView = ({
   initialItems,
@@ -88,6 +128,8 @@ export const ShoppingListPageView = ({
   const allChecked = totalCount > 0 && checkedCount === totalCount;
   const progressPct =
     totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+
+  // ── Actions ───────────────────────────────────────────────────────────────
 
   const changeWeek = (delta: number) => {
     const newOffset = weekOffset + delta;
@@ -147,7 +189,9 @@ export const ShoppingListPageView = ({
 
   const handleCopy = async () => {
     const unchecked = items.filter((i) => !i.isChecked);
-    const categories = Object.keys(ingredientCategoryLabels) as IngredientCategory[];
+    const categories = Object.keys(
+      ingredientCategoryLabels,
+    ) as IngredientCategory[];
     const lines = [
       `Liste de courses — ${weekLabel}`,
       '',
@@ -157,7 +201,9 @@ export const ShoppingListPageView = ({
           const cats: IngredientCategory[] =
             cat === 'meat' ? ['meat', 'fish'] : [cat];
           const label =
-            cat === 'meat' ? 'Viandes & Poissons' : ingredientCategoryLabels[cat];
+            cat === 'meat'
+              ? 'Viandes & Poissons'
+              : ingredientCategoryLabels[cat];
           const groupItems = unchecked.filter((i) => cats.includes(i.category));
           if (groupItems.length === 0) return [];
           return [
@@ -167,56 +213,70 @@ export const ShoppingListPageView = ({
           ];
         }),
     ].join('\n');
-
     await navigator.clipboard.writeText(lines);
     toast.success('Liste copiée !');
   };
 
+  // ── Derived data ──────────────────────────────────────────────────────────
+
+  const categoryGroups = (
+    Object.keys(ingredientCategoryLabels) as IngredientCategory[]
+  )
+    .filter((cat) => cat !== 'fish')
+    .map((cat) => {
+      const cats: IngredientCategory[] =
+        cat === 'meat' ? ['meat', 'fish'] : [cat];
+      const label =
+        cat === 'meat' ? 'Viandes & Poissons' : ingredientCategoryLabels[cat];
+      const emoji = ingredientCategoryEmojis[cat];
+      const groupItems = items.filter((i) => cats.includes(i.category));
+      const theme = getCategoryTheme(cat);
+      const colors = THEME_COLORS[theme];
+      const doneCount = groupItems.filter((i) => i.isChecked).length;
+      return { cat, label, emoji, groupItems, colors, doneCount };
+    })
+    .filter(({ groupItems }) => groupItems.length > 0);
+
+  // ── Render ────────────────────────────────────────────────────────────────
+
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      {/* Header */}
-      <div className="mb-1 flex items-start justify-between gap-4">
-        <h1 className="font-heading text-foreground text-2xl font-semibold">
-          Liste de courses
-        </h1>
+    <div className="px-6 py-8">
+      {/* Page header */}
+      <div className="mb-8 flex items-start justify-between gap-6">
+        <div>
+          <p className="text-muted-foreground mb-1 text-xs font-semibold tracking-widest uppercase">
+            {weekLabel}
+          </p>
+          <h1 className="font-heading text-foreground mb-1.5 text-3xl leading-tight font-semibold">
+            Ma liste de{' '}
+            <em className="text-terracotta-500 not-italic">courses</em>.
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Générée depuis votre planning. Cochez au fur et à mesure.
+          </p>
+        </div>
         <div className="flex shrink-0 items-center gap-2">
+          <button className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-lg border bg-white px-3 py-2 text-sm transition-colors">
+            <Share2 className="h-4 w-4" />
+            Partager
+          </button>
           {totalCount > 0 && (
             <button
               onClick={handleCopy}
-              className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-lg border bg-white px-3 py-2 text-sm transition-colors"
             >
               <ClipboardCopy className="h-4 w-4" />
-              Copier la liste
+              Copier
             </button>
           )}
-          {totalCount > 0 && (
-            <button
-              onClick={handleToggleAll}
-              className={clsx(
-                'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                allChecked
-                  ? 'text-muted-foreground hover:text-foreground border'
-                  : 'bg-primary text-primary-foreground hover:bg-primary/90',
-              )}
-            >
-              {allChecked ? (
-                <>
-                  <RotateCcw className="h-4 w-4" />
-                  Tout décocher
-                </>
-              ) : (
-                <>
-                  <Check className="h-4 w-4" />
-                  Tout cocher
-                </>
-              )}
-            </button>
-          )}
+          <button className="bg-terracotta-500 hover:bg-terracotta-600 flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors">
+            Mode courses
+          </button>
         </div>
       </div>
 
-      {/* Semaine + navigation */}
-      <div className="mb-5 flex items-center gap-1">
+      {/* Week navigation */}
+      <div className="mb-6 flex items-center gap-1">
         <button
           onClick={() => changeWeek(-1)}
           disabled={isPending}
@@ -230,8 +290,7 @@ export const ShoppingListPageView = ({
             <>
               {' · '}
               {uniqueRecipeCount} recette{uniqueRecipeCount > 1 ? 's' : ''}{' '}
-              planifi
-              {uniqueRecipeCount > 1 ? 'ées' : 'ée'}
+              planifi{uniqueRecipeCount > 1 ? 'ées' : 'ée'}
             </>
           )}
         </span>
@@ -244,117 +303,184 @@ export const ShoppingListPageView = ({
         </button>
       </div>
 
-      {/* Barre de progression */}
-      {totalCount > 0 && (
-        <div className="mb-6">
-          <div className="mb-1.5 flex items-center justify-between text-sm">
-            <span className="text-foreground font-medium">
-              {checkedCount} / {totalCount} articles cochés
-            </span>
-            <span className="text-muted-foreground">{progressPct}%</span>
-          </div>
-          <div className="bg-muted h-2 w-full overflow-hidden rounded-full">
-            <div
-              className="bg-primary h-full rounded-full transition-all duration-300"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Liste */}
+      {/* Main content */}
       {totalCount === 0 ? (
         <div className="text-muted-foreground py-16 text-center text-sm">
           Aucun repas planifié cette semaine.
         </div>
       ) : (
-        <div
-          className={clsx(
-            'space-y-5',
-            isPending && 'opacity-60 transition-opacity',
-          )}
-        >
-          {(Object.keys(ingredientCategoryLabels) as IngredientCategory[])
-            .filter((cat) => cat !== 'fish')
-            .map((cat) => {
-            const cats: IngredientCategory[] =
-              cat === 'meat' ? ['meat', 'fish'] : [cat];
-            const label =
-              cat === 'meat' ? 'Viandes & Poissons' : ingredientCategoryLabels[cat];
-            const emoji = ingredientCategoryEmojis[cat];
-            const groupItems = items.filter((i) => cats.includes(i.category));
-            if (groupItems.length === 0) return null;
-            const remaining = groupItems.filter((i) => !i.isChecked).length;
-            return (
-              <section key={cat}>
-                <h2 className="text-foreground mb-2 flex items-center gap-2 text-sm font-semibold">
-                  <span>{emoji}</span>
-                  <span>{label}</span>
-                  {remaining > 0 && (
-                    <span className="text-muted-foreground font-normal">
-                      ({remaining} restant{remaining > 1 ? 's' : ''})
-                    </span>
-                  )}
-                </h2>
-                <ul className="bg-muted divide-border divide-y overflow-hidden rounded-xl border">
-                  {groupItems.map((item) => {
-                    const source = recipeSources[item.name];
-                    const isMultiple = source === 'Plusieurs recettes';
-                    return (
-                      <li
-                        key={item.name}
-                        className={clsx(
-                          'transition-colors',
-                          item.isChecked && 'bg-black/4',
-                        )}
+        <div className="grid grid-cols-[1fr_280px] items-start gap-6">
+          {/* Categories */}
+          <div
+            className={clsx(
+              'space-y-4',
+              isPending && 'opacity-60 transition-opacity',
+            )}
+          >
+            {categoryGroups.map(
+              ({ cat, label, emoji, groupItems, colors, doneCount }) => (
+                <div
+                  key={cat}
+                  className="overflow-hidden rounded-xl border bg-white shadow-sm"
+                >
+                  {/* Card header */}
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-base"
+                        style={{
+                          background: colors.bg,
+                          color: colors.text,
+                        }}
                       >
-                        <label className="flex cursor-pointer items-center gap-3 px-4 py-3">
-                          <input
-                            type="checkbox"
-                            checked={item.isChecked}
-                            onChange={() => toggle(item.name)}
-                            className="text-primary h-4 w-4 shrink-0 cursor-pointer rounded"
-                          />
-                          <span
-                            className={clsx(
-                              'flex-1 text-sm capitalize transition-colors',
-                              item.isChecked
-                                ? 'text-muted-foreground line-through'
-                                : 'text-foreground',
-                            )}
-                          >
-                            {item.name}
-                          </span>
-                          {source && (
+                        {emoji}
+                      </span>
+                      <span className="text-foreground text-sm font-semibold">
+                        {label}
+                      </span>
+                    </div>
+                    <span className="text-muted-foreground text-xs">
+                      {doneCount} / {groupItems.length} cochés
+                    </span>
+                  </div>
+
+                  {/* Items */}
+                  <ul className="divide-border divide-y border-t">
+                    {groupItems.map((item) => {
+                      const source = recipeSources[item.name];
+                      return (
+                        <li
+                          key={item.name}
+                          className={clsx(
+                            'transition-colors',
+                            item.isChecked && 'bg-black/2',
+                          )}
+                        >
+                          <label className="flex cursor-pointer items-center gap-3 px-4 py-3">
+                            <input
+                              type="checkbox"
+                              checked={item.isChecked}
+                              onChange={() => toggle(item.name)}
+                              className="text-primary h-4 w-4 shrink-0 cursor-pointer rounded"
+                            />
+                            <div className="min-w-0 flex-1">
+                              <p
+                                className={clsx(
+                                  'text-sm capitalize',
+                                  item.isChecked
+                                    ? 'text-muted-foreground line-through'
+                                    : 'text-foreground',
+                                )}
+                              >
+                                {item.name}
+                              </p>
+                              {source && (
+                                <p className="text-muted-foreground/70 mt-0.5 text-xs">
+                                  depuis {source}
+                                </p>
+                              )}
+                            </div>
                             <span
                               className={clsx(
-                                'max-w-35 min-w-0 shrink-0 truncate text-right text-xs',
-                                isMultiple
-                                  ? 'bg-muted text-muted-foreground rounded-full px-2 py-0.5'
-                                  : 'text-muted-foreground/70',
+                                'shrink-0 text-right text-sm tabular-nums',
+                                item.isChecked
+                                  ? 'text-muted-foreground/60'
+                                  : 'text-muted-foreground',
                               )}
                             >
-                              {source}
+                              {formatQuantity(item)}
                             </span>
-                          )}
-                          <span
-                            className={clsx(
-                              'w-16 shrink-0 text-right text-sm tabular-nums',
-                              item.isChecked
-                                ? 'text-muted-foreground/60'
-                                : 'text-muted-foreground',
-                            )}
-                          >
-                            {formatQuantity(item)}
-                          </span>
-                        </label>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            );
-          })}
+                          </label>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ),
+            )}
+          </div>
+
+          {/* Summary aside */}
+          <aside className="sticky top-4 rounded-xl border bg-white p-5 shadow-sm">
+            <h3 className="text-foreground mb-4 text-sm font-semibold">
+              Récap
+            </h3>
+
+            <div className="space-y-2.5">
+              {[
+                { label: 'Total articles', value: totalCount },
+                { label: 'Déjà cochés', value: checkedCount },
+                { label: 'Restants', value: totalCount - checkedCount },
+                { label: 'Recettes couvertes', value: uniqueRecipeCount },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between text-sm"
+                >
+                  <span className="text-muted-foreground">{label}</span>
+                  <span className="text-foreground font-semibold">{value}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4">
+              <div className="mb-1.5 flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Progression</span>
+                <span className="text-foreground font-semibold">
+                  {progressPct}%
+                </span>
+              </div>
+              <div className="bg-muted h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="bg-primary h-full rounded-full transition-all duration-300"
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="bg-neutre-50 mt-5 rounded-xl p-4">
+              <div className="mb-1.5 flex items-center gap-2">
+                <Info className="text-muted-foreground h-4 w-4" />
+                <span className="text-foreground text-xs font-semibold">
+                  Astuce
+                </span>
+              </div>
+              <p className="text-muted-foreground text-xs leading-relaxed">
+                Activez le « Mode courses » pour un affichage optimisé sur
+                téléphone.
+              </p>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              {totalCount > 0 && (
+                <button
+                  onClick={handleToggleAll}
+                  className={clsx(
+                    'flex w-full items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                    allChecked
+                      ? 'text-muted-foreground hover:text-foreground border'
+                      : 'bg-primary text-primary-foreground hover:bg-primary/90',
+                  )}
+                >
+                  {allChecked ? (
+                    <>
+                      <RotateCcw className="h-4 w-4" />
+                      Tout décocher
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Tout cocher
+                    </>
+                  )}
+                </button>
+              )}
+              <button className="text-muted-foreground hover:text-foreground flex w-full items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors">
+                <Trash2 className="h-4 w-4" />
+                Vider la liste
+              </button>
+            </div>
+          </aside>
         </div>
       )}
     </div>

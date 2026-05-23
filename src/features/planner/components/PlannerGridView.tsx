@@ -7,12 +7,10 @@ import {
   Minus,
   Moon,
   Plus,
-  ShoppingCart,
   Sun,
   Users,
   X,
 } from 'lucide-react';
-import Link from 'next/link';
 import { Fragment, useState } from 'react';
 import { toast } from 'sonner';
 

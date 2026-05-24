@@ -6,4 +6,5 @@ export type ShoppingListItem = {
   unit: IngredientUnit;
   category: IngredientCategory;
   isChecked: boolean;
+  isManual?: boolean;
 };

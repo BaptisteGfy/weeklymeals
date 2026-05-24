@@ -220,6 +220,7 @@ model ShoppingList {
   unit      IngredientUnit
   category  IngredientCategory
   isChecked Boolean            @default(false)
+  isManual  Boolean            @default(false)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
 

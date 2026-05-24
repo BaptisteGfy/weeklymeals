@@ -5,6 +5,22 @@ import { prisma } from '@/lib/prisma';
 import type { IngredientCategory, IngredientUnit } from '@/types/recipes';
 import type { ShoppingListItem } from '@/types/shopping-list';
 
+const mapRow = (row: {
+  name: string;
+  quantity: number;
+  unit: string;
+  category: string;
+  isChecked: boolean;
+  isManual: boolean;
+}): ShoppingListItem => ({
+  name: row.name,
+  quantity: row.quantity,
+  unit: row.unit as IngredientUnit,
+  category: row.category as IngredientCategory,
+  isChecked: row.isChecked,
+  isManual: row.isManual,
+});
+
 export const syncShoppingList = async (
   weekStart: Date,
   items: ShoppingListItem[],
@@ -15,7 +31,6 @@ export const syncShoppingList = async (
   const userId = session.user.id;
 
   await prisma.$transaction(async (tx) => {
-    // Upsert tous les items calculés (préserve isChecked si l'item existait déjà)
     for (const item of items) {
       await tx.shoppingList.upsert({
         where: {
@@ -34,14 +49,19 @@ export const syncShoppingList = async (
           unit: item.unit,
           category: item.category,
           isChecked: false,
+          isManual: false,
         },
       });
     }
 
-    // Supprime les items qui ne sont plus dans la liste calculée
     const currentNames = items.map((i) => i.name);
     await tx.shoppingList.deleteMany({
-      where: { userId, weekStart, name: { notIn: currentNames } },
+      where: {
+        userId,
+        weekStart,
+        name: { notIn: currentNames },
+        isManual: false,
+      },
     });
   });
 
@@ -50,13 +70,7 @@ export const syncShoppingList = async (
     orderBy: { name: 'asc' },
   });
 
-  return rows.map((row) => ({
-    name: row.name,
-    quantity: row.quantity,
-    unit: row.unit as IngredientUnit,
-    category: row.category as IngredientCategory,
-    isChecked: row.isChecked,
-  }));
+  return rows.map(mapRow);
 };
 
 export const toggleCheckedItem = async (
@@ -96,5 +110,48 @@ export const checkAllItems = async (weekStart: Date): Promise<void> => {
   await prisma.shoppingList.updateMany({
     where: { userId: session.user.id, weekStart },
     data: { isChecked: true },
+  });
+};
+
+export const addManualItem = async (
+  weekStart: Date,
+  name: string,
+  quantity: number,
+  unit: IngredientUnit,
+  category: IngredientCategory,
+): Promise<ShoppingListItem> => {
+  const session = await getCurrentSession();
+  if (!session) throw new Error('User is not authenticated');
+
+  const row = await prisma.shoppingList.create({
+    data: {
+      userId: session.user.id,
+      weekStart,
+      name,
+      quantity,
+      unit,
+      category,
+      isManual: true,
+    },
+  });
+
+  return mapRow(row);
+};
+
+export const deleteManualItem = async (
+  weekStart: Date,
+  name: string,
+): Promise<void> => {
+  const session = await getCurrentSession();
+  if (!session) throw new Error('User is not authenticated');
+
+  await prisma.shoppingList.delete({
+    where: {
+      userId_weekStart_name: {
+        userId: session.user.id,
+        weekStart,
+        name,
+      },
+    },
   });
 };

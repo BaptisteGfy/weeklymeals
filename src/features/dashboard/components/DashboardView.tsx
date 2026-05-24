@@ -175,8 +175,8 @@ export const DashboardView = ({ userName }: DashboardViewProps) => {
           <p className="text-terracotta-600 mb-1 text-xs font-semibold tracking-widest uppercase">
             {todayLabel}
           </p>
-          <h1 className="text-neutre-800 font-serif text-3xl leading-tight font-semibold">
-            Bonjour <em className="text-terracotta-600">{firstName}</em>,
+          <h1 className="text-neutre-800 font-serif text-4xl leading-tight font-normal">
+            Bonjour <em className="text-terracotta-600 italic">{firstName}</em>,
             <br />
             qu&apos;est-ce qu&apos;on mange ce soir&nbsp;?
           </h1>

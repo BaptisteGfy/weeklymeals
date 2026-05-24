@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  CalendarX,
   ChevronLeft,
   ChevronRight,
   Coffee,
@@ -11,9 +12,11 @@ import {
   Users,
   X,
 } from 'lucide-react';
+import Link from 'next/link';
 import { Fragment, useState } from 'react';
 import { toast } from 'sonner';
 
+import { EmptyState } from '@/components/shared/EmptyState';
 import { Button } from '@/components/ui/button';
 import { weekDays } from '@/constants/planner';
 import {
@@ -355,44 +358,67 @@ export const PlannerGridView = ({
       </div>
 
       {/* Bas de page : Suggestions + Récap semaine */}
-      <div className="mt-8 grid grid-cols-[1.5fr_1fr] gap-6">
-        {/* Suggestions — placeholder */}
-        <div className="border-neutre-200 rounded-xl border bg-white p-6">
-          <div className="mb-5 flex items-baseline justify-between">
-            <h2 className="font-serif text-xl font-normal">
-              Suggestions pour compléter
-            </h2>
+      {plannedMeals.length === 0 ? (
+        <EmptyState
+          icon={CalendarX}
+          title="Votre semaine est vierge."
+          description="Ajoutez vos premiers repas pour commencer à planifier votre semaine."
+          className="mt-8"
+          actions={
+            <>
+              <Button onClick={() => setModalSlot({})}>
+                <Plus size={14} />
+                Ajouter un repas
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/dashboard/library">Parcourir la bibliothèque</Link>
+              </Button>
+            </>
+          }
+        />
+      ) : (
+        <div className="mt-8 grid grid-cols-[1.5fr_1fr] gap-6">
+          {/* Suggestions — placeholder */}
+          <div className="border-neutre-200 rounded-xl border bg-white p-6">
+            <div className="mb-5 flex items-baseline justify-between">
+              <h2 className="font-serif text-xl font-normal">
+                Suggestions pour compléter
+              </h2>
+            </div>
+            <p className="text-neutre-400 mb-4 text-sm">
+              Bientôt — des idées de recettes pour remplir les créneaux vides de
+              votre semaine.
+            </p>
           </div>
-          <p className="text-neutre-400 mb-4 text-sm">
-            Bientôt — des idées de recettes pour remplir les créneaux vides de
-            votre semaine.
-          </p>
-        </div>
 
-        {/* Récap semaine */}
-        <div className="border-neutre-200 rounded-xl border bg-white p-6">
-          <div className="mb-5 flex items-baseline justify-between">
-            <h2 className="font-serif text-xl font-normal">Récap semaine</h2>
-          </div>
+          {/* Récap semaine */}
+          <div className="border-neutre-200 rounded-xl border bg-white p-6">
+            <div className="mb-5 flex items-baseline justify-between">
+              <h2 className="font-serif text-xl font-normal">Récap semaine</h2>
+            </div>
 
-          <div className="divide-neutre-100 divide-y">
-            {[
-              { label: 'Repas planifiés', value: String(totalMeals) },
-              { label: 'Jours couverts', value: `${coveredDays} / 7` },
-              { label: 'Recettes distinctes', value: String(distinctRecipes) },
-              {
-                label: 'Temps total cuisine',
-                value: formatCookTime(totalCookMinutes),
-              },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex justify-between py-3 text-sm">
-                <span className="text-neutre-600">{label}</span>
-                <span className="text-neutre-400 font-mono">{value}</span>
-              </div>
-            ))}
+            <div className="divide-neutre-100 divide-y">
+              {[
+                { label: 'Repas planifiés', value: String(totalMeals) },
+                { label: 'Jours couverts', value: `${coveredDays} / 7` },
+                {
+                  label: 'Recettes distinctes',
+                  value: String(distinctRecipes),
+                },
+                {
+                  label: 'Temps total cuisine',
+                  value: formatCookTime(totalCookMinutes),
+                },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex justify-between py-3 text-sm">
+                  <span className="text-neutre-600">{label}</span>
+                  <span className="text-neutre-400 font-mono">{value}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Modale unifiée — slots "+" et bouton "Ajouter un repas" */}
       <AddToPlanningModal

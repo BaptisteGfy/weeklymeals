@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   X,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -26,6 +27,8 @@ import {
   syncShoppingList,
   toggleCheckedItem,
 } from '@/actions/shopping-list-actions';
+import { EmptyState } from '@/components/shared/EmptyState';
+import { Button } from '@/components/ui/button';
 import { getWeekLabel, getWeekStart } from '@/features/planner/utils/date';
 import { buildShoppingList } from '@/features/shopping-list/utils/buildShoppingList';
 import {
@@ -704,9 +707,24 @@ export const ShoppingListPageView = ({
 
         {/* Main content */}
         {totalCount === 0 ? (
-          <div className="text-muted-foreground py-16 text-center text-sm">
-            Aucun repas planifié cette semaine.
-          </div>
+          <EmptyState
+            icon={ShoppingCart}
+            title="Pas encore de liste."
+            description="Planifiez des repas pour la semaine et votre liste se génère automatiquement."
+            actions={
+              <>
+                <Button asChild>
+                  <Link href="/dashboard/planner">Ouvrir mon planning</Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddModalOpen(true)}
+                >
+                  Ajouter un article manuellement
+                </Button>
+              </>
+            }
+          />
         ) : (
           <div className="grid grid-cols-[1fr_280px] items-start gap-6">
             {/* Categories */}

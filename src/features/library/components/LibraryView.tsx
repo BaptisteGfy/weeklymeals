@@ -1,12 +1,14 @@
 'use client';
 
-import { Clock, Leaf } from 'lucide-react';
+import { Clock, Leaf, SearchX } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import type { LibraryRecipe } from '@/actions/library-actions';
+import { EmptyState } from '@/components/shared/EmptyState';
 import { RecipeCard } from '@/components/shared/RecipeCard';
+import { Button } from '@/components/ui/button';
 import { FilterChip } from '@/components/ui/filter-chip';
 import {
   Select,
@@ -163,9 +165,20 @@ export const LibraryView = ({
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <p className="text-neutre-400 py-16 text-center text-sm">
-          Aucune recette pour ce filtre.
-        </p>
+        <EmptyState
+          icon={SearchX}
+          title="Aucune recette ne colle à vos filtres."
+          description="Essayez un autre filtre ou réinitialisez pour tout afficher."
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveFilter('all')}
+            >
+              Réinitialiser les filtres
+            </Button>
+          }
+        />
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((recipe) => {

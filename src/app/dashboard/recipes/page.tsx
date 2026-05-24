@@ -1,17 +1,20 @@
 'use client';
 
 import {
+  BookOpen,
   Clock,
   Edit2,
   LayoutGrid,
   List,
   Plus,
+  SearchX,
   Star,
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
+import { EmptyState } from '@/components/shared/EmptyState';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { RecipeCard } from '@/components/shared/RecipeCard';
 import { Button } from '@/components/ui/button';
@@ -298,11 +301,56 @@ const RecipesPage = () => {
 
         {/* Content */}
         {paginated.length === 0 ? (
-          <div className="text-neutre-400 py-16 text-center text-sm">
-            {activeTab === 'shared'
-              ? 'Fonctionnalité foyer — bientôt disponible.'
-              : 'Aucune recette trouvée.'}
-          </div>
+          activeTab === 'shared' ? (
+            <EmptyState
+              icon={Users}
+              title="Fonctionnalité foyer bientôt disponible."
+              description="Bientôt, vous pourrez partager vos recettes avec les membres de votre foyer."
+            />
+          ) : activeTab === 'favorites' ? (
+            <EmptyState
+              icon={Star}
+              title="Pas encore de favoris."
+              description="Marquez des recettes avec une étoile pour les retrouver ici."
+              actions={
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/dashboard/library">Découvrir des recettes</Link>
+                </Button>
+              }
+            />
+          ) : recipes.length === 0 ? (
+            <EmptyState
+              icon={BookOpen}
+              title="Constituez votre répertoire de recettes."
+              description="Créez vos propres recettes ou ajoutez-en depuis la bibliothèque."
+              actions={
+                <>
+                  <Button asChild>
+                    <Link href="/dashboard/recipes/new">
+                      <Plus size={14} />
+                      Créer une recette
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link href="/dashboard/library">
+                      Explorer la bibliothèque
+                    </Link>
+                  </Button>
+                </>
+              }
+            />
+          ) : (
+            <EmptyState
+              icon={SearchX}
+              title="Aucune recette ne correspond."
+              description="Essayez d'ajuster votre recherche ou vos filtres."
+              actions={
+                <Button variant="outline" size="sm" onClick={reset}>
+                  Réinitialiser les filtres
+                </Button>
+              }
+            />
+          )
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {paginated.map((recipe) => (

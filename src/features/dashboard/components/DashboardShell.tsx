@@ -1,9 +1,10 @@
 'use client';
 
-import { Menu } from 'lucide-react';
 import { useState } from 'react';
 
+import { GlobalSearch } from './GlobalSearch';
 import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
 
 type DashboardShellProps = {
   children: React.ReactNode;
@@ -11,20 +12,20 @@ type DashboardShellProps = {
 };
 
 export const DashboardShell = ({ children, user }: DashboardShellProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="flex h-screen">
-      <Sidebar isOpen={isOpen} onClose={() => setIsOpen(false)} user={user} />
-      <main className="flex-1 overflow-y-auto p-6">
-        <button
-          className="lg:hidden"
-          onClick={() => setIsOpen(true)}
-          aria-label="Ouvrir le menu"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-        {children}
-      </main>
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        user={user}
+      />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <TopBar onSidebarOpen={() => setSidebarOpen(true)} />
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+      </div>
+      <GlobalSearch />
     </div>
   );
 };
